@@ -23,7 +23,7 @@
     background: var(--bg); color: var(--text);
     font-family: -apple-system, "SF Pro Text", "Segoe UI", Roboto, Arial, sans-serif;
     font-size: 17px; line-height: 1.45;
-    display: flex; flex-direction: column; min-height: 100vh;
+    display: flex; flex-direction: column; min-height: 100vh; min-height: 100dvh;
   }
   button, input, select { font: inherit; color: var(--text); }
   .hidden { display: none !important; }
@@ -56,7 +56,7 @@
   .btn-small { padding: 8px 14px; min-height: 44px; font-weight: 600; }
 
   /* ---------- Spielbildschirm ---------- */
-  #screen-game { flex: 1; display: flex; flex-direction: column; min-height: 0; height: 100vh; }
+  #screen-game { flex: 1; display: flex; flex-direction: column; min-height: 0; height: 100vh; height: 100dvh; }
   #topbar {
     display: flex; gap: .5rem; align-items: center;
     padding: .5rem .75rem; background: var(--panel);
@@ -1254,11 +1254,14 @@ function loadState() {
     if (!raw) return false;
     var s = JSON.parse(raw);
     if (!s || typeof s !== "object" || !s.currentRoom) return false;
-    ["solved", "inventory", "notes", "found"].forEach(function (k) {
+    if (!DATA.rooms[s.currentRoom]) s.currentRoom = "keller";
+    ["inventory", "notes", "found"].forEach(function (k) {
       if (!Array.isArray(s[k])) s[k] = [];
     });
-    ["fails", "helpLevel"].forEach(function (k) {
-      if (typeof s[k] !== "object" || s[k] === null) s[k] = {};
+    /* solved, fails, helpLevel sind Objekte (id -> Wert). Ältere, fehlerhafte
+       Spielstände enthielten hier ein leeres Array – das wird repariert. */
+    ["solved", "fails", "helpLevel"].forEach(function (k) {
+      if (typeof s[k] !== "object" || s[k] === null || Array.isArray(s[k])) s[k] = {};
     });
     State = s;
     return true;
@@ -1362,7 +1365,7 @@ function matchError(puzzle, normalized) {
     if (typeof when === "string" && when.indexOf("kind:") === 0) {
       if ((when === "kind:incomplete-set" || when === "kind:grenzen-falsch") &&
           Array.isArray(normalized) && normalized.length > 0) {
-        if (!numsEqual(normalized, puzzle.solution.set)) text = e.text;
+        if (normalized.length < puzzle.solution.set.length) text = e.text;
       }
     } else if (Array.isArray(normalized)) {
       if (normalized.length === 1 && typeof when === "number" &&
@@ -1773,6 +1776,7 @@ $("btn-restart").addEventListener("click", function () {
     clearState();
     $("screen-game").classList.add("hidden");
     $("screen-start").classList.remove("hidden");
+    $("btn-continue").classList.add("hidden");
     setState(undefined);
   });
   $("btn-restart-no").addEventListener("click", closeModal);
@@ -1941,6 +1945,27 @@ window.__runDevTests = function () {
   } else {
     line("t-ok", "OK Türlogik: Bibliothek erst nach Tresor-Code");
   }
+
+  /* Spielstand: Speichern und Laden ohne Datenverlust */
+  (function () {
+    var backup = State, raw = null, storageOk = true;
+    try { raw = localStorage.getItem("tatort-sqrt2"); } catch (e) { storageOk = false; }
+    if (!storageOk) { line("t-ok", "OK localStorage gesperrt – Spiel läuft ohne Speicher"); return; }
+    State = { currentRoom: "labor", solved: { keller_schloss: true }, inventory: ["taschenlampe"],
+              notes: ["n_wurzel_def"], found: ["x"], fails: { labor_x2: 2 }, helpLevel: { labor_x2: 1 }, done: false };
+    saveState();
+    State = null;
+    var loaded = loadState();
+    var good = loaded && State.currentRoom === "labor" && State.solved.keller_schloss === true &&
+               State.fails.labor_x2 === 2 && State.helpLevel.labor_x2 === 1 && State.inventory[0] === "taschenlampe";
+    if (good) line("t-ok", "OK Spielstand bleibt nach Speichern/Laden erhalten");
+    else { line("t-err", "FAIL Spielstand geht beim Laden verloren"); failCount++; }
+    State = backup;
+    try {
+      if (raw === null) localStorage.removeItem("tatort-sqrt2");
+      else localStorage.setItem("tatort-sqrt2", raw);
+    } catch (e) { /* ignorieren */ }
+  })();
 
   /* Notizen prüfen */
   Object.keys(DATA.puzzles).forEach(function (id) {
