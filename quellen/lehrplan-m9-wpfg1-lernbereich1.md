@@ -61,6 +61,6 @@ ca. 10 Unterrichtsstunden
 - **Raum 1 (Wurzeln bestimmen/abschätzen):** gedeckt durch KE 2.
 - **Raum 2 (rational/irrational, ℕ, ℤ, ℚ, ℝ):** gedeckt durch KE 1.
 - **Raum 3 (Intervallschachtelung, Näherungswerte):** im Lehrplan LB 1 (RS, WPF I) **nicht** als Inhalt genannt. Im Lehrplan steht nur das Abschätzen von Wurzeln. Raum 3 sollte daher als „Abschätzen und Eingrenzen“ umgesetzt werden (Wurzelwert zwischen zwei Quadratzahlen einordnen), nicht als eigenes Verfahren, sofern das Westermann-Buch nichts anderes vorsieht.
-- **Raum 4 (Wurzelrechenregeln, teilweises Radizieren, Nenner rational):** gedeckt durch KE 3. Rationalmachen des Nenners eher als optionales Plus-Rätsel.
+- **Raum 4 (Wurzelrechenregeln, teilweises Radizieren, Nenner rational):** gedeckt durch KE 3. Rationalmachen des Nenners laut Buch mit eigener Doppelseite, daher als reguläres Rätsel.
 - **x² = a** (KE 2) sollte als zusätzliches Rätsel vorkommen (z. B. Raum 1 oder 5), das aktuell in der Raumliste fehlt.
-- Offen: Abgleich mit der Reihenfolge und den Aufgabentypen im Westermann-Buch (Inhaltsverzeichnis fehlt noch in `quellen/`).
+- Abgleich mit dem Westermann-Buch: siehe `westermann-m9-wpf1-kapitel4.md`. Das Heronverfahren aus dem Buch wird bewusst nicht umgesetzt.

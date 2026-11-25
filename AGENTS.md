@@ -11,7 +11,7 @@ Browserbasiertes Point-and-Click-Adventure (Detektiv/Escape-Room) zum Lernbereic
 ## Entwicklungsumgebung
 - Umsetzung direkt in **GitHub** mit **Mistral Vibe** und dem Modell **GLM 5.3**. Dieses Dokument ist die verbindliche Arbeitsgrundlage für den Agenten.
 - Inhalte der Rätsel orientieren sich am **LehrplanPLUS Realschule Bayern (M9, WPF I, Lernbereich 1)** und am **Westermann-Schulbuch für bayerische Realschulen**. Reihenfolge, Begriffe, Schreibweisen und Aufgabentypen folgen dem Buch.
-- Der Agent erfindet keine Buchinhalte aus dem Gedächtnis. Der Lehrplanauszug liegt in `quellen/lehrplan-m9-wpfg1-lernbereich1.md`. Die Struktur des Westermann-Buchs (Inhaltsverzeichnis, Aufgabentypen, keine kopierten Buchseiten) stellt Stefan als Datei in `quellen/` bereit. Fehlt etwas, wird nachgefragt.
+- Der Agent erfindet keine Buchinhalte aus dem Gedächtnis. Der Lehrplanauszug liegt in `quellen/lehrplan-m9-wpfg1-lernbereich1.md`. Die Kapitelstruktur des Westermann-Buchs liegt in `quellen/westermann-m9-wpf1-kapitel4.md` (nur Überschriften und Seitenzahlen, keine kopierten Buchseiten). Fehlt etwas, wird nachgefragt.
 
 ## Arbeitsweise (verbindlich)
 - **Nichts ohne Go:** Vor größeren Änderungen kurz Plan/Skizze vorlegen und Freigabe abwarten. Bei Unklarheiten nachfragen, keine Annahmen treffen.
@@ -40,17 +40,19 @@ Browserbasiertes Point-and-Click-Adventure (Detektiv/Escape-Room) zum Lernbereic
 ## Story und Räume
 Im Mathe-Fachraum fehlt √2 aus der Zahlensammlung des Direktors. Das Detektivteam prüft die Alibis der Zahlen.
 
-1. **Hausmeisterkeller:** Definition der Quadratwurzel, Wurzelwerte bestimmen, √(a²) = |a|. Zahlenschloss. (KE 1/2)
-2. **Bibliothek:** Zahlenmengen ℕ, ℤ, ℚ, ℝ, rational/irrational unterscheiden, Begründung, warum √2 nicht rational ist und die Erweiterung auf ℝ nötig ist. (KE 1)
-3. **Labor:** Wurzelwerte abschätzen und eingrenzen (zwischen zwei Quadratzahlen einordnen), quadratische Gleichungen x² = a mit Lösungsmenge L = {−√a; √a}. Kein eigenes Verfahren wie Intervallschachtelung, solange es nicht im Westermann-Buch vorgesehen ist. (KE 2)
-4. **Lehrerzimmer:** Wurzelterme umformen: Produkt und Quotient, teilweises Radizieren. Nenner rational machen nur als optionales Plus-Rätsel (für die Abschlussprüfung von geringerer Relevanz). (KE 3)
-5. **Direktorat:** Finale mit gemischten Aufgaben aus allen Kompetenzerwartungen, Überführung der Täterin/des Täters.
+1. **Hausmeisterkeller:** Quadratwurzeln (Buch S. 67): Definition, Wurzelwerte bestimmen, √(a²) = |a|. Zahlenschloss. (KE 1/2)
+2. **Bibliothek:** Reelle Zahlen (Buch S. 66/69): Zahlenmengen ℕ, ℤ, ℚ, ℝ, rational/irrational, Begründung, warum √2 nicht rational ist. (KE 1)
+3. **Labor:** Wurzelwerte abschätzen und eingrenzen (zwischen zwei Quadratzahlen einordnen), quadratische Gleichungen x² = a mit L = {−√a; √a}. (KE 2)
+4. **Lehrerzimmer:** Mit Wurzeltermen rechnen (Buch S. 72): Produkt und Quotient, teilweises Radizieren, danach Rationalmachen des Nenners (Buch S. 74) als reguläres Rätsel. (KE 3)
+5. **Direktorat:** Finale mit gemischten Aufgaben aus allen Kompetenzerwartungen, Überführung der Täterin/des Täters. Bonusrätsel: goldener Schnitt und Fibonaccizahlen (Buch S. 77/78).
 
-Die Zuordnung (KE 1–3) bezieht sich auf `quellen/lehrplan-m9-wpfg1-lernbereich1.md`. Umfang laut Lehrplan: ca. 10 Std., das Spiel ergänzt den Unterricht und ersetzt ihn nicht.
+**Nicht umsetzen:** Heronverfahren (Buch S. 71) und Intervallschachtelung. Keine Verfahren zur Näherung über das Abschätzen hinaus. Keine Kubikwurzeln.
+
+Die Zuordnung (KE 1–3) bezieht sich auf `quellen/lehrplan-m9-wpfg1-lernbereich1.md`, die Seitenangaben auf `quellen/westermann-m9-wpf1-kapitel4.md`. Umfang laut Lehrplan: ca. 10 Std., das Spiel ergänzt den Unterricht und ersetzt ihn nicht.
 
 **Ton der Story: humorvoll.** Augenzwinkernde Dialoge, skurrile Figuren (z. B. ein pedantischer Hausmeister, eine dramatische Zahl √2), Wortwitz rund um Zahlen. Humor bleibt schülergerecht, nie auf Kosten realer Personen oder Gruppen. Fachliche Erklärungen und Fehlerfeedback bleiben klar und sachlich, der Witz steckt in Rahmenhandlung und Figuren.
 
-Die Raumliste ist mit dem Lehrplan abgeglichen. Der Abgleich mit dem Westermann-Buch (Reihenfolge, Begriffe, Aufgabentypen) steht noch aus und erfolgt, sobald die Inhaltsstruktur in `quellen/` liegt. Bis dahin gilt der Lehrplan als verbindlich.
+Die Raumliste ist mit Lehrplan und der Kapitelstruktur des Westermann-Buchs abgeglichen. Begriffe, Schreibweisen und Aufgabentypen im Detail liegen nicht vor: Bei Unsicherheit gilt der Lehrplan, im Zweifel wird Stefan gefragt.
 
 ## Fachliche Qualität
 - Fachsprache und Schreibweisen wie im bayerischen Realschulunterricht (M9). Inhalte orientieren sich am LehrplanPLUS Realschule Bayern, Lernbereich 1 M9 (WPF I).
@@ -78,6 +80,9 @@ Die Raumliste ist mit dem Lehrplan abgeglichen. Der Abgleich mit dem Westermann-
 - [x] Umsetzung: GitHub + Mistral Vibe + GLM 5.3
 - [x] Tonalität: humorvoll
 - [x] Lehrplanauszug liegt in `quellen/lehrplan-m9-wpfg1-lernbereich1.md` (Abgleich der Raumliste dort unten, Raum 3 prüfen)
-- [ ] Westermann-Inhaltsstruktur für Lernbereich 1 in `quellen/` bereitstellen, danach Raumliste endgültig abgleichen
+- [x] Westermann-Kapitelstruktur liegt in `quellen/`, Raumliste abgeglichen
+- [x] Heronverfahren wird nicht umgesetzt
+- [ ] Bestätigen, dass die Schule genau die Westermann-Ausgabe 2021 (ISBN 978-3-14-123655-2) nutzt
+- [ ] Inhalt der Bonus-/Anwendungsseiten (goldener Schnitt, Fibonacci, Geometrie, Physik) klären
 - [x] Einsatz: freiwillig zu Hause als Ergänzung zum Unterricht
 - [x] Titel und Repo-Name festgelegt (siehe oben)
