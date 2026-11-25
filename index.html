@@ -407,7 +407,7 @@ DATA.puzzles = {
     ke: "KE 1", op: "Ordne zu",
     room: "bibliothek", niv: "main", kind: "word", quick: [["n", "ℕ"], ["z", "ℤ"], ["q", "ℚ"], ["r", "ℝ"]],
     title: "Die Kartei der Zahlenmengen",
-    desc: "Die Bibliothekarin schiebt dir eine Kartei zu: „Ordnung ist das halte Geheimnis der Zahlen. Man muss nur die kleinste passende Schublade finden.“",
+    desc: "Die Bibliothekarin schiebt dir eine Kartei zu: „Ordnung ist das halbe Geheimnis der Zahlen. Man muss nur die kleinste passende Schublade finden.“",
     prompt: "Ordne <b>√16</b> der <b>kleinsten passenden</b> Zahlenmenge zu. Wähle die Zahlenmenge.",
     solution: { token: "n" },
     commonErrors: [
@@ -447,13 +447,13 @@ DATA.puzzles = {
     ke: "KE 1", op: "Begründe",
     room: "bibliothek", niv: "main", kind: "choice",
     title: "Vernehmung: Warum ist √2 nicht rational?",
-    desc: "Die Bibliothekarin tipelt auf die Theke: „Wenn Sie √2 wirklich finden wollen, müssen Sie wenigstens sagen können, warum es sich unter den Brüchen nicht wohlfühlt.“ (Auf Lehrplan-Niveau – ohne formalen Beweis.)",
+    desc: "Die Bibliothekarin tippt auf die Theke: „Wenn Sie √2 wirklich finden wollen, müssen Sie wenigstens sagen können, warum es sich unter den Brüchen nicht wohlfühlt.“ (Auf Lehrplan-Niveau – ohne formalen Beweis.)",
     prompt: "Wähle die zutreffende Begründung:",
     solution: { index: 1 },
     choices: [
       {
         text: "√2 ist irrational, weil seine Dezimalentwicklung irgendwann abbricht.",
-        feedback: "Falsch: Abbrechen würde √2 rational machen (abbrechend ⇒ Bruch ⇒ rational). In Wahrkeit bricht √2 nie ab – und hat auch keine Periode."
+        feedback: "Falsch: Abbrechen würde √2 rational machen (abbrechend ⇒ Bruch ⇒ rational). In Wahrheit bricht √2 nie ab – und hat auch keine Periode."
       },
       {
         text: "√2 ist irrational: Es gibt keinen Bruch p/q mit (p/q)² = 2; die Dezimalentwicklung bricht nie ab und wiederholt sich nie.",
@@ -521,8 +521,8 @@ DATA.puzzles = {
   bibliothek_versteck: {
     ke: "KE 1", op: "Entscheide", calc: { expr: "√2 · √8", rational: true },
     room: "bibliothek", niv: "plus", kind: "word", quick: [["rational", "rational"], ["irrational", "irrational"]],
-    title: "Zusatzrätsel (plus): Der Dramatische Auftritt",
-    desc: "Hinter dem „Goldenen Schnitt“-Poster ist eine Notiz: „Alle behaupten, ich sei irrational. Alias beweist es!“ (Taschenrechner erlaubt.)",
+    title: "Zusatzrätsel (plus): Der dramatische Auftritt",
+    desc: "Hinter dem „Goldenen Schnitt“-Poster ist eine Notiz: „Alle behaupten, ich sei irrational. Und meine Freunde? Die sind es bestimmt auch!“ (Taschenrechner erlaubt.)",
     prompt: "Entscheide: Ist <b>√2 · √8</b> rational oder irrational?",
     solution: { token: "rational" },
     commonErrors: [
@@ -565,7 +565,7 @@ DATA.puzzles = {
     ke: "KE 2", op: "Löse", calc: { square: 6 },
     room: "labor", niv: "main", kind: "termset",
     title: "Die ungeduldige Gleichung",
-    desc: "Auf dem Bildschirm flackert: „x² = 6“. Der Laborant seufzt: „Keine Quadratzahl. Trotzdem zwei Lösungen! So wie meine zwei linken Daumen.“",
+    desc: "Auf dem Bildschirm flackert: „x² = 6“. Der Laborant seufzt: „Keine Quadratzahl. Trotzdem zwei Lösungen! Ein Zwillingspaar: eine positiv, eine negativ.“",
     prompt: "Gib die Lösungsmenge von <b>x² = 6</b> an, z. B. als „L = {−√6; √6}“ oder kurz „±√6“.",
     solution: { terms: ["-√6", "√6"] },
     commonErrors: [
@@ -617,7 +617,7 @@ DATA.puzzles = {
     ],
     help: {
       hint: "Rechne 17 − 16 und 25 − 17. Welcher Abstand ist kleiner?",
-      merk: "Der Radikant 17 liegt näher an der Quadratzahl 16. Also liegt √17 näher an √16 = 4.",
+      merk: "Der Radikand 17 liegt näher an der Quadratzahl 16. Also liegt √17 näher an √16 = 4.",
       beispiel: "√35 liegt näher an 6, denn 35 ist nur 1 von 36 entfernt, aber 10 von 25."
     },
     reveal: "17 ist nur 1 von 16 entfernt, also liegt <b>√17</b> näher an <b>4</b>.",
@@ -672,7 +672,7 @@ DATA.puzzles = {
     ke: "KE 3", op: "Vereinfache", calc: { expr: "√72" },
     room: "lehrerzimmer", niv: "main", kind: "term",
     title: "Der streitsüchtige Getränkeautomat",
-    desc: "Der Getränkeautomat im Lehrerzimmer gibt nur frei, wer teilweises Radizieren beherrscht. Frau Tafelwisch zwinkert: „Quadratische Faktoren rausziehen – so bekommt man auch das letzte Fasswasser aus dem Automaten.“",
+    desc: "Der Getränkeautomat im Lehrerzimmer gibt nur frei, wer teilweises Radizieren beherrscht. Frau Tafelwisch zwinkert: „Quadratische Faktoren rausziehen – so bekommt man auch die letzte Limo aus dem Automaten.“",
     prompt: "Vereinfache durch teilweises Radizieren: <b>√72</b>",
     solution: { token: "6√2" },
     commonErrors: [
@@ -712,7 +712,7 @@ DATA.puzzles = {
   lehrer_standard: {
     ke: "KE 3", op: "Mache den Nenner rational", calc: { expr: "5/√3" },
     room: "lehrerzimmer", niv: "standard", kind: "term",
-    title: "Zusatzrätsel (standard): Wandernde Kaffeemaschine",
+    title: "Zusatzrätsel (standard): Wählerische Kaffeemaschine",
     desc: "Die Kaffeemaschine mahlt nur, wenn im Nenner keine Wurzel steht. Pädagogisch wertvoll.",
     prompt: "Mach den Nenner rational und gib das Ergebnis an: <b>5/√3</b>",
     solution: { token: "5√3/3", tokenAlt: ["5/3√3", "(5/3)√3"] },
@@ -831,8 +831,8 @@ DATA.puzzles = {
     ke: "KE 1", op: "Ordne zu",
     room: "direktorat", niv: "standard", kind: "word", quick: [["n", "ℕ"], ["z", "ℤ"], ["q", "ℚ"], ["r", "ℝ"]],
     title: "Zusatzrätsel (standard): Die nicht einzuordnende Konstante",
-    desc: "Auf dem Schreibtisch liegt eine Zahl ganz ohne Rahmen: π. Der Direktor: „Die ist sogar irrational – und nicht mal eine Wurzel! Trotzdem braucht sie eine Schublade.“",
-    prompt: "Welcher Zahlenmenge gehört <b>π</b> in der kleinsten passenden Schublade zu? Wähle die Zahlenmenge.",
+    desc: "Auf dem Schreibtisch liegt eine Zahl ganz ohne Rahmen: π. Der Direktor: „Die ist auch irrational – und nicht mal eine Wurzel! Trotzdem braucht sie eine Schublade.“",
+    prompt: "Ordne <b>π</b> der <b>kleinsten passenden</b> Zahlenmenge zu. Wähle die Zahlenmenge.",
     solution: { token: "r" },
     commonErrors: [
       { when: "q", text: "π ist irrational – es gibt keinen Bruch p/q für π. Die Dezimalentwicklung von π bricht nie ab und ist nicht periodisch." },
@@ -965,7 +965,7 @@ DATA.rooms.keller = {
       id: "hs_ecke", x: 30, y: 430, w: 130, h: 100, label: "Dunkle Ecke",
       type: "info",
       requiresItem: "taschenlampe",
-      text: "Mit der Taschenlampe leuchtet du die dunkle Ecke hinter dem Regal aus. Dort steht mit Kreide: „1 < √2 < 2 – hier verstecke ich mich gern.“",
+      text: "Mit der Taschenlampe leuchtest du die dunkle Ecke hinter dem Regal aus. Dort steht mit Kreide: „1 < √2 < 2 – hier verstecke ich mich gern.“",
       note: "n_fund_lampe"
     },
     {
@@ -1065,7 +1065,7 @@ DATA.rooms.bibliothek = {
 
 DATA.rooms.labor = {
   name: "Raum 3: Labor",
-  msgStart: "Der Laborant Bunsen-Brock raschelt mit einer Eingrenzzange: „Willkommen im Labor! Hier wird nicht geraten – hier wird eingegrenzt. Grober Unfug bitte außerhalb der Kittelfläche.“",
+  msgStart: "Der Laborant Bunsen-Brock raschelt mit einer Eingrenzzange: „Willkommen im Labor! Hier wird nicht geraten – hier wird eingegrenzt. Grober Unfug bitte nur außerhalb des Kittels.“",
   backdrop: `
   <rect x="0" y="0" width="960" height="540" fill="#20262e"/>
   <rect x="0" y="0" width="960" height="380" fill="#28313c"/>
@@ -1132,14 +1132,14 @@ DATA.rooms.labor = {
     {
       id: "hs_tuer_lehrer", x: 690, y: 420, w: 220, h: 80, label: "Tür zum Lehrerzimmer",
       type: "door", doorId: "lehrerzimmer", requiredPuzzle: "labor_eingrenzen",
-      lockedText: "Der Laborant versperrt dir den Weg: „Erst die Eingrenzprobe bestanden – Reihenfolge ist die halbe Kette.“"
+      lockedText: "Der Laborant versperrt dir den Weg: „Erst die Eingrenzprobe bestehen – Ordnung ist das halbe Labor.“"
     }
   ]
 };
 
 DATA.rooms.lehrerzimmer = {
   name: "Raum 4: Lehrerzimmer",
-  msgStart: "Frau Tafelwisch zieht sich die Tafelstaub-Handschuhe aus: „Willkommen. Hier wird gerechnet, gehobelt und geklärt. Rund um Wurzeln. Beanstandungen bitte in den Postkorb.“",
+  msgStart: "Frau Tafelwisch zieht sich die Tafelstaub-Handschuhe aus: „Willkommen. Hier wird gerechnet, gehobelt und geklärt – rund um Wurzeln. Beanstandungen bitte in den Postkorb.“",
   backdrop: `
   <rect x="0" y="0" width="960" height="540" fill="#2c2723"/>
   <rect x="0" y="0" width="960" height="360" fill="#383129"/>
@@ -1677,7 +1677,7 @@ function activateHotspot(id) {
   if (h.type === "puzzle") {
     var p = DATA.puzzles[h.puzzleId];
     if (isSolved(p.id)) {
-      msg("<b>" + esc(p.title) + "</b> – bereits gelöst. Gut gemacht, Ermittler:in!");
+      msg("<b>" + esc(p.title) + "</b> – bereits gelöst. Gut gemacht!");
       return;
     }
     openPuzzle(p.id);
@@ -1736,15 +1736,17 @@ function tryFinale() {
   if (!requiredDone()) {
     var missing = DATA.story.requiredIds.filter(function (id) { return !isSolved(id); })
       .map(function (id) { return DATA.puzzles[id].title; });
-    msg("Frau Nachschlag hält das Telefon fest: „Erst alle Pflicht-Indizien sichern, dann angerufen!“ Noch offen: <b>" + esc(missing.join(" · ")) + "</b>");
+    msg("Der Direktor hält den Hörer fest: „Erst alle Pflicht-Indizien sichern, dann wird telefoniert!“ Noch offen: <b>" + esc(missing.join(" · ")) + "</b>");
     return;
   }
   var li = DATA.endCompetences.map(function (c) {
-    return '<li class="' + (isSolved(c.required) ? "done" : "") + '"><span class="n-title">' + c.title + '</span></li>';
+    var done = isSolved(c.required);
+    return '<li class="' + (done ? "done" : "") + '"><span class="n-title">' + c.title + "</span>" +
+           (done ? "" : ' <span class="n-text">– noch offen (Zusatzrätsel)</span>') + "</li>";
   }).join("");
   showModal(
     "<h2>Fall vorerst gelöst – fürs Erste!</h2>" +
-    "<p class=\"desc\">√2 meldet sich am Direktions-Telefon: „Danke, dass ihr endlich anerkennt, dass ich rational nicht zu fassen bin. Ich bin übrigens nie wirklich weg gewesen – nur unerhörlich. Ich rahme mich selbst. – √2“. Der Direktor setzt sich und atmet aus. Der Rahmen ist gerahmt, der Fall geschlossen.</p>" +
+    "<p class=\"desc\">√2 meldet sich am Direktions-Telefon: „Danke, dass du endlich anerkennst, dass ich rational nicht zu fassen bin. Ich war übrigens nie wirklich weg – nur unerhörlich. Ich hänge mich gleich wieder selbst in den Rahmen. – √2“. Der Direktor setzt sich und atmet aus. √2 ist zurück, der Fall geschlossen.</p>" +
     "<h3>Gesicherte Kompetenzen</h3><ul class=\"plain\" id=\"end-list\">" + li + "</ul>" +
     "<p class=\"desc\">Zusätzlich gelöste Zusatzrätsel: " +
     Object.keys(State.solved).filter(function (id) { return DATA.story.requiredIds.indexOf(id) < 0; }).length + "</p>" +
