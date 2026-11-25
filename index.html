@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tatort Zahlengerade – Der Fall √2</title>
+<style>
+  :root {
+    --bg: #1d2330;
+    --panel: #2a3242;
+    --panel-2: #343d50;
+    --text: #f2f4f8;
+    --muted: #b8c0cf;
+    --accent: #ffd046;
+    --accent-2: #5ac8fa;
+    --ok: #63d471;
+    --err: #ff7b72;
+    --line: #46506a;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; height: 100%; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: -apple-system, "SF Pro Text", "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 17px; line-height: 1.45;
+    display: flex; flex-direction: column; min-height: 100vh;
+  }
+  button, input, select { font: inherit; color: var(--text); }
+  .hidden { display: none !important; }
+
+  /* ---------- Startscreen ---------- */
+  #screen-start {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 1.2rem;
+    padding: 2rem 1rem; text-align: center;
+  }
+  #screen-start h1 { font-size: 1.9rem; margin: 0; }
+  #screen-start .title-sqrt { color: var(--accent); }
+  #screen-start .intro {
+    max-width: 640px; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 14px;
+    padding: 1rem 1.2rem; color: var(--muted); text-align: left;
+  }
+  #screen-start .intro p { margin: .5rem 0; }
+  #screen-start .intro b { color: var(--text); }
+
+  /* ---------- Buttons ---------- */
+  .btn {
+    min-height: 48px; min-width: 48px;
+    padding: 12px 20px; border: none; border-radius: 12px;
+    background: var(--accent-2); color: #0d1620; font-weight: 700;
+    cursor: pointer;
+  }
+  .btn:focus-visible { outline: 3px solid var(--accent); }
+  .btn-secondary { background: var(--panel-2); color: var(--text); border: 1px solid var(--line); }
+  .btn-small { padding: 8px 14px; min-height: 44px; font-weight: 600; }
+
+  /* ---------- Spielbildschirm ---------- */
+  #screen-game { flex: 1; display: flex; flex-direction: column; min-height: 0; height: 100vh; }
+  #topbar {
+    display: flex; gap: .5rem; align-items: center;
+    padding: .5rem .75rem; background: var(--panel);
+    border-bottom: 1px solid var(--line); flex-wrap: wrap;
+  }
+  #topbar .location { font-weight: 700; margin-right: auto; }
+  #stage { flex: 1; min-height: 0; display: flex; }
+  #stage svg { width: 100%; height: 100%; display: block; }
+  #msgbar {
+    padding: .5rem .9rem; min-height: 3.1rem;
+    background: var(--panel); border-top: 1px solid var(--line);
+    color: var(--muted);
+  }
+  #msgbar b { color: var(--text); }
+
+  /* Hotspots */
+  .hotspot { cursor: pointer; }
+  .hotspot .hit { fill: transparent; stroke: none; }
+  .hotspot:focus-visible { outline: none; }
+  .hotspot:focus-visible .hit { stroke: var(--accent); stroke-width: 4; }
+  .hotspot .marker { fill: var(--accent); fill-opacity: .85; stroke: #1d2330; stroke-width: 2; }
+  .hotspot .marker-text { font: bold 20px sans-serif; fill: #1d2330; text-anchor: middle; pointer-events: none; }
+  .hotspot.solved .marker { fill: #63d471; }
+
+  /* ---------- Panels / Überlagerungen ---------- */
+  #overlay {
+    position: fixed; inset: 0; background: rgba(10, 14, 22, .72);
+    display: flex; align-items: center; justify-content: center;
+    padding: 1rem; z-index: 40;
+  }
+  .modal {
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: 16px; padding: 1.1rem 1.2rem;
+    width: min(560px, 100%); max-height: 88vh; overflow-y: auto;
+  }
+  .modal h2 { margin: 0 0 .4rem; font-size: 1.2rem; }
+  .modal .desc { color: var(--muted); margin-bottom: .8rem; }
+  .modal .prompt { margin-bottom: .6rem; }
+  .modal .actions { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: .9rem; }
+  .answer-input {
+    width: 100%; min-height: 48px;
+    background: var(--panel-2); border: 1px solid var(--line);
+    border-radius: 10px; padding: 10px 12px; color: var(--text);
+  }
+  #feedback { margin-top: .6rem; min-height: 1.4rem; }
+  #feedback.ok { color: var(--ok); }
+  #feedback.err { color: var(--err); }
+  #feedback.info { color: var(--accent-2); }
+  .helpbox {
+    margin-top: .6rem; background: var(--panel-2);
+    border-left: 4px solid var(--accent);
+    border-radius: 8px; padding: .6rem .8rem;
+  }
+  .helpbox.merk { border-left-color: var(--accent-2); }
+  .helpbox.beispiel { border-left-color: var(--ok); }
+  .helpbox .helplabel { font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); display: block; margin-bottom: .2rem; }
+
+  /* Auswahlmöglichkeiten (Multiple-Choice) */
+  .choices { display: grid; gap: .5rem; }
+  .choices .choice {
+    min-height: 48px; text-align: left;
+    background: var(--panel-2); border: 1px solid var(--line);
+    border-radius: 10px; padding: 10px 12px; cursor: pointer;
+    display: flex; align-items: center;
+  }
+  .choices .choice:focus-visible { outline: 3px solid var(--accent); }
+
+  /* Niveau-Wahl */
+  .niveau-bar { display: flex; gap: .5rem; flex-wrap: wrap; }
+
+  ul.plain { list-style: none; padding: 0; margin: 0; }
+  ul.plain li {
+    background: var(--panel-2); border: 1px solid var(--line);
+    border-radius: 8px; padding: .45rem .6rem; margin-bottom: .35rem;
+  }
+  ul.plain li .n-title { font-weight: 700; }
+  ul.plain li .n-text { color: var(--muted); font-size: .95rem; }
+  .tag {
+    display: inline-block; font-size: .8rem; font-weight: 700;
+    background: var(--accent); color: #1d2330;
+    border-radius: 999px; padding: 0 .5rem; margin-left: .4rem;
+  }
+  #end-list li.done .n-title::after { content: " ✓"; color: var(--ok); }
+
+  #dev-panel {
+    position: fixed; left: 8px; bottom: 8px; z-index: 90;
+    background: #10141c; border: 1px solid var(--line); border-radius: 10px;
+    font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 12px;
+    padding: .5rem .7rem; max-width: 340px; max-height: 55vh; overflow-y: auto;
+    color: #c8d0dd; white-space: pre-wrap;
+  }
+  #dev-panel .t-ok { color: var(--ok); }
+  #dev-panel .t-err { color: var(--err); }
+
+  @media (max-width: 760px) {
+    body { font-size: 16px; }
+    #screen-start h1 { font-size: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<section id="screen-start">
+  <h1>Tatort Zahlengerade <span class="title-sqrt">– Der Fall √2</span></h1>
+  <div class="intro" id="intro-text"></div>
+  <button class="btn" id="btn-start" type="button">Neu starten</button>
+  <p id="continue-hint" class="hidden" style="color: var(--muted);"></p>
+</section>
+
+<section id="screen-game" class="hidden">
+  <div id="topbar">
+    <span class="location" id="location-label"></span>
+    <button class="btn btn-secondary btn-small" id="btn-notes" type="button">Notizbuch</button>
+    <button class="btn btn-secondary btn-small" id="btn-inventory" type="button">Inventar</button>
+    <button class="btn btn-secondary btn-small" id="btn-map" type="button">Räume</button>
+    <button class="btn btn-secondary btn-small" id="btn-restart" type="button">Neu starten</button>
+  </div>
+  <div id="stage"></div>
+  <div id="msgbar" aria-live="polite"></div>
+</section>
+
+<div id="overlay" class="hidden" role="dialog" aria-modal="true">
+  <div class="modal" id="modal"></div>
+</div>
+
+<div id="dev-panel" class="hidden"></div>
+
+<script>
+"use strict";
+
+/* =========================================================
+   TATORT ZAHLENGERADE – Der Fall √2
+   Struktur:
+     1. DATA   – alle Inhalte (Story, Räume, Hotspots, Rätsel,
+                 Hilfen, Lösungen, typische Fehler). Nur Daten.
+     2. ENGINE – Rendering, Zustand, Speicherung, Auswertung.
+     3. DEV    – Testfunktion, nur mit ?dev=1 aktiv.
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   1. DATEN
+   --------------------------------------------------------- */
+const DATA = { story: {}, rooms: {}, puzzles: {}, errors: {}, items: {}, notes: {} };
+
+/* ---------- Story und Rahmen ---------- */
+DATA.story = {
+  title: "Tatort Zahlengerade – Der Fall √2",
+  intro: [
+    "<p><b>Auftrag für das Detektivteam!</b></p>",
+    "<p>In der Zahlensammlung des Direktors fehlt eine Zahl: <b>√2</b>. Zurück bleiben nur ein leerer Rahmen und ein Zettel mit der Aufschrift: „Bin kurz unerhörlich. Bin gleich wieder da. Versprochen. – √2“.</p>",
+    "<p>Der Direktor tobt, der Hausmeister fegt wortlos Quadrate in den Staub, und in der Bibliothek behauptet jemand, √2 sei „nie wirklich rational“ gewesen. Ermittle an zwei Tatorten: im <b>Hausmeisterkeller</b> und in der <b>Bibliothek</b>.</p>",
+    "<p>Nimm Gegenstände auf, sammle Zahlen und Merkregeln im Notizbuch – und bring Licht in die halbdunkle Angelegenheit. Viel Erfolg, Ermittlerin oder Ermittler!</p>"
+  ].join(""),
+  requiredIds: ["keller_schloss", "bibliothek_kartei", "bibliothek_periode", "bibliothek_begruendung"]
+};
+
+/* ---------- Aufnehmbare Gegenstände ---------- */
+DATA.items = {
+  taschenlampe: {
+    name: "Taschenlampe",
+    desc: "Die Taschenlampe des Hausmeisters. Leuchtet ungewöhnlich quadratisch."
+  }
+};
+
+/* ---------- Notizbuch: Merkregeln ---------- */
+DATA.notes = {
+  n_wurzel_def: {
+    title: "Definition: Quadratwurzel",
+    text: "Für a ≥ 0 ist √a die nichtnegative Zahl, deren Quadrat a ergibt. Beispiel: √16 = 4, denn 4² = 16."
+  },
+  n_abs: {
+    title: "Merkregel: √(a²) = |a|",
+    text: "Für alle a ∈ ℝ gilt √(a²) = |a|. Zum Beispiel √((−12)²) = |−12| = 12. Der Betrag sorgt dafür, dass die Wurzel nie negativ wird."
+  },
+  n_x2: {
+    title: "Merkregel: x² = a",
+    text: "Für a > 0 hat x² = a zwei Lösungen: L = {−√a; √a}. Beispiel: x² = 121 → L = {−11; 11}. Für a = 0 gilt L = {0}, für a < 0 gibt es keine Lösung."
+  },
+  n_mengen: {
+    title: "Zahlenmengen",
+    text: "ℕ ⊂ ℤ ⊂ ℚ ⊂ ℝ. Jede rationale Zahl lässt sich als Bruch p/q (q ≠ 0) schreiben; ihre Dezimalentwicklung bricht ab oder ist periodisch. Irrationale Zahlen wie √2 gehören zu ℝ, aber nicht zu ℚ."
+  },
+  n_rat: {
+    title: "Merkregel: rational erkennen",
+    text: "Eine Dezimalzahl ist rational, wenn sie abbricht oder periodisch ist. Beispiel: 0,66666… = 0,6̄ = 2/3, also rational. „Unendlich viele Nachkommastellen“ allein heißt nicht irrational!"
+  },
+  n_irr: {
+    title: "Warum √2 irrational ist",
+    text: "√2 liegt zwischen 1 und 2, ist aber kein Bruch: Es gibt keine rationale Zahl p/q mit (p/q)² = 2. Die Dezimalentwicklung von √2 bricht nie ab und wiederholt sich nie. Deshalb erweitert man die Zahlenmenge auf die reellen Zahlen ℝ."
+  },
+  n_fund_lampe: {
+    title: "Fund in der dunklen Ecke",
+    text: "Hinter dem Regal stand mit Kreide: „1 < √2 < 2 – hier verstecke ich mich gern.“ Ein erster Hinweis: √2 liegt zwischen zwei aufeinanderfolgenden ganzen Zahlen."
+  }
+};
+
+/* ---------- Texte zur Engine ---------- */
+DATA.errors = {
+  generic: "Das stimmt noch nicht. Schau noch einmal genau hin – oder hole dir einen Tipp.",
+  soonTitle: "Verschlossene Tür",
+  soonText: "An der Tür hängt ein Schild: „Kommt bald.“ Weitere Ermittlungsorte sind noch in Bau."
+};
+
+/* ---------- Rätsel ----------
+   kind:
+     num    – numerische Eingabe, tolerant (Komma/Punkt, Leerzeichen, * und √-Schreibweisen)
+     set    – Lösungsmenge aus Zahlen (Reihenfolge egal)
+     token  – Begriff (z. B. Niveaus n/z/q/r, rational/irrational)
+     choice – Auswahlmöglichkeiten
+   commonErrors: { when: Zahl | Zeichenkette | "kind:incomplete-set", text: Feedback }
+   Drei Hilfestufen: help.hint → help.merk → help.beispiel
+   reveal: Zugabe nach 5 Fehlversuchen (verhindert Blockaden)
+---------------------------------------------------------------- */
+
+DATA.puzzles = {
+
+  /* ======== RAUM 1: HAUSMEISTERKELLER (Quadratwurzeln, KE 1/2) ======== */
+
+  keller_schloss: {
+    room: "keller", niv: "main", kind: "num",
+    title: "Zahlenschloss am Tresor",
+    desc: "Am Tresor des Hausmeisters klebt ein Zettel: „Vor lauter Wurzeln sieht man den Code vor lauter Bäumen nicht.“ Das Schloss verlangt eine Zahl. (Der Tresor blockiert den Durchgang zur Bibliothek.)",
+    prompt: "Öffne den Code: <b>√169 + √100</b>",
+    solution: { accept: [23] },
+    commonErrors: [
+      { when: 269, text: "Achtung: Zuerst die Wurzeln ziehen, dann addieren: √169 = 13 und √100 = 10. Wichtig: √(a + b) ist nicht dasselbe wie √a + √b!" },
+      { when: 13, text: "13 stimmt für √169 – aber du hast „+ √100“ vergessen. Berechne beide Wurzeln und addiere dann." },
+      { when: 3, text: "Vorsicht: √169 ist nicht 1,3. √169 = 13, denn 13² = 169." }
+    ],
+    help: {
+      hint: "Berechne zuerst jede Wurzel einzeln. Welche Zahlen ergeben hoch 2 genau 169 und genau 100?",
+      merk: "Die Quadratwurzel √a ist die nichtnegative Zahl x mit x² = a. Bekannte Quadratzahlen: 1, 4, 9, 16, 25, 36, 49, 64, 81, 100, 121, 144, 169.",
+      beispiel: "Ganz ähnlich: √144 + √36 = 12 + 6 = 18."
+    },
+    reveal: "√169 = 13 und √100 = 10, also 13 + 10 = <b>23</b>.",
+    onSolve: { note: "n_wurzel_def", found: "√169 + √100 = 23" }
+  },
+
+  keller_regal: {
+    room: "keller", niv: "leicht", kind: "num",
+    title: "Zusatzrätsel (leicht): Quadratzahl-Regal",
+    desc: "Im Regal liegen Kärtchen mit Quadratzahlen – und der Hausmeister hat auf eines sein „Wurzelwerk“ geschrieben.",
+    prompt: "Welchen Wert hat <b>√49</b>?",
+    solution: { accept: [7] },
+    commonErrors: [
+      { when: 24.5, text: "Hier wurde halbiert statt radiziert: 49 : 2 = 24,5. Gesucht ist die Zahl, die mit sich selbst multipliziert 49 ergibt." },
+      { when: 2401, text: "Du hast quadriert (49² = 2401) statt die Wurzel zu ziehen. Quadrieren und Wurzelziehen sind Umkehrungen – hier ist die Wurzel gemeint." },
+      { when: 9.8, text: "Vorsicht: √49 ist nicht 49 : 7. Gesucht ist die Zahl x mit x² = 49." }
+    ],
+    help: {
+      hint: "Welche Zahl mal sich selbst ergibt 49?",
+      merk: "√49 ist die nichtnegative Lösung von x² = 49. Es gilt 7 · 7 = 49.",
+      beispiel: "√64 = 8, denn 8 · 8 = 8² = 64."
+    },
+    reveal: "√49 = <b>7</b>, denn 7 · 7 = 49.",
+    onSolve: { note: null, found: "√49 = 7" }
+  },
+
+  keller_luke: {
+    room: "keller", niv: "standard", kind: "num",
+    title: "Zusatzrätsel (standard): Kellerluke unterm Putz",
+    desc: "Unter einer Putzschicht kommt eine alte Übung zum Vorschein. Tatsächlich: mit Minuszeichen!",
+    prompt: "Welchen Wert hat <b>√((−12)²)</b>?",
+    solution: { accept: [12] },
+    commonErrors: [
+      { when: -12, text: "Vorsicht: Aus einer Wurzel kommt nie etwas Negatives. Es gilt √(a²) = |a| – der Betrag streicht das Minus." },
+      { when: 144, text: "144 ist (−12)² – aber du sollst noch die Wurzel ziehen: √((−12)²) = √144 = 12." },
+      { when: -144, text: "Wurzeln sind nie negativ: Für a ≥ 0 ist √a die nichtnegative Lösung von x² = a." }
+    ],
+    help: {
+      hint: "Quadrat und Wurzel heben sich fast auf – nur das Vorzeichen bleibt auf der Strecke.",
+      merk: "Merkregel: √(a²) = |a| für alle a ∈ ℝ. Aus der Wurzel kommt nie eine negative Zahl.",
+      beispiel: "√((−5)²) = √25 = |−5| = 5."
+    },
+    reveal: "√((−12)²) = √144 = <b>12</b>.",
+    onSolve: { note: "n_abs", found: "√((−12)²) = 12" }
+  },
+
+  keller_werkzeug: {
+    room: "keller", niv: "plus", kind: "set",
+    title: "Zusatzrätsel (plus): Werkzeugkasten",
+    desc: "Im Werkzeugkasten des Hausmeisters liegt bei den Schrauben eine Zettel-Aufgabe: „Zwei Lösungen, wie meine zwei linken Hände.“",
+    prompt: "Gib die Lösungsmenge an: <b>x² = 121</b>",
+    solution: { set: [-11, 11] },
+    commonErrors: [
+      { when: "kind:incomplete-set", text: "Fast! Gleichungen der Form x² = a (a > 0) haben zwei Lösungen: −√a und +√a. Es fehlt noch eine." },
+      { when: 121, text: "121 ist nur der Wert von a. Gesucht sind die Zahlen x, deren Quadrat 121 ergibt." }
+    ],
+    help: {
+      hint: "Denke an positive und negative Vorzeichen. Welche Zahl hoch 2 ergibt 121?",
+      merk: "Für a > 0 gilt: x² = a hat die Lösungen x = √a und x = −√a, also L = {−√a; √a}.",
+      beispiel: "x² = 9 → L = {−3; 3}."
+    },
+    reveal: "x² = 121 → L = <b>{−11; 11}</b>.",
+    onSolve: { note: "n_x2", found: "x² = 121 → L = {−11; 11}" }
+  },
+
+  /* ======== RAUM 2: BIBLIOTHEK (Reelle Zahlen, KE 1) ======== */
+
+  bibliothek_kartei: {
+    room: "bibliothek", niv: "main", kind: "token",
+    title: "Die Kartei der Zahlenmengen",
+    desc: "Die Bibliothekarin schiebt dir eine Kartei zu: „Ordnung ist das halte Geheimnis der Zahlen. Man muss nur die kleinste passende Schublade finden.“",
+    prompt: "Ordne <b>√16</b> der <b>kleinsten passenden</b> Zahlenmenge zu. Antworten: <b>n</b> (ℕ), <b>z</b> (ℤ), <b>q</b> (ℚ), <b>r</b> (ℝ).",
+    solution: { token: "n" },
+    commonErrors: [
+      { when: "r", text: "ℝ stimmt natürlich – aber √16 ist eine natürliche Zahl, und ℕ liegt in ℚ und ℝ. Gesucht ist die kleinste Menge. (ℕ ⊂ ℤ ⊂ ℚ ⊂ ℝ.)" },
+      { when: "q", text: "ℚ stimmt auch – aber √16 = 4 ist sogar eine natürliche Zahl. Gesucht ist die kleinste passende Menge: ℕ ⊂ ℤ ⊂ ℚ ⊂ ℝ." },
+      { when: "z", text: "Fast! √16 = 4 ist sogar eine natürliche Zahl. ℕ ist die kleinste passende Menge (ℕ ⊂ ℤ ⊂ ℚ ⊂ ℝ)." }
+    ],
+    help: {
+      hint: "Berechne zuerst: Was ist √16 überhaupt für eine Zahl?",
+      merk: "ℕ ⊂ ℤ ⊂ ℚ ⊂ ℝ. Gesucht ist immer die kleinste Menge, in der die Zahl liegt. √25 = 5 liegt z. B. in ℕ.",
+      beispiel: "Die Zahl 23 gehört zu ℕ (und damit auch zu ℤ, ℚ und ℝ – aber ℕ ist am kleinsten)."
+    },
+    reveal: "√16 = <b>4</b>, also gehört √16 zur Menge <b>ℕ</b> (Lösung: n).",
+    onSolve: { note: "n_mengen", found: "√16 = 4 ∈ ℕ" }
+  },
+
+  bibliothek_periode: {
+    room: "bibliothek", niv: "main", kind: "token",
+    title: "Die endlose Rückgabe-Frist",
+    desc: "Auf dem Bibliothekscomputer läuft eine Zahl im Kreis: 0,66666… Die Bibliothekarin seufzt: „Ist die wenigstens rational? Man kann ja nie sicher sein.“",
+    prompt: "Ist die Zahl <b>0,66666…</b> (also 0,6̄) rational oder irrational? Antworte mit: <b>rational</b> oder <b>irrational</b>.",
+    solution: { token: "rational" },
+    commonErrors: [
+      { when: "irrational", text: "Vorsicht, typischer Fehler: „unendlich viele Nachkommastellen“ heißt nicht automatisch irrational! Entscheidend ist: Die Entwicklung ist periodisch (Periode 6), und 0,6̄ = 2/3 – ein Bruch, also rational." }
+    ],
+    help: {
+      hint: "Achte nicht darauf, ob die Zahl aufhört, sondern darauf, ob sich etwas wiederholt.",
+      merk: "Rationale Zahlen haben eine abbrechende oder eine periodische Dezimalentwicklung. Periodisch ⇒ als Bruch schreibbar ⇒ rational.",
+      beispiel: "0,33333… = 0,3̄ = 1/3 ist rational, obwohl die development nicht aufhört."
+    },
+    reveal: "0,66666… = 0,6̄ = 2/3, ein Bruch – also <b>rational</b>.",
+    onSolve: { note: "n_rat", found: "0,6̄ = 2/3 ∈ ℚ" }
+  },
+
+  bibliothek_begruendung: {
+    room: "bibliothek", niv: "main", kind: "choice",
+    title: "Vernehmung: Warum ist √2 nicht rational?",
+    desc: "Die Bibliothekarin tipelt auf die Theke: „Wenn Sie √2 wirklich finden wollen, müssen Sie wenigstens sagen können, warum es sich unter den Brüchen nicht wohlfühlt.“ (Auf Lehrplan-Niveau – ohne formalen Beweis.)",
+    prompt: "Wähle die zutreffende Begründung:",
+    solution: { index: 1 },
+    choices: [
+      {
+        text: "√2 ist irrational, weil seine Dezimalentwicklung irgendwann abbricht.",
+        feedback: "Falsch: Abbrechen würde √2 rational machen (abbrechend ⇒ Bruch ⇒ rational). In Wahrkeit bricht √2 nie ab – und hat auch keine Periode."
+      },
+      {
+        text: "√2 ist irrational: Es gibt keinen Bruch p/q mit (p/q)² = 2; die Dezimalentwicklung bricht nie ab und wiederholt sich nie.",
+        ok: true
+      },
+      {
+        text: "√2 ist irrational, weil man es mit dem Taschenrechner nicht exakt eingeben kann.",
+        feedback: "Der Taschenrechner zeigt nur gerundete Werte (z. B. 1,41421356…). Dass er endlich viele Stellen anzeigt, ist kein Beweis für Irrationalität."
+      },
+      {
+        text: "√2 ist irrational, weil es zwischen 1 und 2 liegt.",
+        feedback: "Zwischen 1 und 2 liegen auch viele rationale Zahlen (z. B. 1,5). „Zwischen ganzen Zahlen liegen“ allein begründet Irrationalität nicht – entscheidend ist der fehlende Bruch."
+      }
+    ],
+    help: {
+      hint: "Denk daran, was eine rationale Zahl auszeichnet: abbrechende oder periodische Dezimalentwicklung – bzw. Darstellung als Bruch.",
+      merk: "ℚ = Menge der Brüche p/q. Eine Zahl irrational zu nennen heißt: Es gibt keinen solchen Bruch. Merke: Das Abbrechen der Dezimalentwicklung im Taschenrechner ist kein Zeichen für rational!",
+      beispiel: "0,5 = 1/2 ist rational (bricht ab). 0,3̄ = 1/3 ist rational (periodisch). √2 gehört zu keiner der beiden Gruppen."
+    },
+    reveal: "Richtig ist: Es gibt keinen Bruch p/q mit (p/q)² = 2; die Dezimalentwicklung von √2 bricht nie ab und wiederholt sich nie.",
+    onSolve: { note: "n_irr", found: "√2 ∉ ℚ, denn kein Bruch p/q erfüllt (p/q)² = 2" }
+  },
+
+  bibliothek_negativ: {
+    room: "bibliothek", niv: "leicht", kind: "token",
+    title: "Zusatzrätsel (leicht): Der negative Gast",
+    desc: "In der Leseecke sitzt eine negative Zahl und gibt vor, unschuldig zu sein.",
+    prompt: "Ordne <b>−7</b> der kleinsten passenden Zahlenmenge zu. Antworten: <b>n</b> (ℕ), <b>z</b> (ℤ), <b>q</b> (ℚ), <b>r</b> (ℝ).",
+    solution: { token: "z" },
+    commonErrors: [
+      { when: "q", text: "ℚ stimmt, aber −7 ist eine ganze Zahl – die kleinste passende Menge ist ℤ. (ℕ umfasst nur die Zahlen 1, 2, 3, …; negative Zahlen gehören nicht zu ℕ.)" },
+      { when: "r", text: "ℝ stimmt, ist aber nicht die kleinste Menge: −7 ist ganzzahlig, gehört also schon zu ℤ. (ℕ ⊂ ℤ ⊂ ℚ ⊂ ℝ.)" },
+      { when: "n", text: "ℕ enthält nur die Zahlen 1, 2, 3, … – negative Zahlen gehören nicht dazu. −7 liegt in ℤ." }
+    ],
+    help: {
+      hint: "Negative ganze Zahlen passen nicht mehr in ℕ – welche Menge ist die nächstgrößere Schublade?",
+      merk: "ℕ = {1; 2; 3; …}, ℤ enthält auch die negativen ganzen Zahlen und die 0. Gesucht ist die kleinste passende Menge.",
+      beispiel: "−100 gehört zu ℤ (nicht zu ℕ)."
+    },
+    reveal: "−7 ist eine ganze Zahl: kleinste passende Menge <b>ℤ</b> (Lösung: z).",
+    onSolve: { note: null, found: "−7 ∈ ℤ" }
+  },
+
+  bibliothek_eingrenzen: {
+    room: "bibliothek", niv: "standard", kind: "set",
+    title: "Zusatzrätsel (standard): Das Versteck",
+    desc: "Der Kreide-Hinweis aus dem Keller taucht wieder auf – diesmal als Aufgabe in einem alten Lehrbuch.",
+    prompt: "Zwischen welchen <b>zwei aufeinanderfolgenden ganzen Zahlen</b> liegt √2? (Erst die kleinere, dann die größere.)",
+    solution: { set: [1, 2] },
+    commonErrors: [
+      { when: "kind:incomplete-set", text: "Zwei Zahlen, bitte! Es sind zwei aufeinanderfolgende ganze Zahlen gesucht – die kleinere zuerst." },
+      { when: "kind:grenzen-falsch", text: "Prüfe mit dem Quadrieren: Liegt √2 über 1 und unter seiner Obergrenze, ohne eine Quadratzahl zu treffen?" }
+    ],
+    help: {
+      hint: "Quadriere die Kandidaten: 1² = 1 und 2² = 4. Wo liegt die 2 dazwischen?",
+      merk: "Für 0 < a gilt: Liegt a zwischen zwei Quadratzahlen, dann liegt √a zwischen den zugehörigen Grundzahlen. Beispiel: 4 < 5 < 9 ⇒ 2 < √5 < 3.",
+      beispiel: "√10 liegt zwischen 3 und 4, denn 3² = 9 < 10 < 16 = 4². (Hinweis: Du darfst hier näherungsweise überlegen – das Abschätzen von Wurzeln gehört zum Repertoire.)"
+    },
+    reveal: "1² = 1 < 2 < 4 = 2², also liegt <b>√2</b> zwischen <b>1 und 2</b>.",
+    onSolve: { note: null, found: "1 < √2 < 2" }
+  },
+
+  bibliothek_versteck: {
+    room: "bibliothek", niv: "plus", kind: "token",
+    title: "Zusatzrätsel (plus): Der Dramatische Auftritt",
+    desc: "Hinter dem „Goldenen Schnitt“-Poster ist eine Notiz: „Alle behaupten, ich sei irrational. Alias beweist es!“ (Taschenrechner erlaubt.)",
+    prompt: "Entscheide: Ist <b>√2 · √8</b> rational oder irrational? Antworte mit <b>rational</b> oder <b>irrational</b>.",
+    solution: { token: "rational" },
+    commonErrors: [
+      { when: "irrational", text: "Vorsicht: Produktregel nutzen! √2 · √8 = √(2 · 8) = √16 = 4. Produkte irrationaler Zahlen können also sehr wohl rational sein." }
+    ],
+    help: {
+      hint: "Nutze die Produktregel für Wurzeln: √a · √b = √(a · b).",
+      merk: "Produkt der Wurzeln = Wurzel des Produkts: √a · √b = √(a·b), z. B. √3 · √7 = √21. Taschenrechner nur zur Kontrolle: √2 ≈ 1,41…, √8 ≈ 2,83…, Produkt ≈ 4.",
+      beispiel: "√2 · √18 = √36 = 6 – rational!"
+    },
+    reveal: "√2 · √8 = √16 = <b>4</b>, also <b>rational</b>.",
+    onSolve: { note: null, found: "√2 · √8 = 4 ∈ ℚ" }
+  }
+};
+
+/* ---------- Räume ----------
+   room: { name, msgStart, backdrop (SVG-String), hotspots[] }
+   Hotspot: { id, x, y, w, h, label,
+              type: 'puzzle' | 'item' | 'info' | 'door' | 'niveau' | 'finale',
+              ... je nach type: puzzleId / itemId / text / doorId / requiredId / puzzleIds }
+---------------------------------------------------------------- */
+
+DATA.rooms.keller = {
+  name: "Raum 1: Hausmeisterkeller",
+  msgStart: "Der Hausmeister Herr Kehrweger fegt Quadrate in den Staub: „Hier unten ist alles wunderbar geordnet. Alles! Nur der Tresor verhält sich neuerdings eigensinnig.“",
+  backdrop: `
+  <rect x="0" y="0" width="960" height="540" fill="#2b2620"/>
+  <rect x="0" y="0" width="960" height="420" fill="#3a332a"/>
+  <line x1="0" y1="420" x2="960" y2="420" stroke="#241f19" stroke-width="6"/>
+  <g fill="#5a4632" stroke="#3a2c1e" stroke-width="3">
+    <rect x="60" y="120" width="300" height="40" rx="6"/>
+    <rect x="60" y="220" width="300" height="40" rx="6"/>
+    <rect x="60" y="320" width="300" height="40" rx="6"/>
+  </g>
+  <g fill="#c9a86a" stroke="#8a6f43" stroke-width="2">
+    <rect x="80" y="130" width="36" height="24"/>
+    <rect x="126" y="130" width="36" height="24"/>
+    <rect x="172" y="130" width="36" height="24"/>
+    <rect x="80" y="230" width="36" height="24"/>
+    <rect x="126" y="230" width="36" height="24"/>
+    <rect x="172" y="230" width="36" height="24"/>
+    <rect x="220" y="230" width="60" height="24"/>
+    <rect x="80" y="330" width="36" height="24"/>
+    <rect x="220" y="330" width="60" height="24"/>
+  </g>
+  <g font-family="sans-serif" font-size="14" fill="#3a2c1e" text-anchor="middle">
+    <text x="98" y="147">49</text><text x="144" y="147">64</text><text x="190" y="147">1</text>
+    <text x="98" y="247">25</text><text x="144" y="247">144</text><text x="190" y="247">9</text>
+    <text x="250" y="247">169</text><text x="98" y="347">16</text><text x="250" y="347">100</text>
+  </g>
+  <g>
+    <rect x="660" y="150" width="180" height="240" rx="10" fill="#5f6470" stroke="#33374a" stroke-width="4"/>
+    <circle cx="750" cy="230" r="34" fill="#2a3040" stroke="#ffd046" stroke-width="3"/>
+    <rect x="735" y="290" width="30" height="70" rx="6" fill="#2a3040"/>
+    <rect x="676" y="164" width="148" height="6" fill="#454b59"/>
+    <text x="750" y="400" font-family="sans-serif" font-size="16" fill="#ffd046" text-anchor="middle">TRESOR</text>
+  </g>
+  <g>
+    <rect x="470" y="60" width="150" height="360" rx="8" fill="#26303a" stroke="#3c4a58" stroke-width="4"/>
+    <rect x="470" y="400" width="150" height="14" rx="4" fill="#111"/>
+    <text x="545" y="70" font-family="sans-serif" font-size="16" fill="#7f93a8" text-anchor="middle">↑ Treppe</text>
+  </g>
+  <g>
+    <rect x="180" y="430" width="90" height="90" rx="8" fill="#7a5b3a" stroke="#4d3823" stroke-width="3"/>
+    <rect x="188" y="438" width="26" height="8" fill="#4d3823"/>
+    <text x="225" y="492" font-family="sans-serif" font-size="14" fill="#e5d7bd" text-anchor="middle">Kiste</text>
+  </g>
+  <g>
+    <rect x="640" y="440" width="220" height="14" rx="6" fill="#8a6f43"/>
+    <rect x="848" y="430" width="16" height="80" rx="6" fill="#a8865a"/>
+  </g>
+  <g>
+    <rect x="350" y="300" width="90" height="120" rx="10" fill="#31302e" stroke="#54514c" stroke-width="3"/>
+    <path d="M370 380 l20 -60 l20 60 z" fill="none" stroke="#6b7f93" stroke-width="3"/>
+    <text x="395" y="408" font-family="sans-serif" font-size="14" fill="#9fb3c8" text-anchor="middle">Luke</text>
+  </g>
+  <g>
+    <rect x="330" y="430" width="130" height="80" rx="8" fill="#4a4038" stroke="#211c16" stroke-width="3"/>
+    <circle cx="395" cy="470" r="10" fill="#ffd046"/>
+    <text x="395" y="530" font-family="sans-serif" font-size="14" fill="#c9b899" text-anchor="middle">Werkzeugkasten</text>
+  </g>`,
+  hotspots: [
+    {
+      id: "hs_tresor", x: 640, y: 130, w: 220, h: 270, label: "Tresor mit Zahlenschloss",
+      type: "puzzle", puzzleId: "keller_schloss"
+    },
+    {
+      id: "hs_regal", x: 50, y: 110, w: 320, h: 260, label: "Quadratzahl-Regal",
+      type: "niveau", puzzleIds: ["keller_regal", "keller_luke", "keller_werkzeug"]
+    },
+    {
+      id: "hs_kiste", x: 170, y: 420, w: 110, h: 100, label: "Alte Kiste",
+      type: "item", itemId: "taschenlampe",
+      text: "In der Kiste liegt eine Taschenlampe – nein, zwei? Quatsch, eine. Die Hälfte von zwei eben."
+    },
+    {
+      id: "hs_ecke", x: 30, y: 430, w: 130, h: 100, label: "Dunkle Ecke",
+      type: "info",
+      requiresItem: "taschenlampe",
+      text: "Mit der Taschenlampe leuchtet du die dunkle Ecke hinter dem Regal aus. Dort steht mit Kreide: „1 < √2 < 2 – hier verstecke ich mich gern.“",
+      note: "n_fund_lampe"
+    },
+    {
+      id: "hs_tuer_bib", x: 620, y: 380, w: 260, h: 150, label: "Tür zur Bibliothek",
+      type: "door", doorId: "bibliothek", requiredPuzzle: "keller_schloss",
+      lockedText: "Der Weg zur Bibliothek ist vom Tresor blockiert. Herr Kehrweger: „Erst der Code, dann der Korridor.“"
+    }
+  ]
+};
+
+DATA.rooms.bibliothek = {
+  name: "Raum 2: Bibliothek",
+  msgStart: "Die Bibliothekarin Frau Nachschlag wischt sich eine Träne weg: „√2 hat hier jahrelang im Regal zwischen 1 und 2 gesessen. So eine unruhige Zahl – aber ordentlich war sie!“",
+  backdrop: `
+  <rect x="0" y="0" width="960" height="540" fill="#33272b"/>
+  <rect x="0" y="0" width="960" height="120" fill="#403135"/>
+  <g stroke="#4a363d" stroke-width="4" fill="#5a424a">
+    <rect x="40" y="100" width="250" height="30"/>
+    <rect x="40" y="200" width="250" height="30"/>
+    <rect x="40" y="300" width="250" height="30"/>
+    <rect x="40" y="170" width="250" height="15" fill="#2e2426"/>
+    <rect x="40" y="270" width="250" height="15" fill="#2e2426"/>
+  </g>
+  <g fill="#8a6a75" stroke="#5f4a52" stroke-width="2">
+    <rect x="55" y="80" width="20" height="60"/>
+    <rect x="83" y="80" width="20" height="60"/>
+    <rect x="111" y="80" width="20" height="60"/>
+    <rect x="55" y="180" width="20" height="60"/>
+    <rect x="83" y="180" width="20" height="60"/>
+    <rect x="111" y="180" width="20" height="60"/>
+    <rect x="55" y="280" width="20" height="60"/>
+    <rect x="83" y="280" width="20" height="60"/>
+  </g>
+  <g>
+    <rect x="620" y="80" width="320" height="260" rx="10" fill="#57424b" stroke="#2e2426" stroke-width="4"/>
+    <rect x="640" y="100" width="120" height="90" fill="#2e2426" stroke="#8a6a75" stroke-width="2"/>
+    <text x="700" y="150" font-family="sans-serif" font-size="34" fill="#ffd046" text-anchor="middle">√2</text>
+    <rect x="780" y="100" width="140" height="80" fill="#2e2426" stroke="#8a6a75" stroke-width="2"/>
+    <text x="850" y="150" font-family="sans-serif" font-size="22" fill="#f2f4f8" text-anchor="middle">ℕℤℚℝ</text>
+    <rect x="640" y="210" width="280" height="110" rx="6" fill="#2e2426"/>
+    <text x="780" y="245" font-family="sans-serif" font-size="17" fill="#c9b26b" text-anchor="middle">„Zahlenmengen-“</text>
+    <text x="780" y="270" font-family="sans-serif" font-size="17" fill="#c9b26b" text-anchor="middle">Kartei – bitte
+</text>
+    <text x="780" y="295" font-family="sans-serif" font-size="17" fill="#c9b26b" text-anchor="middle">Ordnung halten“"</text>
+  </g>
+  <g>
+    <rect x="360" y="330" width="200" height="120" rx="8" fill="#7a5b3a" stroke="#4d3823" stroke-width="3"/>
+    <rect x="360" y="300" width="200" height="34" rx="6" fill="#94764f"/>
+    <text x="460" y="324" font-family="sans-serif" font-size="16" fill="#3a2c1e" text-anchor="middle">Theke</text>
+  </g>
+  <g>
+    <rect x="600" y="460" width="80" height="60" rx="6" fill="#453a45" stroke="#241c24" stroke-width="3"/>
+    <circle cx="640" cy="445" r="10" fill="#ffd046"/>
+    <text x="640" y="440" font-family="sans-serif" font-size="12" fill="#1d2330" text-anchor="middle">?</text>
+  </g>
+  <g>
+    <rect x="850" y="150" width="90" height="130" rx="10" fill="#9c7d3c" stroke="#6b5426" stroke-width="3"/>
+    <circle cx="895" cy="200" r="28" fill="#d9b650" stroke="#8a6f30" stroke-width="2"/>
+    <rect x="865" y="160" width="60" height="8" rx="4" fill="#7a6228"/>
+    <text x="877" y="258" font-family="sans-serif" font-size="13" fill="#e8dcae" text-anchor="middle">Poster</text>
+  </g>
+  <g>
+    <rect x="100" y="460" width="180" height="50" rx="8" fill="#574a5e" stroke="#2f2735" stroke-width="3"/>
+    <text x="190" y="492" font-family="sans-serif" font-size="15" fill="#e0d7e8" text-anchor="middle">Tür zum Keller</text>
+  </g>`,
+  hotspots: [
+    {
+      id: "hs_kartei", x: 630, y: 90, w: 300, h: 240, label: "Kartei der Zahlenmengen",
+      type: "puzzle", puzzleId: "bibliothek_kartei"
+    },
+    {
+      id: "hs_computer", x: 360, y: 290, w: 200, h: 170, label: "Bibliothekscomputer",
+      type: "puzzle", puzzleId: "bibliothek_periode"
+    },
+    {
+      id: "hs_theke", x: 360, y: 430, w: 200, h: 60, label: "Theke der Bibliothekarin",
+      type: "puzzle", puzzleId: "bibliothek_begruendung"
+    },
+    {
+      id: "hs_zusatz", x: 40, y: 100, w: 250, h: 240, label: "Regal mit Übungsbüchern",
+      type: "niveau", puzzleIds: ["bibliothek_negativ", "bibliothek_eingrenzen", "bibliothek_versteck"]
+    },
+    {
+      id: "hs_telefon", x: 590, y: 440, w: 100, h: 80, label: "Telefon des Direktors",
+      type: "finale"
+    },
+    {
+      id: "hs_tuer_keller", x: 90, y: 440, w: 200, h: 80, label: "Zurück zum Hausmeisterkeller",
+      type: "door", doorId: "keller"
+    }
+  ]
+};
+
+/* Platzhalter-Türen (Räume 3–5): erscheinen im „Räume“-Dialog */
+DATA.placeholderRooms = [
+  { id: "labor", name: "Raum 3: Labor", hint: "Abschätzen und eingrenzen – kommt bald." },
+  { id: "lehrerzimmer", name: "Raum 4: Lehrerzimmer", hint: "Mit Wurzeltermen rechnen – kommt bald." },
+  { id: "direktorat", name: "Raum 5: Direktorat", hint: "Das Finale – kommt bald." }
+];
+
+DATA.mapPuzzleByRoom = {};
+Object.keys(DATA.puzzles).forEach(function (id) {
+  var p = DATA.puzzles[id];
+  (DATA.mapPuzzleByRoom[p.room] = DATA.mapPuzzleByRoom[p.room] || []).push(id);
+});
+
+DATA.endCompetences = [
+  { title: "Quadratwurzeln bestimmen (√169, √49)", required: "keller_schloss" },
+  { title: "√(a²) = |a| anwenden", required: "keller_luke" },
+  { title: "Gleichungen x² = a lösen (L = {−√a; √a})", required: "keller_werkzeug" },
+  { title: "Zahlen in ℕ, ℤ, ℚ, ℝ einordnen", required: "bibliothek_kartei" },
+  { title: "Rational und irrational unterscheiden", required: "bibliothek_periode" },
+  { title: "Begründen, warum √2 nicht rational ist", required: "bibliothek_begruendung" }
+];
+
+/* ---------------------------------------------------------
+   2. ENGINE
+   --------------------------------------------------------- */
+function setState(msg) {
+  document.getElementById("intro-text").innerHTML = DATA.story.intro;
+  document.getElementById("continue-hint").classList.add("hidden");
+  if (msg !== undefined) {
+    document.getElementById("continue-hint").textContent = msg;
+    document.getElementById("continue-hint").classList.remove("hidden");
+  }
+}
+setState();
+</script>
+</body>
+</html>
