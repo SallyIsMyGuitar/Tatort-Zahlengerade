@@ -227,7 +227,7 @@ DATA.story = {
     "<p>Der Direktor tobt, der Hausmeister fegt wortlos Quadrate in den Staub, und in der Bibliothek behauptet jemand, √2 sei „nie wirklich rational“ gewesen. Ermittle an fünf Tatorten: im <b>Hausmeisterkeller</b>, in der <b>Bibliothek</b>, im <b>Labor</b>, im <b>Lehrerzimmer</b> und im <b>Direktorat</b>.</p>",
     "<p>Nimm Gegenstände auf, sammle Zahlen und Merkregeln im Notizbuch – und bring Licht in die halbdunkle Angelegenheit. Viel Erfolg, Ermittlerin oder Ermittler!</p>"
   ].join(""),
-  requiredIds: ["keller_schloss", "bibliothek_kartei", "bibliothek_periode", "bibliothek_begruendung", "labor_eingrenzen", "labor_x2", "lehrer_produkt", "lehrer_radizieren", "direktor_code", "direktor_taeter"],
+  requiredIds: ["keller_schloss", "bibliothek_kartei", "bibliothek_periode", "bibliothek_begruendung", "labor_eingrenzen", "labor_x2", "lehrer_produkt", "lehrer_radizieren", "lehrer_nenner", "direktor_code", "direktor_gleichung", "direktor_taeter"],
   roomOrder: ["keller", "bibliothek", "labor", "lehrerzimmer", "direktorat"],
   /* Freischaltung der Räume: Rätsel-ID, die gelöst sein muss (null = offen). */
   roomUnlock: {
@@ -709,11 +709,11 @@ DATA.puzzles = {
     onSolve: { note: null, found: "√32 : √8 = 2" }
   },
 
-  lehrer_standard: {
+  lehrer_nenner: {
     ke: "KE 3", op: "Mache den Nenner rational", calc: { expr: "5/√3" },
-    room: "lehrerzimmer", niv: "standard", kind: "term",
-    title: "Zusatzrätsel (standard): Wählerische Kaffeemaschine",
-    desc: "Die Kaffeemaschine mahlt nur, wenn im Nenner keine Wurzel steht. Pädagogisch wertvoll.",
+    room: "lehrerzimmer", niv: "main", kind: "term",
+    title: "Der Kopierer mit Nennerangst",
+    desc: "Der Kopierer druckt nur Brüche, in deren Nenner keine Wurzel steht. Frau Tafelwisch flüstert: „Er hat eine Phobie. Wir nennen es Nennerangst.“",
     prompt: "Mach den Nenner rational und gib das Ergebnis an: <b>5/√3</b>",
     solution: { token: "5√3/3", tokenAlt: ["5/3√3", "(5/3)√3"] },
     commonErrors: [
@@ -722,11 +722,32 @@ DATA.puzzles = {
     ],
     help: {
       hint: "Erweitere Zähler und Nenner mit √3. Was ergibt √3 · √3 im Nenner?",
-      merk: "Nenner rational machen: mit √b erweitern, denn √b · √b = b. Beispiel: 5/√3 = 5√3/3.",
+      merk: "Nenner rational machen: Zähler und Nenner mit √b erweitern, denn √b · √b = b. Beispiel: 2/√5 = (2 · √5)/(√5 · √5) = 2√5/5.",
       beispiel: "1/√2 = √2/2 (erweitert mit √2)."
     },
     reveal: "5/√3 = (5 · √3)/(√3 · √3) = <b>5√3/3</b>.",
     onSolve: { note: "n_nenner", found: "5/√3 = 5√3/3" }
+  },
+
+  lehrer_standard: {
+    ke: "KE 3", op: "Mache den Nenner rational", calc: { expr: "6/√2" },
+    room: "lehrerzimmer", niv: "standard", kind: "term",
+    title: "Zusatzrätsel (standard): Der Brief ohne Absender",
+    desc: "Im Postkorb liegt ein Brief, adressiert an „die Kollegin mit der Wurzel im Nenner“. Darin nur ein Bruch.",
+    prompt: "Mache den Nenner rational und vereinfache so weit wie möglich: <b>6/√2</b>",
+    solution: { token: "3√2" },
+    commonErrors: [
+      { when: "6√2/2", text: "Richtig erweitert! Jetzt noch kürzen: 6√2/2 = 3√2." },
+      { when: "3", text: "Vorsicht: Beim Erweitern mit √2 bleibt im Zähler ein √2 stehen: 6/√2 = 6√2/2 = 3√2." },
+      { when: "6√2", text: "Der neue Nenner fehlt: 6/√2 = 6√2/(√2 · √2) = 6√2/2. Kürze dann noch durch 2." }
+    ],
+    help: {
+      hint: "Erweitere mit √2. Kann man das Ergebnis danach noch kürzen?",
+      merk: "Nenner rational machen: mit √b erweitern, denn √b · √b = b. Danach prüfen, ob sich der Bruch kürzen lässt.",
+      beispiel: "10/√5 = 10√5/5 = 2√5."
+    },
+    reveal: "6/√2 = 6√2/(√2 · √2) = 6√2/2 = <b>3√2</b>.",
+    onSolve: { note: null, found: "6/√2 = 3√2" }
   },
 
   lehrer_plus: {
@@ -805,6 +826,29 @@ DATA.puzzles = {
     },
     reveal: "√2 hat sich selbst „verschwinden“ lassen, um zu zeigen: Rational bin ich nicht zu fassen. Rückkehr: zugesagt.",
     onSolve: { note: null, found: "Fall gelöst: √2 ist (fast) zurück" }
+  },
+
+  direktor_gleichung: {
+    ke: "KE 2", op: "Löse", calc: { square: 50 },
+    room: "direktorat", niv: "main", kind: "termset",
+    title: "Der Aktenschrank mit Doppelschloss",
+    desc: "Der Aktenschrank des Direktors hat zwei Schlösser – eins links, eins rechts. „Symmetrie“, sagt er stolz, „ist das halbe Direktorat.“ Auf dem Schild steht eine Gleichung.",
+    prompt: "Löse <b>x² = 50</b> und vereinfache die Lösungen durch teilweises Radizieren.",
+    notSimplified: "Die Werte stimmen – aber √50 lässt sich noch teilweise radizieren: √50 = √(25 · 2) = 5√2.",
+    solution: { terms: ["-5√2", "5√2"] },
+    commonErrors: [
+      { when: ["-√50", "√50"], text: "Beide Lösungen stimmen – aber √50 lässt sich noch vereinfachen: √50 = √(25 · 2) = 5√2. Also L = {−5√2; 5√2}." },
+      { when: "kind:incomplete-set", text: "Das Schloss hat zwei Seiten: x² = 50 hat zwei Lösungen, eine positive und eine negative." },
+      { when: ["25", "-25"], text: "50 : 2 = 25 ist halbiert, nicht radiziert. Gesucht sind die Zahlen x mit x² = 50." },
+      { when: ["-2√5", "2√5"], text: "Prüfe die Zerlegung: (2√5)² = 4 · 5 = 20, nicht 50. Richtig ist 50 = 25 · 2, also √50 = 5√2." }
+    ],
+    help: {
+      hint: "Zuerst wie gewohnt: x² = a hat die Lösungen ±√a. Dann √50 teilweise radizieren.",
+      merk: "x² = a (a > 0) ⇒ L = {−√a; √a}. Teilweises Radizieren: größten quadratischen Faktor suchen, z. B. √(a² · b) = a√b.",
+      beispiel: "x² = 18 ⇒ L = {−√18; √18} = {−3√2; 3√2}, denn √18 = √(9 · 2) = 3√2."
+    },
+    reveal: "x² = 50 ⇒ x = ±√50 = ±√(25 · 2) = ±5√2, also <b>L = {−5√2; 5√2}</b>.",
+    onSolve: { note: null, found: "x² = 50 → L = {−5√2; 5√2}" }
   },
 
   direktor_leicht: {
@@ -1166,6 +1210,14 @@ DATA.rooms.lehrerzimmer = {
     <text x="635" y="398" font-family="sans-serif" font-size="15" fill="#dde5ed" text-anchor="middle">Getränkeautomat</text>
   </g>
   <g>
+    <rect x="770" y="120" width="160" height="150" rx="10" fill="#c9ccd2" stroke="#4b4f58" stroke-width="4"/>
+    <rect x="785" y="135" width="130" height="34" rx="4" fill="#4b4f58"/>
+    <rect x="790" y="185" width="80" height="40" rx="4" fill="#10151b"/>
+    <text x="830" y="211" font-family="sans-serif" font-size="17" fill="#63d471" text-anchor="middle">5/√3</text>
+    <circle cx="895" cy="205" r="10" fill="#ff7b72"/>
+    <text x="850" y="290" font-family="sans-serif" font-size="15" fill="#e8ddc8" text-anchor="middle">Kopierer</text>
+  </g>
+  <g>
     <rect x="760" y="330" width="170" height="90" rx="8" fill="#5b4f3e" stroke="#2f271e" stroke-width="3"/>
     <rect x="768" y="322" width="70" height="14" rx="6" fill="#e8e2d4"/>
     <text x="845" y="442" font-family="sans-serif" font-size="15" fill="#e8ddc8" text-anchor="middle">Postkorb</text>
@@ -1186,6 +1238,10 @@ DATA.rooms.lehrerzimmer = {
     {
       id: "hs_automat", x: 560, y: 130, w: 150, h: 265, label: "Getränkeautomat",
       type: "puzzle", puzzleId: "lehrer_radizieren"
+    },
+    {
+      id: "hs_kopierer", x: 760, y: 110, w: 180, h: 170, label: "Kopierer",
+      type: "puzzle", puzzleId: "lehrer_nenner"
     },
     {
       id: "hs_postkorb", x: 750, y: 300, w: 190, h: 125, label: "Postkorb mit Übungszetteln",
@@ -1234,6 +1290,13 @@ DATA.rooms.direktorat = {
     <text x="430" y="238" font-family="sans-serif" font-size="14" fill="#d7cfe8" text-anchor="middle">Panik-Code-Rahmen</text>
   </g>
   <g>
+    <rect x="320" y="270" width="160" height="150" rx="6" fill="#5a4f3f" stroke="#2a2418" stroke-width="4"/>
+    <line x1="320" y1="345" x2="480" y2="345" stroke="#2a2418" stroke-width="3"/>
+    <circle cx="350" cy="310" r="8" fill="#ffd046"/><circle cx="450" cy="310" r="8" fill="#ffd046"/>
+    <text x="400" y="385" font-family="sans-serif" font-size="18" fill="#f2e9d8" text-anchor="middle">x² = 50</text>
+    <text x="400" y="440" font-family="sans-serif" font-size="14" fill="#d7cfe8" text-anchor="middle">Aktenschrank</text>
+  </g>
+  <g>
     <rect x="60" y="440" width="220" height="60" rx="8" fill="#4a5560" stroke="#22292f" stroke-width="3"/>
     <text x="170" y="477" font-family="sans-serif" font-size="15" fill="#dde5ed" text-anchor="middle">Zurück zum Lehrerzimmer</text>
   </g>
@@ -1247,6 +1310,10 @@ DATA.rooms.direktorat = {
     {
       id: "hs_direktor_code", x: 380, y: 90, w: 110, h: 160, label: "Rahmen mit Panik-Code",
       type: "puzzle", puzzleId: "direktor_code"
+    },
+    {
+      id: "hs_aktenschrank", x: 310, y: 260, w: 180, h: 170, label: "Aktenschrank mit Doppelschloss",
+      type: "puzzle", puzzleId: "direktor_gleichung"
     },
     {
       id: "hs_schreibtisch", x: 520, y: 220, w: 280, h: 170, label: "Schreibtisch des Direktors",
@@ -1285,7 +1352,8 @@ DATA.endCompetences = [
   { title: "Begründen, warum √2 nicht rational ist", required: "bibliothek_begruendung" },
   { title: "Produkt und Quotient von Wurzeln (√3 · √7 = √21)", required: "lehrer_produkt" },
   { title: "Teilweises Radizieren (√72 = 6√2)", required: "lehrer_radizieren" },
-  { title: "Nenner rational machen (5/√3 = 5√3/3)", required: "lehrer_standard" },
+  { title: "Nenner rational machen (5/√3 = 5√3/3)", required: "lehrer_nenner" },
+  { title: "x² = a lösen und Lösungen vereinfachen (x² = 50)", required: "direktor_gleichung" },
   { title: "Gemischte Wurzelterme zusammenfassen (√2 + √8 = 3√2)", required: "direktor_plus" }
 ];
 
