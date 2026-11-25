@@ -1050,71 +1050,81 @@ DATA.rooms.keller = {
   name: "Raum 1: Hausmeisterkeller",
   msgStart: "Der Hausmeister Herr Kehrweger fegt Quadrate in den Staub: „Hier unten ist alles wunderbar geordnet. Alles! Nur der Tresor verhält sich neuerdings eigensinnig.“",
   backdrop: `
-  <rect x="0" y="0" width="960" height="540" fill="#2b2620"/>
-  <rect x="0" y="0" width="960" height="420" fill="#3a332a"/>
-  <line x1="0" y1="420" x2="960" y2="420" stroke="#241f19" stroke-width="6"/>
-  <g fill="#5a4632" stroke="#3a2c1e" stroke-width="3">
-    <rect x="60" y="120" width="300" height="40" rx="6"/>
-    <rect x="60" y="220" width="300" height="40" rx="6"/>
-    <rect x="60" y="320" width="300" height="40" rx="6"/>
+  <rect width="960" height="420" fill="url(#p-brick)"/>
+  <rect width="960" height="420" fill="#120d09" opacity=".28"/>
+  <rect y="414" width="960" height="10" fill="#17120e"/>
+  <rect y="424" width="960" height="116" fill="#2b2520"/>
+  <path d="M0 468 H960 M0 506 H960 M120 424 L90 540 M420 424 L410 540 M760 424 L790 540" stroke="#231e19" stroke-width="2"/>
+  <rect x="0" y="16" width="960" height="14" fill="#5b5f66"/><rect x="0" y="16" width="960" height="4" fill="#80858d"/>
+  <g fill="#43474e"><rect x="200" y="12" width="12" height="22" rx="2"/><rect x="690" y="12" width="12" height="22" rx="2"/></g>
+  <line x1="300" y1="30" x2="300" y2="64" stroke="#1a1a1a" stroke-width="3"/>
+  <rect x="294" y="60" width="12" height="10" fill="#555"/>
+  <circle cx="300" cy="80" r="12" fill="#ffe7a3"/>
+  <circle cx="300" cy="90" r="320" fill="url(#g-bulb)"/>
+  <g filter="url(#f-shadow)">
+    <rect x="54" y="96" width="312" height="276" rx="4" fill="#33261a"/>
+    <rect x="60" y="102" width="300" height="264" fill="#2a1f15"/>
+    <g fill="url(#g-wood)"><rect x="56" y="154" width="308" height="12"/><rect x="56" y="254" width="308" height="12"/><rect x="56" y="354" width="308" height="14"/></g>
   </g>
-  <g fill="#c9a86a" stroke="#8a6f43" stroke-width="2">
-    <rect x="80" y="130" width="36" height="24"/>
-    <rect x="126" y="130" width="36" height="24"/>
-    <rect x="172" y="130" width="36" height="24"/>
-    <rect x="80" y="230" width="36" height="24"/>
-    <rect x="126" y="230" width="36" height="24"/>
-    <rect x="172" y="230" width="36" height="24"/>
-    <rect x="220" y="230" width="60" height="24"/>
-    <rect x="80" y="330" width="36" height="24"/>
-    <rect x="220" y="330" width="60" height="24"/>
+  <g fill="#e2c78c" stroke="#8a6f43" stroke-width="2">
+    <rect x="80" y="130" width="36" height="24" rx="2"/><rect x="126" y="130" width="36" height="24" rx="2"/><rect x="172" y="130" width="36" height="24" rx="2"/>
+    <rect x="80" y="230" width="36" height="24" rx="2"/><rect x="126" y="230" width="36" height="24" rx="2"/><rect x="172" y="230" width="36" height="24" rx="2"/>
+    <rect x="220" y="230" width="60" height="24" rx="2"/><rect x="80" y="330" width="36" height="24" rx="2"/><rect x="220" y="330" width="60" height="24" rx="2"/>
   </g>
-  <g font-family="sans-serif" font-size="14" fill="#3a2c1e" text-anchor="middle">
+  <g font-family="sans-serif" font-size="14" font-weight="700" fill="#3a2c1e" text-anchor="middle">
     <text x="98" y="147">49</text><text x="144" y="147">64</text><text x="190" y="147">1</text>
     <text x="98" y="247">25</text><text x="144" y="247">144</text><text x="190" y="247">9</text>
     <text x="250" y="247">169</text><text x="98" y="347">16</text><text x="250" y="347">100</text>
   </g>
+  <g fill="#6b4f2e"><rect x="230" y="118" width="20" height="36" rx="3"/><rect x="256" y="128" width="26" height="26" rx="3"/><rect x="300" y="320" width="34" height="34" rx="4"/></g>
   <g>
-    <rect x="660" y="150" width="180" height="240" rx="10" fill="#5f6470" stroke="#33374a" stroke-width="4"/>
-    <circle cx="750" cy="230" r="34" fill="#2a3040" stroke="#ffd046" stroke-width="3"/>
-    <rect x="735" y="290" width="30" height="70" rx="6" fill="#2a3040"/>
-    <rect x="676" y="164" width="148" height="6" fill="#454b59"/>
-    <text x="750" y="400" font-family="sans-serif" font-size="16" fill="#ffd046" text-anchor="middle">TRESOR</text>
+    <rect x="470" y="60" width="150" height="360" fill="#121417"/>
+    <path d="M470 420 L470 420 L495 420 L495 375 L520 375 L520 330 L545 330 L545 285 L570 285 L570 240 L595 240 L595 195 L620 195 L620 150 L620 420 Z" fill="#3a3f47" stroke="#22262c" stroke-width="2"/>
+    <path d="M480 400 L605 130" stroke="#9aa3ad" stroke-width="4"/>
+    <rect x="470" y="56" width="150" height="8" fill="#2b2f35"/>
+    <rect x="478" y="74" width="100" height="28" rx="4" fill="#1f3a5f"/>
+    <text x="528" y="94" font-family="sans-serif" font-size="14" font-weight="700" fill="#f4ecd9" text-anchor="middle">↑ Bibliothek</text>
+  </g>
+  <g filter="url(#f-shadow)">
+    <rect x="350" y="300" width="90" height="116" rx="6" fill="#4b4f55" stroke="#2a2d31" stroke-width="3"/>
+    <rect x="360" y="310" width="70" height="80" rx="3" fill="none" stroke="#6b7079" stroke-width="2"/>
+    <g fill="#8a9099"><circle cx="358" cy="308" r="3"/><circle cx="432" cy="308" r="3"/><circle cx="358" cy="408" r="3"/><circle cx="432" cy="408" r="3"/></g>
+    <text x="395" y="356" font-family="sans-serif" font-size="14" font-weight="700" fill="#c9d1db" text-anchor="middle">LUKE</text>
+  </g>
+  <g filter="url(#f-shadow)">
+    <rect x="660" y="150" width="180" height="240" rx="10" fill="url(#g-metal)" stroke="#2a2e38" stroke-width="4"/>
+    <rect x="676" y="166" width="148" height="208" rx="6" fill="none" stroke="#3a3f4b" stroke-width="3"/>
+    <circle cx="750" cy="235" r="40" fill="#2a3040" stroke="#1a1e28" stroke-width="3"/>
+    <g stroke="#ffd046" stroke-width="2.5"><line x1="780.0" y1="235.0" x2="786.0" y2="235.0"/><line x1="776.0" y1="250.0" x2="781.2" y2="253.0"/><line x1="765.0" y1="261.0" x2="768.0" y2="266.2"/><line x1="750.0" y1="265.0" x2="750.0" y2="271.0"/><line x1="735.0" y1="261.0" x2="732.0" y2="266.2"/><line x1="724.0" y1="250.0" x2="718.8" y2="253.0"/><line x1="720.0" y1="235.0" x2="714.0" y2="235.0"/><line x1="724.0" y1="220.0" x2="718.8" y2="217.0"/><line x1="735.0" y1="209.0" x2="732.0" y2="203.8"/><line x1="750.0" y1="205.0" x2="750.0" y2="199.0"/><line x1="765.0" y1="209.0" x2="768.0" y2="203.8"/><line x1="776.0" y1="220.0" x2="781.2" y2="217.0"/></g>
+    <circle cx="750" cy="235" r="14" fill="#ffd046" stroke="#a88a20" stroke-width="2"/>
+    <line x1="750" y1="235" x2="750" y2="207" stroke="#2a3040" stroke-width="4"/>
+    <rect x="738" y="292" width="24" height="64" rx="6" fill="#2a3040"/>
+    <rect x="742" y="298" width="16" height="10" rx="3" fill="#5b6270"/>
+    <rect x="700" y="372" width="100" height="22" rx="3" fill="#1d2129"/>
+    <text x="750" y="389" font-family="sans-serif" font-size="14" font-weight="700" fill="#ffd046" text-anchor="middle">TRESOR</text>
+  </g>
+  <g filter="url(#f-shadow)">
+    <rect x="182" y="436" width="86" height="80" rx="3" fill="#8a6440" stroke="#4d3823" stroke-width="3"/>
+    <path d="M182 462 H268 M182 490 H268 M186 440 L264 512" stroke="#5e4329" stroke-width="3"/>
+    <rect x="200" y="474" width="50" height="18" rx="2" fill="#e8dcbc"/>
+    <text x="225" y="488" font-family="sans-serif" font-size="12" font-weight="700" fill="#3a2c1e" text-anchor="middle">Kiste</text>
+  </g>
+  <g filter="url(#f-shadow)">
+    <path d="M370 442 q25 -22 50 0" fill="none" stroke="#2a2d31" stroke-width="6"/>
+    <rect x="335" y="442" width="120" height="62" rx="6" fill="#a33a2e" stroke="#5e1f18" stroke-width="3"/>
+    <rect x="335" y="462" width="120" height="6" fill="#7e2b22"/>
+    <rect x="384" y="472" width="22" height="12" rx="2" fill="#d8c06a"/>
+  </g>
+  <text x="395" y="528" font-family="sans-serif" font-size="14" fill="#e5d7bd" text-anchor="middle">Werkzeugkasten</text>
+  <g filter="url(#f-shadow)">
+    <rect x="640" y="436" width="224" height="16" rx="3" fill="url(#g-wood)"/>
+    <rect x="652" y="452" width="12" height="70" fill="#5e4329"/><rect x="840" y="452" width="12" height="70" fill="#5e4329"/>
+    <rect x="700" y="424" width="60" height="10" rx="2" fill="#6b7079"/><rect x="755" y="418" width="14" height="22" rx="2" fill="#4b4f55"/>
   </g>
   <g>
-    <rect x="470" y="60" width="150" height="360" rx="8" fill="#26303a" stroke="#3c4a58" stroke-width="4"/>
-    <rect x="470" y="400" width="150" height="14" rx="4" fill="#111"/>
-    <g stroke="#3c4a58" stroke-width="3">
-      <line x1="482" y1="130" x2="608" y2="130"/><line x1="482" y1="190" x2="608" y2="190"/>
-      <line x1="482" y1="250" x2="608" y2="250"/><line x1="482" y1="310" x2="608" y2="310"/>
-      <line x1="482" y1="370" x2="608" y2="370"/>
-    </g>
-    <text x="545" y="160" font-family="sans-serif" font-size="16" fill="#9fb3c8" text-anchor="middle">↑ Treppe zur</text>
-    <text x="545" y="180" font-family="sans-serif" font-size="16" fill="#9fb3c8" text-anchor="middle">Bibliothek</text>
-  </g>
-  <g>
-    <rect x="30" y="430" width="130" height="100" rx="6" fill="#16130f"/>
-    <path d="M30 430 l40 30 M30 450 l25 10 M60 430 l10 30" stroke="#3a332a" stroke-width="2" fill="none"/>
-    <text x="95" y="500" font-family="sans-serif" font-size="13" fill="#6e6252" text-anchor="middle">dunkle Ecke</text>
-  </g>
-  <g>
-    <rect x="180" y="430" width="90" height="90" rx="8" fill="#7a5b3a" stroke="#4d3823" stroke-width="3"/>
-    <rect x="188" y="438" width="26" height="8" fill="#4d3823"/>
-    <text x="225" y="492" font-family="sans-serif" font-size="14" fill="#e5d7bd" text-anchor="middle">Kiste</text>
-  </g>
-  <g>
-    <rect x="640" y="440" width="220" height="14" rx="6" fill="#8a6f43"/>
-    <rect x="848" y="430" width="16" height="80" rx="6" fill="#a8865a"/>
-  </g>
-  <g>
-    <rect x="350" y="300" width="90" height="120" rx="10" fill="#31302e" stroke="#54514c" stroke-width="3"/>
-    <path d="M370 380 l20 -60 l20 60 z" fill="none" stroke="#6b7f93" stroke-width="3"/>
-    <text x="395" y="408" font-family="sans-serif" font-size="14" fill="#9fb3c8" text-anchor="middle">Luke</text>
-  </g>
-  <g>
-    <rect x="330" y="430" width="130" height="80" rx="8" fill="#4a4038" stroke="#211c16" stroke-width="3"/>
-    <circle cx="395" cy="470" r="10" fill="#ffd046"/>
-    <text x="395" y="530" font-family="sans-serif" font-size="14" fill="#c9b899" text-anchor="middle">Werkzeugkasten</text>
+    <rect x="30" y="430" width="130" height="100" rx="4" fill="#0c0a08"/>
+    <path d="M30 430 L80 470 M30 455 L60 462 M58 430 L66 466 M30 430 Q60 450 50 470 Q42 452 30 455" stroke="#4a4035" stroke-width="1.5" fill="none"/>
+    <text x="100" y="510" font-family="sans-serif" font-size="13" fill="#6e6252" text-anchor="middle">dunkle Ecke</text>
   </g>`,
   hotspots: [
     {
@@ -1149,60 +1159,67 @@ DATA.rooms.bibliothek = {
   name: "Raum 2: Bibliothek",
   msgStart: "Die Bibliothekarin Frau Nachschlag wischt sich eine Träne weg: „√2 hat hier jahrelang im Regal zwischen 1 und 2 gesessen. So eine unruhige Zahl – aber ordentlich war sie!“",
   backdrop: `
-  <rect x="0" y="0" width="960" height="540" fill="#33272b"/>
-  <rect x="0" y="0" width="960" height="120" fill="#403135"/>
-  <g stroke="#4a363d" stroke-width="4" fill="#5a424a">
-    <rect x="40" y="100" width="250" height="30"/>
-    <rect x="40" y="200" width="250" height="30"/>
-    <rect x="40" y="300" width="250" height="30"/>
-    <rect x="40" y="170" width="250" height="15" fill="#2e2426"/>
-    <rect x="40" y="270" width="250" height="15" fill="#2e2426"/>
+  <rect width="960" height="360" fill="url(#p-wallpaper)"/>
+  <rect y="296" width="960" height="64" fill="#3a2a22"/>
+  <rect y="292" width="960" height="7" fill="#5a4030"/>
+  <rect y="360" width="960" height="180" fill="url(#p-carpet)"/>
+  <rect y="356" width="960" height="6" fill="#1f1714"/>
+  <circle cx="480" cy="0" r="460" fill="url(#g-lamp)"/>
+  <g filter="url(#f-shadow)">
+    <rect x="30" y="70" width="270" height="286" rx="4" fill="#4a3326"/>
+    <rect x="44" y="84" width="242" height="262" fill="#21160f"/>
+    <rect x="50" y="107" width="17" height="53" fill="#4f7a4a" stroke="#1c140f" stroke-width="1"/><rect x="53" y="115" width="11" height="3" fill="#e8d59a" opacity=".7"/><rect x="68" y="89" width="18" height="71" fill="#8c3b3b" stroke="#1c140f" stroke-width="1"/><rect x="71" y="97" width="12" height="3" fill="#e8d59a" opacity=".7"/><rect x="87" y="89" width="21" height="71" fill="#3b5f8c" stroke="#1c140f" stroke-width="1"/><rect x="90" y="97" width="15" height="3" fill="#e8d59a" opacity=".7"/><rect x="109" y="106" width="13" height="54" fill="#2f6f6f" stroke="#1c140f" stroke-width="1"/><rect x="123" y="94" width="20" height="66" fill="#8c3b3b" stroke="#1c140f" stroke-width="1"/><rect x="126" y="102" width="14" height="3" fill="#e8d59a" opacity=".7"/><rect x="144" y="103" width="10" height="57" fill="#a0522d" stroke="#1c140f" stroke-width="1"/><rect x="155" y="109" width="17" height="51" fill="#8c3b3b" stroke="#1c140f" stroke-width="1"/><rect x="158" y="117" width="11" height="3" fill="#e8d59a" opacity=".7"/><rect x="173" y="110" width="16" height="50" fill="#7a6a4a" stroke="#1c140f" stroke-width="1"/><rect x="176" y="118" width="10" height="3" fill="#e8d59a" opacity=".7"/><rect x="190" y="103" width="16" height="57" fill="#7a6a4a" stroke="#1c140f" stroke-width="1"/><rect x="193" y="111" width="10" height="3" fill="#e8d59a" opacity=".7"/><rect x="207" y="93" width="16" height="67" fill="#b08a3c" stroke="#1c140f" stroke-width="1"/><rect x="210" y="101" width="10" height="3" fill="#e8d59a" opacity=".7"/><rect x="224" y="104" width="15" height="56" fill="#2f6f6f" stroke="#1c140f" stroke-width="1"/><rect x="240" y="93" width="11" height="67" fill="#a0522d" stroke="#1c140f" stroke-width="1"/><rect x="252" y="112" width="17" height="48" fill="#4f7a4a" stroke="#1c140f" stroke-width="1"/><rect x="255" y="120" width="11" height="3" fill="#e8d59a" opacity=".7"/><rect x="50" y="189" width="17" height="56" fill="#8c3b3b" stroke="#1c140f" stroke-width="1"/><rect x="53" y="197" width="11" height="3" fill="#e8d59a" opacity=".7"/><rect x="68" y="196" width="20" height="49" fill="#b08a3c" stroke="#1c140f" stroke-width="1"/><rect x="71" y="204" width="14" height="3" fill="#e8d59a" opacity=".7"/><rect x="89" y="194" width="14" height="51" fill="#3b5f8c" stroke="#1c140f" stroke-width="1"/><rect x="104" y="192" width="11" height="53" fill="#2f6f6f" stroke="#1c140f" stroke-width="1"/><rect x="116" y="184" width="12" height="61" fill="#6b4a7a" stroke="#1c140f" stroke-width="1"/><rect x="129" y="183" width="20" height="62" fill="#4f7a4a" stroke="#1c140f" stroke-width="1"/><rect x="132" y="191" width="14" height="3" fill="#e8d59a" opacity=".7"/><rect x="150" y="186" width="10" height="59" fill="#4f7a4a" stroke="#1c140f" stroke-width="1"/><rect x="161" y="187" width="21" height="58" fill="#a0522d" stroke="#1c140f" stroke-width="1"/><rect x="164" y="195" width="15" height="3" fill="#e8d59a" opacity=".7"/><rect x="183" y="187" width="17" height="58" fill="#6b4a7a" stroke="#1c140f" stroke-width="1"/><rect x="186" y="195" width="11" height="3" fill="#e8d59a" opacity=".7"/><rect x="201" y="180" width="14" height="65" fill="#8c3b3b" stroke="#1c140f" stroke-width="1"/><rect x="216" y="181" width="13" height="64" fill="#2f6f6f" stroke="#1c140f" stroke-width="1"/><rect x="230" y="185" width="10" height="60" fill="#6b4a7a" stroke="#1c140f" stroke-width="1"/><rect x="241" y="180" width="13" height="65" fill="#7a6a4a" stroke="#1c140f" stroke-width="1"/><rect x="255" y="191" width="20" height="54" fill="#3b5f8c" stroke="#1c140f" stroke-width="1"/><rect x="258" y="199" width="14" height="3" fill="#e8d59a" opacity=".7"/><rect x="50" y="268" width="10" height="62" fill="#7a6a4a" stroke="#1c140f" stroke-width="1"/><rect x="61" y="261" width="21" height="69" fill="#4f7a4a" stroke="#1c140f" stroke-width="1"/><rect x="64" y="269" width="15" height="3" fill="#e8d59a" opacity=".7"/><rect x="83" y="263" width="14" height="67" fill="#2f6f6f" stroke="#1c140f" stroke-width="1"/><rect x="98" y="276" width="10" height="54" fill="#3b5f8c" stroke="#1c140f" stroke-width="1"/><rect x="109" y="263" width="10" height="67" fill="#7a6a4a" stroke="#1c140f" stroke-width="1"/><rect x="120" y="270" width="14" height="60" fill="#a0522d" stroke="#1c140f" stroke-width="1"/><rect x="135" y="277" width="11" height="53" fill="#7a6a4a" stroke="#1c140f" stroke-width="1"/><rect x="147" y="272" width="13" height="58" fill="#a0522d" stroke="#1c140f" stroke-width="1"/><rect x="161" y="275" width="18" height="55" fill="#3b5f8c" stroke="#1c140f" stroke-width="1"/><rect x="164" y="283" width="12" height="3" fill="#e8d59a" opacity=".7"/><rect x="180" y="267" width="11" height="63" fill="#4f7a4a" stroke="#1c140f" stroke-width="1"/><rect x="192" y="261" width="11" height="69" fill="#3b5f8c" stroke="#1c140f" stroke-width="1"/><rect x="204" y="259" width="18" height="71" fill="#3b5f8c" stroke="#1c140f" stroke-width="1"/><rect x="207" y="267" width="12" height="3" fill="#e8d59a" opacity=".7"/><rect x="223" y="261" width="20" height="69" fill="#3b5f8c" stroke="#1c140f" stroke-width="1"/><rect x="226" y="269" width="14" height="3" fill="#e8d59a" opacity=".7"/><rect x="244" y="271" width="19" height="59" fill="#b08a3c" stroke="#1c140f" stroke-width="1"/><rect x="247" y="279" width="13" height="3" fill="#e8d59a" opacity=".7"/><rect x="264" y="270" width="13" height="60" fill="#b08a3c" stroke="#1c140f" stroke-width="1"/>
+    <g fill="#5e4130"><rect x="40" y="160" width="250" height="9"/><rect x="40" y="245" width="250" height="9"/><rect x="40" y="330" width="250" height="16"/></g>
   </g>
-  <g fill="#8a6a75" stroke="#5f4a52" stroke-width="2">
-    <rect x="55" y="80" width="20" height="60"/>
-    <rect x="83" y="80" width="20" height="60"/>
-    <rect x="111" y="80" width="20" height="60"/>
-    <rect x="55" y="180" width="20" height="60"/>
-    <rect x="83" y="180" width="20" height="60"/>
-    <rect x="111" y="180" width="20" height="60"/>
-    <rect x="55" y="280" width="20" height="60"/>
-    <rect x="83" y="280" width="20" height="60"/>
+  <g filter="url(#f-shadow)" transform="rotate(-2 490 105)">
+    <rect x="440" y="40" width="100" height="130" rx="3" fill="#efe2bd"/>
+    <rect x="452" y="54" width="76" height="47" fill="none" stroke="#b08a3c" stroke-width="2"/>
+    <path d="M481 54 V101 M481 72 H528 M510 72 V101 M481 72 A29 29 0 0 1 510 101" fill="none" stroke="#b08a3c" stroke-width="2"/>
+    <text x="490" y="124" font-family="serif" font-size="12" fill="#5a4030" text-anchor="middle">Goldener</text>
+    <text x="490" y="140" font-family="serif" font-size="12" fill="#5a4030" text-anchor="middle">Schnitt</text>
+    <text x="490" y="160" font-family="sans-serif" font-size="11" fill="#8a7050" text-anchor="middle">Poster</text>
   </g>
-  <g>
-    <rect x="620" y="80" width="320" height="260" rx="10" fill="#57424b" stroke="#2e2426" stroke-width="4"/>
-    <rect x="640" y="100" width="120" height="90" fill="#2e2426" stroke="#8a6a75" stroke-width="2"/>
-    <text x="700" y="150" font-family="sans-serif" font-size="34" fill="#ffd046" text-anchor="middle">√2</text>
-    <rect x="780" y="100" width="140" height="80" fill="#2e2426" stroke="#8a6a75" stroke-width="2"/>
-    <text x="850" y="150" font-family="sans-serif" font-size="22" fill="#f2f4f8" text-anchor="middle">ℕℤℚℝ</text>
-    <rect x="640" y="210" width="280" height="110" rx="6" fill="#2e2426"/>
-    <text x="780" y="245" font-family="sans-serif" font-size="17" fill="#c9b26b" text-anchor="middle">Kartei der Zahlenmengen</text>
-    <text x="780" y="275" font-family="sans-serif" font-size="15" fill="#c9b26b" text-anchor="middle">„Bitte Ordnung halten!“</text>
+  <g filter="url(#f-shadow)">
+    <rect x="620" y="80" width="320" height="262" rx="8" fill="#5e4130" stroke="#2e2015" stroke-width="4"/>
+    <rect x="640" y="98" width="120" height="92" rx="2" fill="#2a1d17" stroke="#d9b650" stroke-width="5"/>
+    <text x="700" y="160" font-family="serif" font-size="44" fill="none" stroke="#d9b650" stroke-width="1.5" stroke-dasharray="4 4" text-anchor="middle">√2</text>
+    <text x="700" y="184" font-family="sans-serif" font-size="11" fill="#d9b650" text-anchor="middle">PLATZ LEER</text>
+    <rect x="780" y="98" width="140" height="80" rx="4" fill="#efe4c8" stroke="#3e2a1a" stroke-width="2"/>
+    <text x="850" y="148" font-family="sans-serif" font-size="26" font-weight="700" fill="#2b2419" text-anchor="middle">ℕ ℤ ℚ ℝ</text>
+    <text x="780" y="206" font-family="sans-serif" font-size="13" font-weight="700" fill="#efe4c8" text-anchor="middle">KARTEI DER ZAHLENMENGEN</text>
+    <rect x="644" y="214" width="64" height="30" rx="3" fill="#7a5a3c" stroke="#3e2a1a" stroke-width="2"/><rect x="664" y="219" width="24" height="9" fill="#efe4c8"/><circle cx="676" cy="235" r="3.5" fill="#d9b650"/><rect x="714" y="214" width="64" height="30" rx="3" fill="#7a5a3c" stroke="#3e2a1a" stroke-width="2"/><rect x="734" y="219" width="24" height="9" fill="#efe4c8"/><circle cx="746" cy="235" r="3.5" fill="#d9b650"/><rect x="784" y="214" width="64" height="30" rx="3" fill="#7a5a3c" stroke="#3e2a1a" stroke-width="2"/><rect x="804" y="219" width="24" height="9" fill="#efe4c8"/><circle cx="816" cy="235" r="3.5" fill="#d9b650"/><rect x="854" y="214" width="64" height="30" rx="3" fill="#7a5a3c" stroke="#3e2a1a" stroke-width="2"/><rect x="874" y="219" width="24" height="9" fill="#efe4c8"/><circle cx="886" cy="235" r="3.5" fill="#d9b650"/><rect x="644" y="250" width="64" height="30" rx="3" fill="#7a5a3c" stroke="#3e2a1a" stroke-width="2"/><rect x="664" y="255" width="24" height="9" fill="#efe4c8"/><circle cx="676" cy="271" r="3.5" fill="#d9b650"/><rect x="714" y="250" width="64" height="30" rx="3" fill="#7a5a3c" stroke="#3e2a1a" stroke-width="2"/><rect x="734" y="255" width="24" height="9" fill="#efe4c8"/><circle cx="746" cy="271" r="3.5" fill="#d9b650"/><rect x="784" y="250" width="64" height="30" rx="3" fill="#7a5a3c" stroke="#3e2a1a" stroke-width="2"/><rect x="804" y="255" width="24" height="9" fill="#efe4c8"/><circle cx="816" cy="271" r="3.5" fill="#d9b650"/><rect x="854" y="250" width="64" height="30" rx="3" fill="#7a5a3c" stroke="#3e2a1a" stroke-width="2"/><rect x="874" y="255" width="24" height="9" fill="#efe4c8"/><circle cx="886" cy="271" r="3.5" fill="#d9b650"/><rect x="644" y="286" width="64" height="30" rx="3" fill="#7a5a3c" stroke="#3e2a1a" stroke-width="2"/><rect x="664" y="291" width="24" height="9" fill="#efe4c8"/><circle cx="676" cy="307" r="3.5" fill="#d9b650"/><rect x="714" y="286" width="64" height="30" rx="3" fill="#7a5a3c" stroke="#3e2a1a" stroke-width="2"/><rect x="734" y="291" width="24" height="9" fill="#efe4c8"/><circle cx="746" cy="307" r="3.5" fill="#d9b650"/><rect x="784" y="286" width="64" height="30" rx="3" fill="#7a5a3c" stroke="#3e2a1a" stroke-width="2"/><rect x="804" y="291" width="24" height="9" fill="#efe4c8"/><circle cx="816" cy="307" r="3.5" fill="#d9b650"/><rect x="854" y="286" width="64" height="30" rx="3" fill="#7a5a3c" stroke="#3e2a1a" stroke-width="2"/><rect x="874" y="291" width="24" height="9" fill="#efe4c8"/><circle cx="886" cy="307" r="3.5" fill="#d9b650"/>
   </g>
-  <g>
-    <rect x="380" y="235" width="140" height="95" rx="8" fill="#10151b" stroke="#5f4a52" stroke-width="4"/>
+  <g filter="url(#f-shadow)">
+    <rect x="378" y="232" width="144" height="100" rx="10" fill="#cfc6ad" stroke="#7d745c" stroke-width="3"/>
+    <rect x="390" y="243" width="120" height="70" rx="6" fill="#0f1a12"/>
     <text x="450" y="280" font-family="monospace" font-size="20" fill="#63d471" text-anchor="middle">0,666…</text>
-    <text x="450" y="310" font-family="sans-serif" font-size="12" fill="#63d471" text-anchor="middle">Computer</text>
-    <rect x="440" y="330" width="20" height="22" fill="#2e2426"/>
+    <text x="450" y="302" font-family="monospace" font-size="11" fill="#63d471" opacity=".8" text-anchor="middle">Computer</text>
+    <rect x="436" y="332" width="28" height="20" fill="#a89e84"/>
+  </g>
+  <g filter="url(#f-shadow)">
+    <rect x="336" y="350" width="248" height="20" rx="4" fill="#a88a5c"/>
+    <rect x="342" y="370" width="236" height="92" rx="4" fill="#6e4f33" stroke="#3e2a1a" stroke-width="3"/>
+    <g fill="none" stroke="#4e3622" stroke-width="3"><rect x="356" y="382" width="64" height="66" rx="3"/><rect x="428" y="382" width="64" height="66" rx="3"/><rect x="500" y="382" width="64" height="66" rx="3"/></g>
+    <text x="460" y="420" font-family="sans-serif" font-size="15" font-weight="700" fill="#efe4c8" text-anchor="middle">Theke</text>
+    <path d="M548 342 q12 -18 24 0 z" fill="#d9b650" stroke="#8a6f30" stroke-width="1.5"/><rect x="544" y="341" width="32" height="5" rx="2" fill="#8a6f30"/>
+    <path d="M540 300 h40 l-8 18 h-24z" fill="#2f6b45"/><rect x="558" y="318" width="4" height="30" fill="#b0954f"/>
+  </g>
+  <circle cx="560" cy="330" r="60" fill="url(#g-bulb)"/>
+  <g filter="url(#f-shadow)">
+    <rect x="718" y="346" width="84" height="20" rx="3" fill="#efe4c8" stroke="#3e2a1a"/>
+    <text x="760" y="361" font-family="sans-serif" font-size="13" font-weight="700" fill="#2b2419" text-anchor="middle">LABOR</text>
+    <rect x="700" y="370" width="120" height="152" rx="4" fill="#5a3d2b" stroke="#2e2015" stroke-width="4"/>
+    <rect x="716" y="386" width="88" height="50" rx="3" fill="#a9c7d6" stroke="#2e2015" stroke-width="3"/>
+    <rect x="716" y="448" width="88" height="62" rx="3" fill="none" stroke="#3e2a1a" stroke-width="3"/>
+    <circle cx="804" cy="452" r="6" fill="#d9b650"/>
   </g>
   <g>
-    <rect x="340" y="352" width="240" height="26" rx="6" fill="#94764f"/>
-    <rect x="340" y="376" width="240" height="84" rx="8" fill="#7a5b3a" stroke="#4d3823" stroke-width="3"/>
-    <text x="460" y="425" font-family="sans-serif" font-size="16" fill="#e8dcae" text-anchor="middle">Theke</text>
+    <rect x="100" y="452" width="180" height="62" rx="4" fill="#120d0a"/>
+    <path d="M110 470 H270 M116 486 H264 M122 500 H258" stroke="#3a2a22" stroke-width="4"/>
   </g>
-  <g>
-    <rect x="700" y="370" width="120" height="150" rx="6" fill="#453a45" stroke="#241c24" stroke-width="4"/>
-    <circle cx="800" cy="450" r="7" fill="#ffd046"/>
-    <text x="760" y="410" font-family="sans-serif" font-size="15" fill="#e0d7e8" text-anchor="middle">Labor</text>
-  </g>
-  <g>
-    <rect x="440" y="40" width="100" height="130" rx="8" fill="#9c7d3c" stroke="#6b5426" stroke-width="3"/>
-    <circle cx="490" cy="90" r="28" fill="#d9b650" stroke="#8a6f30" stroke-width="2"/>
-    <text x="490" y="150" font-family="sans-serif" font-size="13" fill="#3a2c1e" text-anchor="middle">Poster</text>
-  </g>
-  <g>
-    <rect x="100" y="460" width="180" height="50" rx="8" fill="#574a5e" stroke="#2f2735" stroke-width="3"/>
-    <text x="190" y="492" font-family="sans-serif" font-size="15" fill="#e0d7e8" text-anchor="middle">Tür zum Keller</text>
-  </g>`,
+  <g><rect x="110" y="462" width="160" height="40" rx="8" fill="#1f3a5f" stroke="#0f1d30" stroke-width="3"/>
+    <rect x="114" y="466" width="152" height="32" rx="6" fill="none" stroke="#5f84b3" stroke-width="1.5"/>
+    <text x="180.0" y="488.0" font-family="sans-serif" font-size="17" font-weight="700" fill="#f4ecd9" text-anchor="middle">↓ Keller</text></g>`,
   hotspots: [
     {
       id: "hs_kartei", x: 630, y: 90, w: 300, h: 240, label: "Kartei der Zahlenmengen",
@@ -1236,51 +1253,51 @@ DATA.rooms.labor = {
   name: "Raum 3: Labor",
   msgStart: "Der Laborant Bunsen-Brock raschelt mit einer Eingrenzzange: „Willkommen im Labor! Hier wird nicht geraten – hier wird eingegrenzt. Grober Unfug bitte nur außerhalb des Kittels.“",
   backdrop: `
-  <rect x="0" y="0" width="960" height="540" fill="#20262e"/>
-  <rect x="0" y="0" width="960" height="380" fill="#28313c"/>
-  <line x1="0" y1="380" x2="960" y2="380" stroke="#171c22" stroke-width="6"/>
-  <g>
-    <rect x="40" y="90" width="330" height="60" rx="8" fill="#2f3b47" stroke="#141b22" stroke-width="3"/>
-    <rect x="40" y="150" width="330" height="60" rx="8" fill="#2f3b47" stroke="#141b22" stroke-width="3"/>
-    <rect x="52" y="100" width="46" height="40" fill="#9db8cf" rx="4"/>
-    <rect x="104" y="100" width="46" height="40" fill="#b7c98f" rx="4"/>
-    <rect x="156" y="100" width="46" height="40" fill="#d7a86a" rx="4"/>
-    <rect x="208" y="100" width="46" height="40" fill="#9db8cf" rx="4"/>
-    <rect x="52" y="160" width="46" height="40" fill="#c5968f" rx="4"/>
-    <rect x="104" y="160" width="46" height="40" fill="#d7c26a" rx="4"/>
-    <rect x="156" y="160" width="46" height="40" fill="#8fbf9f" rx="4"/>
-    <rect x="208" y="160" width="46" height="40" fill="#b48fc0" rx="4"/>
-    <text x="215" y="200" font-family="sans-serif" font-size="15" fill="#e6edf3" text-anchor="middle">Probenregal</text>
+  <rect width="960" height="380" fill="url(#p-tiles)"/>
+  <rect y="374" width="960" height="8" fill="#141a20"/>
+  <rect y="382" width="960" height="158" fill="url(#p-checker)"/>
+  <rect x="300" y="8" width="360" height="12" rx="4" fill="#e8f6ff"/>
+  <ellipse cx="480" cy="20" rx="520" ry="360" fill="url(#g-cool)"/>
+  <g filter="url(#f-shadow)">
+    <rect x="40" y="94" width="330" height="10" fill="#8a98a6"/>
+    <rect x="40" y="148" width="330" height="10" rx="2" fill="#5b6b7a"/><rect x="40" y="208" width="330" height="10" rx="2" fill="#5b6b7a"/>
+    <rect x="44" y="94" width="6" height="124" fill="#5b6b7a"/><rect x="360" y="94" width="6" height="124" fill="#5b6b7a"/>
+    <path d="M60 148 l6 -22 v-14 h8 v14 l6 22 z" fill="#7ecbb4" stroke="#d9e6ee" stroke-width="2" opacity=".95"/><rect x="112" y="110" width="16" height="38" rx="4" fill="#e0a85a" stroke="#d9e6ee" stroke-width="2"/><rect x="110" y="104" width="20" height="8" rx="2" fill="#5b6b7a"/><path d="M160 148 l6 -22 v-14 h8 v14 l6 22 z" fill="#c98fb8" stroke="#d9e6ee" stroke-width="2" opacity=".95"/><rect x="212" y="110" width="16" height="38" rx="4" fill="#8fb4e0" stroke="#d9e6ee" stroke-width="2"/><rect x="210" y="104" width="20" height="8" rx="2" fill="#5b6b7a"/><path d="M260 148 l6 -22 v-14 h8 v14 l6 22 z" fill="#d6d26a" stroke="#d9e6ee" stroke-width="2" opacity=".95"/><rect x="312" y="110" width="16" height="38" rx="4" fill="#e07a6a" stroke="#d9e6ee" stroke-width="2"/><rect x="310" y="104" width="20" height="8" rx="2" fill="#5b6b7a"/><rect x="80" y="170" width="16" height="38" rx="4" fill="#c98fb8" stroke="#d9e6ee" stroke-width="2"/><rect x="78" y="164" width="20" height="8" rx="2" fill="#5b6b7a"/><path d="M128 208 l6 -22 v-14 h8 v14 l6 22 z" fill="#8fb4e0" stroke="#d9e6ee" stroke-width="2" opacity=".95"/><rect x="180" y="170" width="16" height="38" rx="4" fill="#d6d26a" stroke="#d9e6ee" stroke-width="2"/><rect x="178" y="164" width="20" height="8" rx="2" fill="#5b6b7a"/><path d="M228 208 l6 -22 v-14 h8 v14 l6 22 z" fill="#e07a6a" stroke="#d9e6ee" stroke-width="2" opacity=".95"/><rect x="280" y="170" width="16" height="38" rx="4" fill="#7ecbb4" stroke="#d9e6ee" stroke-width="2"/><rect x="278" y="164" width="20" height="8" rx="2" fill="#5b6b7a"/><path d="M328 208 l6 -22 v-14 h8 v14 l6 22 z" fill="#e0a85a" stroke="#d9e6ee" stroke-width="2" opacity=".95"/>
   </g>
-  <g>
-    <rect x="560" y="90" width="230" height="160" rx="10" fill="#10151b" stroke="#3c4a58" stroke-width="4"/>
-    <text x="675" y="130" font-family="monospace" font-size="22" fill="#63d471" text-anchor="middle">x² = 6</text>
-    <rect x="590" y="150" width="170" height="10" rx="4" fill="#243226"/>
-    <rect x="590" y="168" width="170" height="10" rx="4" fill="#1c2a20"/>
-    <rect x="640" y="200" width="70" height="34" rx="6" fill="#243226"/>
-    <text x="675" y="222" font-family="sans-serif" font-size="13" fill="#63d471" text-anchor="middle">BILD →</text>
+  <text x="205" y="236" font-family="sans-serif" font-size="14" font-weight="700" fill="#e6edf3" text-anchor="middle">Probenregal</text>
+  <g filter="url(#f-shadow)">
+    <rect x="560" y="90" width="230" height="156" rx="10" fill="#2b333c" stroke="#141a20" stroke-width="4"/>
+    <rect x="574" y="102" width="202" height="128" rx="4" fill="#0b130e"/>
+    <text x="675" y="138" font-family="monospace" font-size="24" fill="#63d471" text-anchor="middle">x² = 6</text>
+    <path d="M600 222 H750 M675 222 V150" stroke="#2f5a3a" stroke-width="1.5"/>
+    <path d="M622 160 Q675 290 728 160" fill="none" stroke="#63d471" stroke-width="2.5"/>
+    <path d="M600 196 H750" stroke="#e0a85a" stroke-width="1.5" stroke-dasharray="5 4"/>
+    <circle cx="651" cy="196" r="4" fill="#e0a85a"/><circle cx="699" cy="196" r="4" fill="#e0a85a"/>
+    <rect x="660" y="246" width="30" height="14" fill="#2b333c"/>
   </g>
-  <g>
-    <rect x="450" y="290" width="200" height="80" rx="8" fill="#5b6b7a" stroke="#22292f" stroke-width="3"/>
-    <circle cx="495" cy="290" r="16" fill="#7ecbb4" stroke="#22292f" stroke-width="3"/>
-    <path d="M540 290 q10 -34 30 0 z" fill="#7ecbb4" stroke="#22292f" stroke-width="2" transform="scale(0.9) translate(40,0)"/>
-    <rect x="590" y="260" width="20" height="40" rx="4" fill="#c98f8f"/>
-    <text x="550" y="358" font-family="sans-serif" font-size="15" fill="#dde5ed" text-anchor="middle">Labortisch</text>
+  <g filter="url(#f-shadow)">
+    <rect x="440" y="330" width="220" height="14" rx="3" fill="#c8d2da"/>
+    <rect x="452" y="344" width="10" height="36" fill="#5b6b7a"/><rect x="638" y="344" width="10" height="36" fill="#5b6b7a"/>
+    <path d="M470 330 l10 -34 v-14 h12 v14 l10 34 z" fill="#7ecbb4" stroke="#d9e6ee" stroke-width="2"/>
+    <rect x="520" y="300" width="50" height="8" rx="2" fill="#8a98a6"/>
+    <g fill="#c98fb8" stroke="#d9e6ee" stroke-width="1.5"><rect x="526" y="282" width="8" height="26" rx="3"/><rect x="541" y="286" width="8" height="22" rx="3"/><rect x="556" y="280" width="8" height="28" rx="3"/></g>
+    <rect x="588" y="282" width="30" height="48" rx="5" fill="#e8f0f5" stroke="#5b6b7a" stroke-width="2"/>
+    <rect x="588" y="298" width="30" height="16" fill="#ffd046"/>
+    <text x="603" y="311" font-family="sans-serif" font-size="11" font-weight="700" fill="#2b2419" text-anchor="middle">√50</text>
   </g>
-  <g>
-    <rect x="120" y="430" width="180" height="60" rx="8" fill="#57485e" stroke="#2f2735" stroke-width="3"/>
-    <text x="210" y="467" font-family="sans-serif" font-size="15" fill="#e0d7e8" text-anchor="middle">Tür zur Bibliothek</text>
+  <text x="550" y="400" font-family="sans-serif" font-size="13" font-weight="700" fill="#1d2a33" text-anchor="middle">Labortisch</text>
+  <g filter="url(#f-shadow)">
+    <rect x="828" y="116" width="96" height="126" rx="6" fill="#c9b78e" stroke="#6b5a3a" stroke-width="3"/>
+    <g fill="#8a7a5a"><circle cx="840" cy="128" r="2"/><circle cx="854" cy="128" r="2"/><circle cx="868" cy="128" r="2"/><circle cx="882" cy="128" r="2"/><circle cx="896" cy="128" r="2"/><circle cx="910" cy="128" r="2"/><circle cx="840" cy="142" r="2"/><circle cx="854" cy="142" r="2"/><circle cx="868" cy="142" r="2"/><circle cx="882" cy="142" r="2"/><circle cx="896" cy="142" r="2"/><circle cx="910" cy="142" r="2"/><circle cx="840" cy="156" r="2"/><circle cx="854" cy="156" r="2"/><circle cx="868" cy="156" r="2"/><circle cx="882" cy="156" r="2"/><circle cx="896" cy="156" r="2"/><circle cx="910" cy="156" r="2"/><circle cx="840" cy="170" r="2"/><circle cx="854" cy="170" r="2"/><circle cx="868" cy="170" r="2"/><circle cx="882" cy="170" r="2"/><circle cx="896" cy="170" r="2"/><circle cx="910" cy="170" r="2"/><circle cx="840" cy="184" r="2"/><circle cx="854" cy="184" r="2"/><circle cx="868" cy="184" r="2"/><circle cx="882" cy="184" r="2"/><circle cx="896" cy="184" r="2"/><circle cx="910" cy="184" r="2"/><circle cx="840" cy="198" r="2"/><circle cx="854" cy="198" r="2"/><circle cx="868" cy="198" r="2"/><circle cx="882" cy="198" r="2"/><circle cx="896" cy="198" r="2"/><circle cx="910" cy="198" r="2"/><circle cx="840" cy="212" r="2"/><circle cx="854" cy="212" r="2"/><circle cx="868" cy="212" r="2"/><circle cx="882" cy="212" r="2"/><circle cx="896" cy="212" r="2"/><circle cx="910" cy="212" r="2"/></g>
+    <path d="M850 140 h44 v12 h-30 v40 h-14z M876 152 v24 h10 v-24" fill="#5b6b7a" stroke="#2b333c" stroke-width="2"/>
+    <text x="876" y="232" font-family="sans-serif" font-size="11" font-weight="700" fill="#2b2419" text-anchor="middle">Eingrenzzange</text>
   </g>
-  <g>
-    <rect x="700" y="430" width="200" height="60" rx="8" fill="#4a5560" stroke="#22292f" stroke-width="3"/>
-    <text x="800" y="467" font-family="sans-serif" font-size="15" fill="#dde5ed" text-anchor="middle">Tür zum Lehrerzimmer</text>
-  </g>
-  <g>
-    <rect x="830" y="120" width="90" height="120" rx="8" fill="#3c4a58" stroke="#22292f" stroke-width="3"/>
-    <circle cx="875" cy="160" r="22" fill="none" stroke="#ffd046" stroke-width="4"/>
-    <line x1="875" y1="160" x2="875" y2="146" stroke="#ffd046" stroke-width="4"/>
-    <text x="875" y="205" font-family="sans-serif" font-size="13" fill="#e6edf3" text-anchor="middle">Eingrenzzange</text>
-  </g>`,
+  <g><rect x="120" y="432" width="180" height="54" rx="8" fill="#1f3a5f" stroke="#0f1d30" stroke-width="3"/>
+    <rect x="124" y="436" width="172" height="46" rx="6" fill="none" stroke="#5f84b3" stroke-width="1.5"/>
+    <text x="200.0" y="465.0" font-family="sans-serif" font-size="17" font-weight="700" fill="#f4ecd9" text-anchor="middle">← Bibliothek</text></g>
+  <g><rect x="700" y="432" width="200" height="54" rx="8" fill="#1f3a5f" stroke="#0f1d30" stroke-width="3"/>
+    <rect x="704" y="436" width="192" height="46" rx="6" fill="none" stroke="#5f84b3" stroke-width="1.5"/>
+    <text x="790.0" y="465.0" font-family="sans-serif" font-size="17" font-weight="700" fill="#f4ecd9" text-anchor="middle">Lehrerzimmer →</text></g>`,
   hotspots: [
     {
       id: "hs_probe", x: 450, y: 280, w: 200, h: 100, label: "Probe auf dem Labortisch",
@@ -1310,51 +1327,62 @@ DATA.rooms.lehrerzimmer = {
   name: "Raum 4: Lehrerzimmer",
   msgStart: "Frau Tafelwisch zieht sich die Tafelstaub-Handschuhe aus: „Willkommen. Hier wird gerechnet, gehobelt und geklärt – rund um Wurzeln. Beanstandungen bitte in den Postkorb.“",
   backdrop: `
-  <rect x="0" y="0" width="960" height="540" fill="#2c2723"/>
-  <rect x="0" y="0" width="960" height="360" fill="#383129"/>
-  <line x1="0" y1="360" x2="960" y2="360" stroke="#1e1a15" stroke-width="6"/>
-  <g>
-    <rect x="40" y="60" width="260" height="140" rx="10" fill="#e8e2d4" stroke="#5b4f3e" stroke-width="4"/>
-    <rect x="60" y="80" width="220" height="100" rx="6" fill="#f5f1e6" stroke="#5b4f3e" stroke-width="2"/>
-    <text x="170" y="120" font-family="sans-serif" font-size="22" fill="#5b4f3e" text-anchor="middle">√a · √b = √(a·b)</text>
-    <text x="170" y="155" font-family="sans-serif" font-size="18" fill="#5b4f3e" text-anchor="middle">√a : √b = √(a:b)</text>
+  <rect width="960" height="360" fill="#5a4e40"/>
+  <rect width="960" height="360" fill="url(#p-stripes)"/>
+  <rect y="354" width="960" height="8" fill="#2a221a"/>
+  <rect y="362" width="960" height="178" fill="url(#p-planks)"/>
+  <circle cx="560" cy="0" r="440" fill="url(#g-lamp)"/>
+  <g filter="url(#f-shadow)">
+    <rect x="40" y="58" width="262" height="146" rx="4" fill="#7a5a3c"/>
+    <rect x="50" y="68" width="242" height="122" fill="#2f4a3a"/>
+    <text x="171" y="116" font-family="sans-serif" font-size="21" fill="#f2f2ea" text-anchor="middle">√a · √b = √(a·b)</text>
+    <text x="171" y="152" font-family="sans-serif" font-size="18" fill="#f2f2ea" text-anchor="middle">√a : √b = √(a:b)</text>
+    <path d="M70 172 q40 -8 70 2" stroke="#f2f2ea" stroke-width="1.5" fill="none" opacity=".35"/>
+    <rect x="60" y="196" width="222" height="8" fill="#5e4329"/><rect x="200" y="192" width="22" height="6" rx="2" fill="#f2f2ea"/>
   </g>
-  <g>
-    <rect x="380" y="120" width="130" height="120" rx="8" fill="#7a5b3a" stroke="#3f2f21" stroke-width="3"/>
-    <rect x="396" y="100" width="98" height="40" rx="6" fill="#3f2f21"/>
-    <path d="M380 180 a30 24 0 0 1 130 0 z" fill="none" stroke="#241c14" stroke-width="4"/>
-    <rect x="396" y="215" width="98" height="30" rx="4" fill="#5b432c"/>
-    <text x="445" y="282" font-family="sans-serif" font-size="15" fill="#e8ddc8" text-anchor="middle">Kaffeemaschine</text>
+  <g filter="url(#f-shadow)">
+    <rect x="356" y="238" width="178" height="122" rx="4" fill="url(#g-wood)" stroke="#3e2a1a" stroke-width="3"/>
+    <path d="M445 244 V354" stroke="#3e2a1a" stroke-width="2"/>
+    <rect x="388" y="106" width="114" height="132" rx="8" fill="#34363c" stroke="#1d1e22" stroke-width="3"/>
+    <rect x="398" y="118" width="94" height="26" rx="4" fill="#1d1e22"/><circle cx="480" cy="131" r="5" fill="#ff7b72"/>
+    <path d="M412 180 h66 l-6 48 h-54z" fill="#c9e0ea" opacity=".55" stroke="#9ab0bb" stroke-width="2"/>
+    <rect x="414" y="204" width="62" height="22" fill="#5b3a22" opacity=".9"/>
+    <g transform="rotate(6 470 150)"><rect x="452" y="140" width="56" height="44" fill="#fff3a8"/><text x="480" y="162" font-family="sans-serif" font-size="10" fill="#2b2419" text-anchor="middle">√3 · √7</text><text x="480" y="176" font-family="sans-serif" font-size="10" fill="#2b2419" text-anchor="middle">= ???</text></g>
   </g>
-  <g>
-    <rect x="560" y="240" width="150" height="140" rx="10" fill="#33424e" stroke="#161d24" stroke-width="4"/>
-    <rect x="596" y="140" width="78" height="100" fill="#4b5b69"/>
-    <circle cx="635" cy="160" r="10" fill="#ff7b72"/>
-    <rect x="596" y="180" width="50" height="8" rx="4" fill="#9db8cf"/>
-    <rect x="596" y="196" width="30" height="8" rx="4" fill="#9db8cf"/>
-    <text x="635" y="398" font-family="sans-serif" font-size="15" fill="#dde5ed" text-anchor="middle">Getränkeautomat</text>
+  <text x="445" y="300" font-family="sans-serif" font-size="14" font-weight="700" fill="#f4ecd9" text-anchor="middle">Kaffeemaschine</text>
+  <g filter="url(#f-shadow)">
+    <rect x="566" y="134" width="140" height="256" rx="8" fill="#b83b3b" stroke="#5e1f18" stroke-width="4"/>
+    <rect x="580" y="150" width="86" height="170" rx="4" fill="#1d2a33"/>
+    <rect x="586" y="160" width="14" height="26" rx="4" fill="#ffd046"/><rect x="606" y="160" width="14" height="26" rx="4" fill="#5ac8fa"/><rect x="626" y="160" width="14" height="26" rx="4" fill="#63d471"/><rect x="646" y="160" width="14" height="26" rx="4" fill="#ff7b72"/><rect x="586" y="198" width="14" height="26" rx="4" fill="#5ac8fa"/><rect x="606" y="198" width="14" height="26" rx="4" fill="#63d471"/><rect x="626" y="198" width="14" height="26" rx="4" fill="#ff7b72"/><rect x="646" y="198" width="14" height="26" rx="4" fill="#ffd046"/><rect x="586" y="236" width="14" height="26" rx="4" fill="#63d471"/><rect x="606" y="236" width="14" height="26" rx="4" fill="#ff7b72"/><rect x="626" y="236" width="14" height="26" rx="4" fill="#ffd046"/><rect x="646" y="236" width="14" height="26" rx="4" fill="#5ac8fa"/><rect x="586" y="274" width="14" height="26" rx="4" fill="#ff7b72"/><rect x="606" y="274" width="14" height="26" rx="4" fill="#ffd046"/><rect x="626" y="274" width="14" height="26" rx="4" fill="#5ac8fa"/><rect x="646" y="274" width="14" height="26" rx="4" fill="#63d471"/>
+    <rect x="674" y="154" width="24" height="16" rx="2" fill="#0b130e"/><text x="686" y="166" font-family="monospace" font-size="9" fill="#63d471" text-anchor="middle">√72</text>
+    <g fill="#e8dcbc"><rect x="676" y="180" width="8" height="8" rx="1"/><rect x="686" y="180" width="8" height="8" rx="1"/><rect x="676" y="192" width="8" height="8" rx="1"/><rect x="686" y="192" width="8" height="8" rx="1"/><rect x="676" y="204" width="8" height="8" rx="1"/><rect x="686" y="204" width="8" height="8" rx="1"/><rect x="676" y="216" width="8" height="8" rx="1"/><rect x="686" y="216" width="8" height="8" rx="1"/></g>
+    <rect x="590" y="334" width="66" height="24" rx="3" fill="#1d1e22"/>
+    <rect x="566" y="366" width="140" height="22" rx="3" fill="#7e2b22"/>
+    <text x="636" y="382" font-family="sans-serif" font-size="12" font-weight="700" fill="#f4ecd9" text-anchor="middle">Getränkeautomat</text>
   </g>
-  <g>
-    <rect x="770" y="120" width="160" height="150" rx="10" fill="#c9ccd2" stroke="#4b4f58" stroke-width="4"/>
-    <rect x="785" y="135" width="130" height="34" rx="4" fill="#4b4f58"/>
-    <rect x="790" y="185" width="80" height="40" rx="4" fill="#10151b"/>
-    <text x="830" y="211" font-family="sans-serif" font-size="17" fill="#63d471" text-anchor="middle">5/√3</text>
-    <circle cx="895" cy="205" r="10" fill="#ff7b72"/>
-    <text x="850" y="290" font-family="sans-serif" font-size="15" fill="#e8ddc8" text-anchor="middle">Kopierer</text>
+  <g filter="url(#f-shadow)">
+    <rect x="770" y="120" width="160" height="150" rx="10" fill="#d4d7dd" stroke="#4b4f58" stroke-width="4"/>
+    <rect x="782" y="132" width="136" height="30" rx="4" fill="#5b5f68"/><rect x="790" y="140" width="120" height="6" fill="#8a8f99"/>
+    <rect x="790" y="182" width="80" height="40" rx="4" fill="#0b130e"/>
+    <text x="830" y="208" font-family="sans-serif" font-size="17" fill="#63d471" text-anchor="middle">5/√3</text>
+    <circle cx="896" cy="196" r="9" fill="#ff7b72"/><circle cx="896" cy="220" r="7" fill="#63d471"/>
+    <rect x="786" y="236" width="128" height="20" rx="3" fill="#b7bbc3"/>
   </g>
-  <g>
-    <rect x="760" y="330" width="170" height="90" rx="8" fill="#5b4f3e" stroke="#2f271e" stroke-width="3"/>
-    <rect x="768" y="322" width="70" height="14" rx="6" fill="#e8e2d4"/>
-    <text x="845" y="442" font-family="sans-serif" font-size="15" fill="#e8ddc8" text-anchor="middle">Postkorb</text>
+  <text x="850" y="290" font-family="sans-serif" font-size="14" font-weight="700" fill="#f4ecd9" text-anchor="middle">Kopierer</text>
+  <g filter="url(#f-shadow)">
+    <rect x="756" y="390" width="178" height="12" rx="3" fill="url(#g-wood)"/>
+    <rect x="770" y="402" width="10" height="24" fill="#5e4329"/><rect x="910" y="402" width="10" height="24" fill="#5e4329"/>
+    <path d="M772 390 l8 -40 h132 l8 40z" fill="#8a7a5a" stroke="#4d3f2a" stroke-width="2"/>
+    <rect x="790" y="334" width="96" height="30" fill="#f4ecd9" transform="rotate(-4 838 349)"/>
+    <rect x="800" y="330" width="96" height="30" fill="#fffdf7" transform="rotate(3 848 345)"/>
+    <text x="845" y="384" font-family="sans-serif" font-size="13" font-weight="700" fill="#f4ecd9" text-anchor="middle">Postkorb</text>
   </g>
-  <g>
-    <rect x="60" y="440" width="190" height="60" rx="8" fill="#4a5560" stroke="#22292f" stroke-width="3"/>
-    <text x="155" y="477" font-family="sans-serif" font-size="15" fill="#dde5ed" text-anchor="middle">Zurück ins Labor</text>
-  </g>
-  <g>
-    <rect x="620" y="440" width="240" height="60" rx="8" fill="#57485e" stroke="#2f2735" stroke-width="3"/>
-    <text x="740" y="477" font-family="sans-serif" font-size="15" fill="#e0d7e8" text-anchor="middle">Tür zum Direktorat</text>
-  </g>`,
+  <g><rect x="66" y="444" width="180" height="52" rx="8" fill="#1f3a5f" stroke="#0f1d30" stroke-width="3"/>
+    <rect x="70" y="448" width="172" height="44" rx="6" fill="none" stroke="#5f84b3" stroke-width="1.5"/>
+    <text x="146.0" y="476.0" font-family="sans-serif" font-size="17" font-weight="700" fill="#f4ecd9" text-anchor="middle">← Labor</text></g>
+  <g><rect x="626" y="444" width="228" height="52" rx="8" fill="#1f3a5f" stroke="#0f1d30" stroke-width="3"/>
+    <rect x="630" y="448" width="220" height="44" rx="6" fill="none" stroke="#5f84b3" stroke-width="1.5"/>
+    <text x="730.0" y="476.0" font-family="sans-serif" font-size="17" font-weight="700" fill="#f4ecd9" text-anchor="middle">Direktorat →</text></g>`,
   hotspots: [
     {
       id: "hs_kaffee", x: 380, y: 90, w: 130, h: 150, label: "Notizzettel an der Kaffeemaschine",
@@ -1393,44 +1421,69 @@ DATA.rooms.direktorat = {
   name: "Raum 5: Direktorat",
   msgStart: "Der Direktor steht grübelnd vor einem leeren Rahmen: „√2 hat mir eine Nachricht hinterlassen. Aber der Sonder-Rahmen hat einen Panik-Code. Aus Wurzeln. Ich bin Direktor, nicht Wahrsager.“",
   backdrop: `
-  <rect x="0" y="0" width="960" height="540" fill="#241f2b"/>
-  <rect x="0" y="0" width="960" height="120" fill="#332c3f"/>
-  <g>
-    <rect x="40" y="60" width="240" height="170" rx="10" fill="#4a3f55" stroke="#181420" stroke-width="4"/>
-    <rect x="60" y="80" width="200" height="130" rx="4" fill="#f5f1e6" stroke="#8a7a5c" stroke-width="6"/>
-    <path d="M110 180 q50 -90 100 0 z" fill="none" stroke="#8a7a5c" stroke-width="3"/>
-    <text x="160" y="205" font-family="sans-serif" font-size="15" fill="#c8bfae" text-anchor="middle">(leerer Rahmen)</text>
+  <rect width="960" height="400" fill="#2e3a33"/>
+  <rect width="960" height="400" fill="url(#p-damask)"/>
+  <rect y="300" width="960" height="100" fill="#3e2a1e"/>
+  <g stroke="#2a1c13" stroke-width="3" fill="none"><rect x="20" y="314" width="100" height="72" rx="3"/><rect x="140" y="314" width="100" height="72" rx="3"/><rect x="260" y="314" width="100" height="72" rx="3"/><rect x="380" y="314" width="100" height="72" rx="3"/><rect x="500" y="314" width="100" height="72" rx="3"/><rect x="620" y="314" width="100" height="72" rx="3"/><rect x="740" y="314" width="100" height="72" rx="3"/><rect x="860" y="314" width="100" height="72" rx="3"/></g>
+  <rect y="296" width="960" height="6" fill="#6b4c32"/>
+  <rect y="400" width="960" height="140" fill="#5a2328"/>
+  <rect y="400" width="960" height="140" fill="url(#p-carpet2)"/>
+  <rect y="396" width="960" height="6" fill="#1f1714"/>
+  <g filter="url(#f-shadow)">
+    <rect x="540" y="36" width="240" height="128" rx="4" fill="#0e1830" stroke="#4a3426" stroke-width="8"/>
+    <circle cx="730" cy="70" r="16" fill="#f4ecd9"/><circle cx="738" cy="64" r="14" fill="#0e1830"/>
+    <g fill="#f4ecd9"><circle cx="669" cy="91" r="1.6"/><circle cx="632" cy="55" r="1.6"/><circle cx="683" cy="97" r="1.6"/><circle cx="663" cy="147" r="1.6"/><circle cx="579" cy="138" r="1.6"/><circle cx="638" cy="73" r="1.6"/><circle cx="607" cy="108" r="1.6"/><circle cx="710" cy="83" r="1.6"/><circle cx="681" cy="65" r="1.6"/><circle cx="627" cy="123" r="1.6"/><circle cx="635" cy="136" r="1.6"/><circle cx="562" cy="63" r="1.6"/><circle cx="583" cy="134" r="1.6"/><circle cx="624" cy="118" r="1.6"/></g>
+    <path d="M660 40 V160 M544 100 H776" stroke="#4a3426" stroke-width="6"/>
+    <path d="M530 30 q20 70 0 140 h-14 v-140z M790 30 q-20 70 0 140 h14 v-140z" fill="#7a2a30"/>
   </g>
-  <g>
-    <rect x="520" y="240" width="280" height="120" rx="10" fill="#6b5a3d" stroke="#3a3020" stroke-width="4"/>
-    <rect x="540" y="180" width="60" height="80" rx="4" fill="#8a7a5c"/>
-    <rect x="620" y="190" width="40" height="70" rx="4" fill="#3f5a72"/>
-    <rect x="680" y="170" width="30" height="90" rx="4" fill="#5a4f3f"/>
-    <text x="660" y="388" font-family="sans-serif" font-size="15" fill="#e8ddc8" text-anchor="middle">Schreibtisch des Direktors</text>
+  <g filter="url(#f-shadow)">
+    <rect x="40" y="40" width="250" height="196" rx="6" fill="#c9a54a" stroke="#7a5f20" stroke-width="4"/>
+    <rect x="56" y="56" width="218" height="164" fill="#a5843a"/>
+    <rect x="66" y="66" width="198" height="144" fill="#f4ecd9"/>
+    <text x="165" y="158" font-family="serif" font-size="60" fill="none" stroke="#b8975a" stroke-width="2" stroke-dasharray="6 5" text-anchor="middle">√2</text>
+    <rect x="115" y="186" width="100" height="18" rx="2" fill="#d9bd84"/>
+    <text x="165" y="199" font-family="sans-serif" font-size="11" font-weight="700" fill="#2b2419" text-anchor="middle">(leerer Rahmen)</text>
   </g>
-  <g>
-    <rect x="380" y="100" width="100" height="120" rx="8" fill="#3a3347" stroke="#181420" stroke-width="3"/>
-    <circle cx="430" cy="150" r="18" fill="#ffd046"/>
-    <circle cx="430" cy="190" r="6" fill="#ffd046" opacity="0.7"/>
-    <text x="430" y="238" font-family="sans-serif" font-size="14" fill="#d7cfe8" text-anchor="middle">Panik-Code-Rahmen</text>
+  <g filter="url(#f-shadow)">
+    <rect x="384" y="96" width="100" height="134" rx="6" fill="#3a3347" stroke="#181420" stroke-width="3"/>
+    <rect x="396" y="108" width="76" height="22" rx="3" fill="#0b130e"/>
+    <text x="434" y="124" font-family="monospace" font-size="12" fill="#ff7b72" text-anchor="middle">CODE ?</text>
+    <g fill="#d7cfe8"><rect x="400" y="138" width="18" height="14" rx="2"/><rect x="424" y="138" width="18" height="14" rx="2"/><rect x="448" y="138" width="18" height="14" rx="2"/><rect x="400" y="158" width="18" height="14" rx="2"/><rect x="424" y="158" width="18" height="14" rx="2"/><rect x="448" y="158" width="18" height="14" rx="2"/><rect x="400" y="178" width="18" height="14" rx="2"/><rect x="424" y="178" width="18" height="14" rx="2"/><rect x="448" y="178" width="18" height="14" rx="2"/><rect x="400" y="198" width="18" height="14" rx="2"/><rect x="424" y="198" width="18" height="14" rx="2"/><rect x="448" y="198" width="18" height="14" rx="2"/></g>
   </g>
-  <g>
-    <rect x="320" y="270" width="160" height="150" rx="6" fill="#5a4f3f" stroke="#2a2418" stroke-width="4"/>
-    <line x1="320" y1="345" x2="480" y2="345" stroke="#2a2418" stroke-width="3"/>
-    <circle cx="350" cy="310" r="8" fill="#ffd046"/><circle cx="450" cy="310" r="8" fill="#ffd046"/>
-    <text x="400" y="385" font-family="sans-serif" font-size="18" fill="#f2e9d8" text-anchor="middle">x² = 50</text>
-    <text x="400" y="440" font-family="sans-serif" font-size="14" fill="#d7cfe8" text-anchor="middle">Aktenschrank</text>
+  <text x="434" y="248" font-family="sans-serif" font-size="13" font-weight="700" fill="#e8ddc8" text-anchor="middle">Panik-Code</text>
+  <g filter="url(#f-shadow)">
+    <rect x="322" y="272" width="156" height="146" rx="4" fill="#6f7a6e" stroke="#2e352d" stroke-width="4"/>
+    <rect x="334" y="284" width="132" height="56" rx="3" fill="#7f8a7e" stroke="#2e352d" stroke-width="2"/>
+    <rect x="334" y="350" width="132" height="56" rx="3" fill="#7f8a7e" stroke="#2e352d" stroke-width="2"/>
+    <circle cx="352" cy="300" r="7" fill="#ffd046" stroke="#8a6f20" stroke-width="2"/><circle cx="448" cy="300" r="7" fill="#ffd046" stroke="#8a6f20" stroke-width="2"/>
+    <rect x="360" y="318" width="80" height="16" rx="2" fill="#f4ecd9"/>
+    <text x="400" y="331" font-family="sans-serif" font-size="12" font-weight="700" fill="#2b2419" text-anchor="middle">x² = 50</text>
+    <rect x="384" y="372" width="32" height="8" rx="3" fill="#3a4239"/>
   </g>
-  <g>
-    <rect x="60" y="440" width="220" height="60" rx="8" fill="#4a5560" stroke="#22292f" stroke-width="3"/>
-    <text x="170" y="477" font-family="sans-serif" font-size="15" fill="#dde5ed" text-anchor="middle">Zurück zum Lehrerzimmer</text>
+  <text x="400" y="438" font-family="sans-serif" font-size="13" font-weight="700" fill="#e8ddc8" text-anchor="middle">Aktenschrank</text>
+  <g filter="url(#f-shadow)">
+    <rect x="516" y="262" width="288" height="22" rx="4" fill="#6b4a2c"/>
+    <rect x="530" y="284" width="260" height="96" fill="#5a3d24" stroke="#3a2614" stroke-width="3"/>
+    <g fill="none" stroke="#3a2614" stroke-width="3"><rect x="544" y="296" width="70" height="72" rx="3"/><rect x="706" y="296" width="70" height="72" rx="3"/></g>
+    <rect x="618" y="300" width="84" height="22" rx="2" fill="#d9b650"/>
+    <text x="660" y="316" font-family="serif" font-size="12" font-weight="700" fill="#2b2419" text-anchor="middle">DIREKTOR</text>
+    <rect x="560" y="238" width="60" height="24" fill="#f4ecd9" transform="rotate(-6 590 250)"/>
+    <rect x="630" y="244" width="44" height="18" fill="#d9e6ee"/>
+    <path d="M740 262 v-40 l-16 -6 M724 216 l-22 -6 h40z" stroke="#2f4a3a" stroke-width="4" fill="#2f6b45"/>
   </g>
-  <g>
-    <rect x="700" y="420" width="180" height="90" rx="8" fill="#7a3f3f" stroke="#3f2020" stroke-width="3"/>
-    <circle cx="790" cy="450" r="14" fill="#ffd046"/>
-    <rect x="730" y="476" width="120" height="12" rx="6" fill="#3f2020"/>
-    <text x="790" y="499" font-family="sans-serif" font-size="13" fill="#f2e4e4" text-anchor="middle">Direktions-Telefon</text>
-  </g>`,
+  <circle cx="726" cy="230" r="70" fill="url(#g-bulb)"/>
+  <text x="660" y="396" font-family="sans-serif" font-size="13" font-weight="700" fill="#e8ddc8" text-anchor="middle">Schreibtisch des Direktors</text>
+  <g filter="url(#f-shadow)">
+    <rect x="704" y="470" width="172" height="12" rx="3" fill="url(#g-wood)"/>
+    <rect x="716" y="482" width="10" height="44" fill="#5e4329"/><rect x="854" y="482" width="10" height="44" fill="#5e4329"/>
+    <path d="M748 470 q4 -30 42 -30 q38 0 42 30z" fill="#b8322a" stroke="#5e1f18" stroke-width="2"/>
+    <circle cx="790" cy="455" r="12" fill="#f4ecd9" stroke="#5e1f18" stroke-width="2"/><circle cx="790" cy="455" r="4" fill="#5e1f18"/>
+    <path d="M752 438 q38 -24 76 0" stroke="#5e1f18" stroke-width="10" fill="none" stroke-linecap="round"/>
+  </g>
+  <text x="790" y="506" font-family="sans-serif" font-size="13" font-weight="700" fill="#f4ecd9" text-anchor="middle">Telefon</text>
+  <g><rect x="66" y="444" width="210" height="52" rx="8" fill="#1f3a5f" stroke="#0f1d30" stroke-width="3"/>
+    <rect x="70" y="448" width="202" height="44" rx="6" fill="none" stroke="#5f84b3" stroke-width="1.5"/>
+    <text x="161.0" y="476.0" font-family="sans-serif" font-size="17" font-weight="700" fill="#f4ecd9" text-anchor="middle">← Lehrerzimmer</text></g>`,
   hotspots: [
     {
       id: "hs_direktor_code", x: 380, y: 90, w: 110, h: 160, label: "Rahmen mit Panik-Code",
@@ -1458,6 +1511,25 @@ DATA.rooms.direktorat = {
     }
   ]
 };
+
+DATA.sceneDefs = `<defs>
+  <radialGradient id="g-vignette" cx="50%" cy="45%" r="72%"><stop offset="62%" stop-color="#000" stop-opacity="0"/><stop offset="100%" stop-color="#000" stop-opacity=".55"/></radialGradient>
+  <radialGradient id="g-lamp"><stop offset="0" stop-color="#ffe2a0" stop-opacity=".22"/><stop offset="1" stop-color="#ffe2a0" stop-opacity="0"/></radialGradient>
+  <radialGradient id="g-bulb"><stop offset="0" stop-color="#ffe7a3" stop-opacity=".35"/><stop offset=".35" stop-color="#ffe7a3" stop-opacity=".12"/><stop offset="1" stop-color="#ffe7a3" stop-opacity="0"/></radialGradient>
+  <radialGradient id="g-cool"><stop offset="0" stop-color="#dff2ff" stop-opacity=".16"/><stop offset="1" stop-color="#dff2ff" stop-opacity="0"/></radialGradient>
+  <linearGradient id="g-metal" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8b93a1"/><stop offset="1" stop-color="#4d5462"/></linearGradient>
+  <linearGradient id="g-wood" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8f6a42"/><stop offset="1" stop-color="#5e4329"/></linearGradient>
+  <pattern id="p-brick" width="64" height="32" patternUnits="userSpaceOnUse"><rect width="64" height="32" fill="#4f3e30"/><path d="M0 16 H64 M0 32 H64 M32 0 V16 M0 16 V32 M64 16 V32" stroke="#36291f" stroke-width="3"/></pattern>
+  <pattern id="p-wallpaper" width="40" height="40" patternUnits="userSpaceOnUse"><rect width="40" height="40" fill="#4a2f33"/><rect width="18" height="40" fill="#53363a"/><circle cx="29" cy="20" r="2.5" fill="#6b474b"/></pattern>
+  <pattern id="p-carpet" width="48" height="48" patternUnits="userSpaceOnUse"><rect width="48" height="48" fill="#2f4a3a"/><path d="M24 6 L42 24 L24 42 L6 24z" fill="none" stroke="#3b5a47" stroke-width="2"/></pattern>
+  <pattern id="p-carpet2" width="60" height="60" patternUnits="userSpaceOnUse"><path d="M30 8 L52 30 L30 52 L8 30z" fill="none" stroke="#6e2d33" stroke-width="2"/></pattern>
+  <pattern id="p-tiles" width="40" height="40" patternUnits="userSpaceOnUse"><rect width="40" height="40" fill="#3b4a57"/><path d="M0 0 H40 M0 0 V40" stroke="#2e3b46" stroke-width="2"/></pattern>
+  <pattern id="p-checker" width="60" height="60" patternUnits="userSpaceOnUse"><rect width="60" height="60" fill="#c9d2da"/><rect width="30" height="30" fill="#8fa0ae"/><rect x="30" y="30" width="30" height="30" fill="#8fa0ae"/></pattern>
+  <pattern id="p-stripes" width="36" height="36" patternUnits="userSpaceOnUse"><rect width="12" height="36" fill="#ffffff" opacity=".035"/></pattern>
+  <pattern id="p-planks" width="160" height="30" patternUnits="userSpaceOnUse"><rect width="160" height="30" fill="#6b4c32"/><path d="M0 30 H160 M100 0 V30" stroke="#4e3624" stroke-width="2"/><path d="M20 12 q20 -4 40 0" stroke="#7a5a3c" fill="none"/></pattern>
+  <pattern id="p-damask" width="50" height="50" patternUnits="userSpaceOnUse"><path d="M25 8 q10 17 0 34 q-10 -17 0 -34z" fill="#36443b"/></pattern>
+  <filter id="f-shadow" x="-10%" y="-10%" width="130%" height="140%"><feDropShadow dx="0" dy="6" stdDeviation="5" flood-color="#000" flood-opacity=".45"/></filter>
+</defs>`;
 
 DATA.mapPuzzleByRoom = {};
 Object.keys(DATA.puzzles).forEach(function (id) {
@@ -1836,7 +1908,8 @@ function renderRoom() {
   var room = DATA.rooms[State.currentRoom];
   $("location-label").textContent = room.name;
   var svg = '<svg viewBox="0 0 960 540" role="img" aria-label="' + esc(room.name) + '">';
-  svg += room.backdrop;
+  svg += DATA.sceneDefs + room.backdrop;
+  svg += '<rect width="960" height="540" fill="url(#g-vignette)" pointer-events="none"/>';
   room.hotspots.forEach(function (h) {
     var solvedMark = (h.type === "puzzle" && isSolved(h.puzzleId)) ||
                      (h.type === "niveau" && h.puzzleIds.every(isSolved)) ||
