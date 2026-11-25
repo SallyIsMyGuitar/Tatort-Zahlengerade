@@ -1,7 +1,7 @@
 # AGENTS.md – Detektiv-Adventure „Reelle Zahlen“
 
 Titel: **Tatort Zahlengerade – Der Fall √2**
-Repo-Name: `tatort-zahlengerade`
+Repo: `Tatort-Zahlengerade` (GitHub Pages: `https://sallyismyguitar.github.io/Tatort-Zahlengerade/`)
 
 Einsatz: freiwillige Ergänzung zum Unterricht, Üben und Vertiefen zu Hause (Selbstlernen ohne Lehrkraft, ca. 30–45 Min Gesamtspielzeit, jederzeit unterbrechbar dank Spielstand). Dadurch besonders wichtig: verständliche Hilfen, Merkkästen und Beispiele im Spiel, da keine Lehrkraft nachfragen kann.
 
@@ -11,7 +11,7 @@ Browserbasiertes Point-and-Click-Adventure (Detektiv/Escape-Room) zum Lernbereic
 ## Entwicklungsumgebung
 - Umsetzung direkt in **GitHub** mit **Mistral Vibe** und dem Modell **GLM 5.3**. Dieses Dokument ist die verbindliche Arbeitsgrundlage für den Agenten.
 - Inhalte der Rätsel orientieren sich am **LehrplanPLUS Realschule Bayern (M9, WPF I, Lernbereich 1)** und am **Westermann-Schulbuch für bayerische Realschulen**. Reihenfolge, Begriffe, Schreibweisen und Aufgabentypen folgen dem Buch.
-- Der Agent erfindet keine Buchinhalte aus dem Gedächtnis. Lehrplanauszug und Buchseiten (bzw. deren Struktur) werden von Stefan als Datei im Ordner `quellen/` bereitgestellt. Fehlt etwas, wird nachgefragt.
+- Der Agent erfindet keine Buchinhalte aus dem Gedächtnis. Der Lehrplanauszug liegt in `quellen/lehrplan-m9-wpfg1-lernbereich1.md`. Die Struktur des Westermann-Buchs (Inhaltsverzeichnis, Aufgabentypen, keine kopierten Buchseiten) stellt Stefan als Datei in `quellen/` bereit. Fehlt etwas, wird nachgefragt.
 
 ## Arbeitsweise (verbindlich)
 - **Nichts ohne Go:** Vor größeren Änderungen kurz Plan/Skizze vorlegen und Freigabe abwarten. Bei Unklarheiten nachfragen, keine Annahmen treffen.
@@ -40,15 +40,17 @@ Browserbasiertes Point-and-Click-Adventure (Detektiv/Escape-Room) zum Lernbereic
 ## Story und Räume
 Im Mathe-Fachraum fehlt √2 aus der Zahlensammlung des Direktors. Das Detektivteam prüft die Alibis der Zahlen.
 
-1. **Hausmeisterkeller:** Quadratwurzeln bestimmen und abschätzen, Zahlenschloss.
-2. **Bibliothek:** rational/irrational unterscheiden, Zuordnung zu ℕ, ℤ, ℚ, ℝ, periodische vs. nicht abbrechende Dezimalzahlen.
-3. **Labor:** Intervallschachtelung, Näherungswerte.
-4. **Lehrerzimmer:** Wurzelrechenregeln (Produkt, Quotient, teilweises Wurzelziehen, Nenner rational machen).
-5. **Direktorat:** Finale mit gemischten Aufgaben, Überführung der Täterin/des Täters.
+1. **Hausmeisterkeller:** Definition der Quadratwurzel, Wurzelwerte bestimmen, √(a²) = |a|. Zahlenschloss. (KE 1/2)
+2. **Bibliothek:** Zahlenmengen ℕ, ℤ, ℚ, ℝ, rational/irrational unterscheiden, Begründung, warum √2 nicht rational ist und die Erweiterung auf ℝ nötig ist. (KE 1)
+3. **Labor:** Wurzelwerte abschätzen und eingrenzen (zwischen zwei Quadratzahlen einordnen), quadratische Gleichungen x² = a mit Lösungsmenge L = {−√a; √a}. Kein eigenes Verfahren wie Intervallschachtelung, solange es nicht im Westermann-Buch vorgesehen ist. (KE 2)
+4. **Lehrerzimmer:** Wurzelterme umformen: Produkt und Quotient, teilweises Radizieren. Nenner rational machen nur als optionales Plus-Rätsel (für die Abschlussprüfung von geringerer Relevanz). (KE 3)
+5. **Direktorat:** Finale mit gemischten Aufgaben aus allen Kompetenzerwartungen, Überführung der Täterin/des Täters.
+
+Die Zuordnung (KE 1–3) bezieht sich auf `quellen/lehrplan-m9-wpfg1-lernbereich1.md`. Umfang laut Lehrplan: ca. 10 Std., das Spiel ergänzt den Unterricht und ersetzt ihn nicht.
 
 **Ton der Story: humorvoll.** Augenzwinkernde Dialoge, skurrile Figuren (z. B. ein pedantischer Hausmeister, eine dramatische Zahl √2), Wortwitz rund um Zahlen. Humor bleibt schülergerecht, nie auf Kosten realer Personen oder Gruppen. Fachliche Erklärungen und Fehlerfeedback bleiben klar und sachlich, der Witz steckt in Rahmenhandlung und Figuren.
 
-Die Rätselthemen (Raumliste oben) sind ein Entwurf und werden mit Lehrplan und Westermann-Buch abgeglichen, bevor sie umgesetzt werden.
+Die Raumliste ist mit dem Lehrplan abgeglichen. Der Abgleich mit dem Westermann-Buch (Reihenfolge, Begriffe, Aufgabentypen) steht noch aus und erfolgt, sobald die Inhaltsstruktur in `quellen/` liegt. Bis dahin gilt der Lehrplan als verbindlich.
 
 ## Fachliche Qualität
 - Fachsprache und Schreibweisen wie im bayerischen Realschulunterricht (M9). Inhalte orientieren sich am LehrplanPLUS Realschule Bayern, Lernbereich 1 M9 (WPF I).
@@ -68,9 +70,9 @@ Die Rätselthemen (Raumliste oben) sind ein Entwurf und werden mit Lehrplan und 
 - Neustart und Laden des Spielstands funktionieren, auch bei deaktiviertem `localStorage`.
 
 ## Deployment (GitHub Pages)
-1. Repo anlegen, `index.html` und `AGENTS.md` ins Root.
+1. Repo ist angelegt. `index.html` und `AGENTS.md` liegen im Root.
 2. *Settings → Pages → Branch `main`, Ordner `/ (root)`*.
-3. Aufruf unter `https://<benutzername>.github.io/<repo>/`.
+3. Aufruf unter `https://sallyismyguitar.github.io/Tatort-Zahlengerade/`.
 
 ## Offene Punkte (vor Umsetzung klären)
 - [x] Umsetzung: GitHub + Mistral Vibe + GLM 5.3
