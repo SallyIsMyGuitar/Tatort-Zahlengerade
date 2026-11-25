@@ -75,6 +75,7 @@ Die Rätselthemen (Raumliste oben) sind ein Entwurf und werden mit Lehrplan und 
 ## Offene Punkte (vor Umsetzung klären)
 - [x] Umsetzung: GitHub + Mistral Vibe + GLM 5.3
 - [x] Tonalität: humorvoll
-- [ ] Lehrplanauszug und Westermann-Inhaltsstruktur für Lernbereich 1 in `quellen/` bereitstellen, danach Raumliste abgleichen
+- [x] Lehrplanauszug liegt in `quellen/lehrplan-m9-wpfg1-lernbereich1.md` (Abgleich der Raumliste dort unten, Raum 3 prüfen)
+- [ ] Westermann-Inhaltsstruktur für Lernbereich 1 in `quellen/` bereitstellen, danach Raumliste endgültig abgleichen
 - [x] Einsatz: freiwillig zu Hause als Ergänzung zum Unterricht
 - [x] Titel und Repo-Name festgelegt (siehe oben)
