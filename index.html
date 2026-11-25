@@ -124,6 +124,18 @@
   }
   .choices .choice:focus-visible { outline: 3px solid var(--accent); }
 
+  /* Schnellwahl und Symbolleiste (iPad-Tastatur hat kein √) */
+  .quick { display: flex; gap: .5rem; flex-wrap: wrap; }
+  .quick .btn { min-width: 72px; font-size: 1.15rem; }
+  .symbar { display: flex; gap: .4rem; flex-wrap: wrap; margin-top: .5rem; }
+  .symbar .sym {
+    min-width: 48px; min-height: 44px; padding: 6px 10px;
+    background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px;
+    font-size: 1.15rem; font-weight: 700; cursor: pointer; touch-action: manipulation;
+  }
+  .symbar .sym:focus-visible { outline: 3px solid var(--accent); }
+  .symbar .sym-del { margin-left: auto; }
+
   /* Niveau-Wahl */
   .niveau-bar { display: flex; gap: .5rem; flex-wrap: wrap; }
 
@@ -280,6 +292,9 @@ DATA.notes = {
 /* ---------- Texte zur Engine ---------- */
 DATA.errors = {
   generic: "Das stimmt noch nicht. Schau noch einmal genau hin – oder hole dir einen Tipp.",
+  notSimplified: "Der Wert stimmt – aber der Term ist noch nicht so weit wie möglich vereinfacht. Schau dir die Merkregel in der Hilfe an.",
+  wrongBounds: "Prüfe durch Quadrieren: Die Zahl unter der Wurzel muss zwischen den Quadraten deiner beiden Zahlen liegen.",
+  notConsecutive: "Gesucht sind zwei <b>aufeinanderfolgende</b> ganze Zahlen (z. B. 3 und 4). Quadriere deine Kandidaten und grenze enger ein.",
   soonTitle: "Verschlossene Tür",
   soonText: "An der Tür hängt ein Schild: „Kommt bald.“ Weitere Ermittlungsorte sind noch in Bau."
 };
@@ -381,10 +396,10 @@ DATA.puzzles = {
   /* ======== RAUM 2: BIBLIOTHEK (Reelle Zahlen, KE 1) ======== */
 
   bibliothek_kartei: {
-    room: "bibliothek", niv: "main", kind: "token",
+    room: "bibliothek", niv: "main", kind: "word", quick: [["n", "ℕ"], ["z", "ℤ"], ["q", "ℚ"], ["r", "ℝ"]],
     title: "Die Kartei der Zahlenmengen",
     desc: "Die Bibliothekarin schiebt dir eine Kartei zu: „Ordnung ist das halte Geheimnis der Zahlen. Man muss nur die kleinste passende Schublade finden.“",
-    prompt: "Ordne <b>√16</b> der <b>kleinsten passenden</b> Zahlenmenge zu. Antworten: <b>n</b> (ℕ), <b>z</b> (ℤ), <b>q</b> (ℚ), <b>r</b> (ℝ).",
+    prompt: "Ordne <b>√16</b> der <b>kleinsten passenden</b> Zahlenmenge zu. Wähle die Zahlenmenge.",
     solution: { token: "n" },
     commonErrors: [
       { when: "r", text: "ℝ stimmt natürlich – aber √16 ist eine natürliche Zahl, und ℕ liegt in ℚ und ℝ. Gesucht ist die kleinste Menge. (ℕ ⊂ ℤ ⊂ ℚ ⊂ ℝ.)" },
@@ -396,15 +411,15 @@ DATA.puzzles = {
       merk: "ℕ ⊂ ℤ ⊂ ℚ ⊂ ℝ. Gesucht ist immer die kleinste Menge, in der die Zahl liegt. √25 = 5 liegt z. B. in ℕ.",
       beispiel: "Die Zahl 23 gehört zu ℕ (und damit auch zu ℤ, ℚ und ℝ – aber ℕ ist am kleinsten)."
     },
-    reveal: "√16 = <b>4</b>, also gehört √16 zur Menge <b>ℕ</b> (Lösung: n).",
+    reveal: "√16 = <b>4</b>, also gehört √16 zur Menge <b>ℕ</b>.",
     onSolve: { note: "n_mengen", found: "√16 = 4 ∈ ℕ" }
   },
 
   bibliothek_periode: {
-    room: "bibliothek", niv: "main", kind: "token",
+    room: "bibliothek", niv: "main", kind: "word", quick: [["rational", "rational"], ["irrational", "irrational"]],
     title: "Die endlose Rückgabe-Frist",
     desc: "Auf dem Bibliothekscomputer läuft eine Zahl im Kreis: 0,66666… Die Bibliothekarin seufzt: „Ist die wenigstens rational? Man kann ja nie sicher sein.“",
-    prompt: "Ist die Zahl <b>0,66666…</b> (also 0,6̄) rational oder irrational? Antworte mit: <b>rational</b> oder <b>irrational</b>.",
+    prompt: "Ist die Zahl <b>0,66666…</b> (also 0,6̄) rational oder irrational?",
     solution: { token: "rational" },
     commonErrors: [
       { when: "irrational", text: "Vorsicht, typischer Fehler: „unendlich viele Nachkommastellen“ heißt nicht automatisch irrational! Entscheidend ist: Die Entwicklung ist periodisch (Periode 6), und 0,6̄ = 2/3 – ein Bruch, also rational." }
@@ -452,10 +467,10 @@ DATA.puzzles = {
   },
 
   bibliothek_negativ: {
-    room: "bibliothek", niv: "leicht", kind: "token",
+    room: "bibliothek", niv: "leicht", kind: "word", quick: [["n", "ℕ"], ["z", "ℤ"], ["q", "ℚ"], ["r", "ℝ"]],
     title: "Zusatzrätsel (leicht): Der negative Gast",
     desc: "In der Leseecke sitzt eine negative Zahl und gibt vor, unschuldig zu sein.",
-    prompt: "Ordne <b>−7</b> der kleinsten passenden Zahlenmenge zu. Antworten: <b>n</b> (ℕ), <b>z</b> (ℤ), <b>q</b> (ℚ), <b>r</b> (ℝ).",
+    prompt: "Ordne <b>−7</b> der kleinsten passenden Zahlenmenge zu. Wähle die Zahlenmenge.",
     solution: { token: "z" },
     commonErrors: [
       { when: "q", text: "ℚ stimmt, aber −7 ist eine ganze Zahl – die kleinste passende Menge ist ℤ. (ℕ umfasst nur die Zahlen 1, 2, 3, …; negative Zahlen gehören nicht zu ℕ.)" },
@@ -467,12 +482,13 @@ DATA.puzzles = {
       merk: "ℕ = {1; 2; 3; …}, ℤ enthält auch die negativen ganzen Zahlen und die 0. Gesucht ist die kleinste passende Menge.",
       beispiel: "−100 gehört zu ℤ (nicht zu ℕ)."
     },
-    reveal: "−7 ist eine ganze Zahl: kleinste passende Menge <b>ℤ</b> (Lösung: z).",
+    reveal: "−7 ist eine ganze Zahl: kleinste passende Menge <b>ℤ</b>.",
     onSolve: { note: null, found: "−7 ∈ ℤ" }
   },
 
   bibliothek_eingrenzen: {
     room: "bibliothek", niv: "standard", kind: "set",
+    interval: true,
     title: "Zusatzrätsel (standard): Das Versteck",
     desc: "Der Kreide-Hinweis aus dem Keller taucht wieder auf – diesmal als Aufgabe in einem alten Lehrbuch.",
     prompt: "Zwischen welchen <b>zwei aufeinanderfolgenden ganzen Zahlen</b> liegt √2? (Erst die kleinere, dann die größere.)",
@@ -490,10 +506,10 @@ DATA.puzzles = {
   },
 
   bibliothek_versteck: {
-    room: "bibliothek", niv: "plus", kind: "token",
+    room: "bibliothek", niv: "plus", kind: "word", quick: [["rational", "rational"], ["irrational", "irrational"]],
     title: "Zusatzrätsel (plus): Der Dramatische Auftritt",
     desc: "Hinter dem „Goldenen Schnitt“-Poster ist eine Notiz: „Alle behaupten, ich sei irrational. Alias beweist es!“ (Taschenrechner erlaubt.)",
-    prompt: "Entscheide: Ist <b>√2 · √8</b> rational oder irrational? Antworte mit <b>rational</b> oder <b>irrational</b>.",
+    prompt: "Entscheide: Ist <b>√2 · √8</b> rational oder irrational?",
     solution: { token: "rational" },
     commonErrors: [
       { when: "irrational", text: "Vorsicht: Produktregel nutzen! √2 · √8 = √(2 · 8) = √16 = 4. Produkte irrationaler Zahlen können also sehr wohl rational sein." }
@@ -511,6 +527,7 @@ DATA.puzzles = {
 
   labor_eingrenzen: {
     room: "labor", niv: "main", kind: "set",
+    interval: true,
     title: "Eingrenzzange",
     desc: "Auf dem Labortisch liegt eine Probe mit der Aufschrift „√50 – Fundort: Zahlengerade“. Der Laborant Bunsen-Brock drückt dir die Eingrenzzange in die Hand: „Zwischen zwei Quadratzahlen, bitte. Und schön der Reihe nach!“",
     prompt: "Zwischen welchen <b>zwei aufeinanderfolgenden ganzen Zahlen</b> liegt <b>√50</b>? (Erst die kleinere.)",
@@ -530,15 +547,16 @@ DATA.puzzles = {
   },
 
   labor_x2: {
-    room: "labor", niv: "main", kind: "token",
+    room: "labor", niv: "main", kind: "termset",
     title: "Die ungeduldige Gleichung",
     desc: "Auf dem Bildschirm flackert: „x² = 6“. Der Laborant seufzt: „Keine Quadratzahl. Trotzdem zwei Lösungen! So wie meine zwei linken Daumen.“",
-    prompt: "Gib die Lösungsmenge von <b>x² = 6</b> an – z. B. als „±√6“ oder „L = {−√6; √6}“.",
-    solution: { token: "±√6", tokenAlt: ["-√6;√6", "√6;-√6", "{-√6;√6}", "l={-√6;√6}", "l{-√6;√6}"] },
+    prompt: "Gib die Lösungsmenge von <b>x² = 6</b> an, z. B. als „L = {−√6; √6}“ oder kurz „±√6“.",
+    solution: { terms: ["-√6", "√6"] },
     commonErrors: [
-      { when: "√6", text: "Fast! x² = 6 hat <b>zwei</b> Lösungen: +√6 und −√6. Das negative Vorzeichen darf nicht fehlen: L = {−√6; √6}." },
-      { when: "-√6", text: "Auch die positive Lösung gehört dazu: L = {−√6; √6}." },
-      { when: 36, text: "36 = 6² – aber gesucht sind die Zahlen x mit x² = 6, und das sind ±√6. Quadrieren und Wurzelziehen sind Umkehrungen." }
+      { when: ["√6"], text: "Fast! x² = 6 hat <b>zwei</b> Lösungen: +√6 und −√6. Das negative Vorzeichen darf nicht fehlen: L = {−√6; √6}." },
+      { when: ["-√6"], text: "Auch die positive Lösung gehört dazu: L = {−√6; √6}." },
+      { when: ["3", "-3"], text: "Vorsicht: 6 : 2 = 3 ist halbiert, nicht radiziert. Gesucht sind die Zahlen x mit x² = 6, also ±√6." },
+      { when: ["36"], text: "36 = 6² – aber gesucht sind die Zahlen x mit x² = 6, und das sind ±√6. Quadrieren und Wurzelziehen sind Umkehrungen." }
     ],
     help: {
       hint: "Denke an positive UND negative Vorzeichen. Was ergibt (−√6)²?",
@@ -551,6 +569,7 @@ DATA.puzzles = {
 
   labor_leicht: {
     room: "labor", niv: "leicht", kind: "set",
+    interval: true,
     title: "Zusatzrätsel (leicht): Erste Eingrenzung",
     desc: "Am Probenregal klebt ein Etikett: „√20 – Handprobe, bitte nicht anhauchen.“",
     prompt: "Zwischen welchen zwei aufeinanderfolgenden ganzen Zahlen liegt <b>√20</b>?",
@@ -610,11 +629,11 @@ DATA.puzzles = {
   /* ======== RAUM 4: LEHRERZIMMER (Mit Wurzeltermen rechnen, KE 3) ======== */
 
   lehrer_produkt: {
-    room: "lehrerzimmer", niv: "main", kind: "token",
+    room: "lehrerzimmer", niv: "main", kind: "term",
     title: "Kaffeemaschinen-Notizzettel",
     desc: "An der Kaffeemaschine hängt ein Notizzettel: „√3 · √7 = ??? – wer das löst, bekommt den letzten Keks. Signiert: Frau Tafelwisch.“",
     prompt: "Vereinfache <b>√3 · √7</b> so weit wie möglich.",
-    solution: { token: "√21", tokenAlt: ["wurzel21", "√(21)"] },
+    solution: { token: "√21" },
     commonErrors: [
       { when: "√10", text: "Achtung, typischer Fehler: √a · √b = √(a · b) – Produkt unter der Wurzel, nicht Summe! Also √(3 · 7) = √21 und nicht √(3 + 7) = √10." },
       { when: 21, text: "21 ist richtig – aber noch unter der Wurzel: geschrieben als √21. (21 ist keine Quadratzahl, deshalb bleibt die Wurzel stehen.)" },
@@ -630,11 +649,11 @@ DATA.puzzles = {
   },
 
   lehrer_radizieren: {
-    room: "lehrerzimmer", niv: "main", kind: "token",
+    room: "lehrerzimmer", niv: "main", kind: "term",
     title: "Der streitsüchtige Getränkeautomat",
     desc: "Der Getränkeautomat im Lehrerzimmer gibt nur frei, wer teilweises Radizieren beherrscht. Frau Tafelwisch zwinkert: „Quadratische Faktoren rausziehen – so bekommt man auch das letzte Fasswasser aus dem Automaten.“",
     prompt: "Vereinfache durch teilweises Radizieren: <b>√72</b>",
-    solution: { token: "6√2", tokenAlt: ["6wurzel2"] },
+    solution: { token: "6√2" },
     commonErrors: [
       { when: 36, text: "36 ist der größte quadratische Faktor von 72 (72 = 36 · 2). Aber du sollst die Wurzel ziehen: √72 = √(36 · 2) = √36 · √2 = 6√2." },
       { when: "√36·√2", text: "Fast! Ziehe die Faktoren aus einer gemeinsamen Wurzel: √72 = √(36 · 2) = 6√2. Schreibe das Ergebnis als 6√2." },
@@ -669,11 +688,11 @@ DATA.puzzles = {
   },
 
   lehrer_standard: {
-    room: "lehrerzimmer", niv: "standard", kind: "token",
+    room: "lehrerzimmer", niv: "standard", kind: "term",
     title: "Zusatzrätsel (standard): Wandernde Kaffeemaschine",
     desc: "Die Kaffeemaschine mahlt nur, wenn im Nenner keine Wurzel steht. Pädagogisch wertvoll.",
     prompt: "Mach den Nenner rational und gib das Ergebnis an: <b>5/√3</b>",
-    solution: { token: "5√3/3", tokenAlt: ["(5√3)/3", "5/3√3", "5√3:3"] },
+    solution: { token: "5√3/3", tokenAlt: ["5/3√3", "(5/3)√3"] },
     commonErrors: [
       { when: "5/3", text: "Fast: Beim Erweitern mit √3 landet auch im Zähler ein √3: 5/√3 = (5 · √3)/(√3 · √3) = 5√3/3." },
       { when: "5√3", text: "Ohne den neuen Nenner stimmt das nicht: Erweitere mit √3, dann gilt (√3)² = 3 im Nenner. Ergebnis: 5√3/3." }
@@ -688,11 +707,11 @@ DATA.puzzles = {
   },
 
   lehrer_plus: {
-    room: "lehrerzimmer", niv: "plus", kind: "token",
+    room: "lehrerzimmer", niv: "plus", kind: "term",
     title: "Zusatzrätsel (plus): Vertretungsplan-Challenge",
     desc: "Auf dem Vertretungsplan klebt ein Zettel des Mathe-Kurses: „√(8a²) – wer das löst, bekommt eine freie Vertretungsstunde. Hinweis: a ≥ 0.“",
     prompt: "Vereinfache durch teilweises Radizieren: <b>√(8a²)</b> (für a ≥ 0)",
-    solution: { token: "2a√2", tokenAlt: ["2√2a"] },
+    solution: { token: "2a√2", tokenAlt: ["2√2a", "2√2·a"] },
     commonErrors: [
       { when: "2a", text: "Der quadratische Faktor 4 liefert √(8a²) = √(4 · 2 · a²) = 2a√2 – der Faktor √2 fehlt dir noch." },
       { when: "8a", text: "Vorsicht: Ziehe die quadratischen Faktoren aus der Wurzel: 8 = 4 · 2 und a². Also √(8a²) = 2a√2." },
@@ -782,10 +801,10 @@ DATA.puzzles = {
   },
 
   direktor_standard: {
-    room: "direktorat", niv: "standard", kind: "token",
+    room: "direktorat", niv: "standard", kind: "word", quick: [["n", "ℕ"], ["z", "ℤ"], ["q", "ℚ"], ["r", "ℝ"]],
     title: "Zusatzrätsel (standard): Die nicht einzuordnende Konstante",
     desc: "Auf dem Schreibtisch liegt eine Zahl ganz ohne Rahmen: π. Der Direktor: „Die ist sogar irrational – und nicht mal eine Wurzel! Trotzdem braucht sie eine Schublade.“",
-    prompt: "Welcher Zahlenmenge gehört <b>π</b> in der kleinsten passenden Schublade zu? Antworten: <b>n</b> (ℕ), <b>z</b> (ℤ), <b>q</b> (ℚ) oder <b>r</b> (ℝ).",
+    prompt: "Welcher Zahlenmenge gehört <b>π</b> in der kleinsten passenden Schublade zu? Wähle die Zahlenmenge.",
     solution: { token: "r" },
     commonErrors: [
       { when: "q", text: "π ist irrational – es gibt keinen Bruch p/q für π. Die Dezimalentwicklung von π bricht nie ab und ist nicht periodisch." },
@@ -797,16 +816,16 @@ DATA.puzzles = {
       merk: "Irrationale Zahlen gehören zu ℝ, aber nicht zu ℚ. π und √2 sind Beispiele: kein Abbruch, keine Periode.",
       beispiel: "√2 gehört als kleinste passende Menge zu ℝ. Dasselbe gilt für π."
     },
-    reveal: "π ist irrational ⇒ kleinste passende Menge <b>ℝ</b> (Lösung: r).",
+    reveal: "π ist irrational ⇒ kleinste passende Menge <b>ℝ</b>.",
     onSolve: { note: null, found: "π ∈ ℝ, irrational" }
   },
 
   direktor_plus: {
-    room: "direktorat", niv: "plus", kind: "token",
+    room: "direktorat", niv: "plus", kind: "term",
     title: "Zusatzrätsel (plus): Der Wurzel-Hut",
     desc: "Unter dem Hut des Direktors steckt ein letzter Zettel: „Addieren kann man Wurzeln nur, wenn sie zur selben Wurzel gehören. Viel Erfolg.“",
     prompt: "Fasse zusammen und vereinfache: <b>√2 + √8</b>",
-    solution: { token: "3√2", tokenAlt: ["3wurzel2"] },
+    solution: { token: "3√2" },
     commonErrors: [
       { when: "√10", text: "Achtung: √a + √b ist NICHT √(a + b). Erst umformen: √8 = √(4 · 2) = 2√2, dann addieren: √2 + 2√2 = 3√2." },
       { when: 4, text: "Fast: 4 wäre √16. Richtig ist √2 + √8 = √2 + 2√2 = 3√2 (≈ 4,24) – die Wurzeln bleiben erhalten." },
@@ -1283,37 +1302,143 @@ function requiredDone() {
   return DATA.story.requiredIds.every(isSolved);
 }
 
-/* ---------- Normierung der Eingaben (tolerant) ---------- */
-function normalizeInput(raw) {
-  return String(raw == null ? "" : raw)
-    .toLowerCase()
-    .replace(/\s+/g, "")
-    .replace(/·/g, "*")
-    .replace(/\*/g, "")
-    .replace(/×/g, "")
-    .replace(/,/g, ".")
-    .replace(/\u2212/g, "-");
+/* ---------- Normierung der Eingaben (tolerant) ----------
+   Rätselarten (kind):
+     num     – eine Zahl (Komma/Punkt, Leerzeichen egal)
+     set     – Menge aus Zahlen, Reihenfolge egal; ±11 wird zu −11 und 11
+               (interval: true → "7-8", "7 < √50 < 8" werden verstanden)
+     word    – Begriff per Schnellwahl-Button oder Eingabe (n/z/q/r, rational/irrational)
+     term    – Wurzelterm (√21, 6√2, 5√3/3, 2a√2); "wurzel", "sqrt", *, ·, Klammern tolerant
+     termset – Lösungsmenge aus Termen (L = {−√6; √6}, ±√6, x1 = …; x2 = …)
+     choice  – Auswahlmöglichkeiten
+   --------------------------------------------------------- */
+
+function unifyMinus(s) {
+  return String(s == null ? "" : s).replace(/[−–—]/g, "-");
 }
 
-function tokenKey(raw) {
-  var s = normalizeInput(raw);
-  s = s
-    .replace(/ℕ/g, "n").replace(/natürlichenzahlen?/g, "n").replace(/natürlichezahlen?/g, "n")
-    .replace(/ℤ/g, "z").replace(/ganzezahlen?/g, "z").replace(/ganzezahl?/g, "z")
-    .replace(/ℚ/g, "q").replace(/rationalezahlen?/g, "q").replace(/rationalezahl?/g, "q")
-    .replace(/ℝ/g, "r").replace(/reellenzahlen?/g, "r").replace(/reellezahl?/g, "r")
-    .replace(/ irrational /g, "irrational");
-  if (s === "rationale") s = "rational";
-  if (s === "irrationale") s = "irrational";
+/* Kanonische Schreibweise eines Wurzelterms (für den Vergleich) */
+function canonTerm(raw) {
+  var s = unifyMinus(raw).toLowerCase()
+    .replace(/\s+/g, "")
+    .replace(/wurzel|sqrt/g, "√")
+    .replace(/[·*×⋅]/g, "")
+    .replace(/:/g, "/")
+    .replace(/,/g, ".")
+    .replace(/\^2/g, "²");
+  s = s.replace(/√\((\d+(?:\.\d+)?|[a-z])\)/g, "√$1");   // √(21) → √21
+  s = s.replace(/^\(([^()]*)\)\//, "$1/");               // (5√3)/3 → 5√3/3
+  s = s.replace(/^\+/, "");
   return s;
 }
 
-function extractNumbers(raw) {
-  var s = String(raw).replace(/,/g, ".");
+/* Kleiner, sicherer Rechner für Wurzelterme (kein eval).
+   Unterstützt Zahlen, a, √, ², + − · /, Klammern, implizites Mal.
+   Rückgabe NaN, wenn der Term nicht lesbar ist. */
+function evalTerm(raw, aVal) {
+  var s = canonTerm(raw);
+  var i = 0;
+  if (aVal === undefined) aVal = 1.7;
+  function peek() { return s.charAt(i); }
+  function primary() {
+    var c = peek();
+    if (c === "(") {
+      i++;
+      var v = expr();
+      if (peek() !== ")") throw new Error("Klammer");
+      i++;
+      return v;
+    }
+    if (c === "√") {
+      i++;
+      var r = primary();
+      if (r < 0) throw new Error("negativ");
+      return Math.sqrt(r);
+    }
+    if (c === "a") { i++; return aVal; }
+    var m = /^\d+(?:\.\d+)?/.exec(s.slice(i));
+    if (!m) throw new Error("Zahl");
+    i += m[0].length;
+    return parseFloat(m[0]);
+  }
+  function factor() {
+    if (peek() === "-") { i++; return -factor(); }
+    if (peek() === "+") { i++; return factor(); }
+    var v = primary();
+    while (peek() === "²") { i++; v = v * v; }
+    return v;
+  }
+  function term() {
+    var v = factor();
+    for (;;) {
+      var c = peek();
+      if (c === "/") { i++; v = v / factor(); }
+      else if (c && /[\d(√a]/.test(c)) { v = v * factor(); }
+      else return v;
+    }
+  }
+  function expr() {
+    var v = term();
+    for (;;) {
+      var c = peek();
+      if (c === "+") { i++; v += term(); }
+      else if (c === "-") { i++; v -= term(); }
+      else return v;
+    }
+  }
+  try {
+    if (!s) return NaN;
+    var val = expr();
+    if (i !== s.length || !isFinite(val)) return NaN;
+    return val;
+  } catch (e) {
+    return NaN;
+  }
+}
+
+function near(a, b) { return Math.abs(a - b) < 1e-9 * Math.max(1, Math.abs(b)); }
+
+/* Lösungsmenge aus Termen zerlegen: "L = {−√6; √6}", "±√6", "x1 = √6, x2 = −√6" */
+function parseTermSet(raw) {
+  var s = unifyMinus(raw).toLowerCase().replace(/\s+/g, "")
+    .replace(/\+\/-|\+-/g, "±")
+    .replace(/^l=/, "")
+    .replace(/[{}]/g, "");
   var out = [];
-  var re = /[-+]?\d+(?:\.\d+)?/g;
+  s.split(/;|,|und|oder/).forEach(function (part) {
+    part = part.replace(/^x(_?[12])?=/, "");
+    if (!part) return;
+    if (part.charAt(0) === "±") {
+      var t = canonTerm(part.slice(1));
+      out.push(t, canonTerm("-" + t));
+    } else {
+      out.push(canonTerm(part));
+    }
+  });
+  return out;
+}
+
+function sameStrings(a, b) {
+  if (a.length !== b.length) return false;
+  var x = a.slice().sort(), y = b.slice().sort();
+  return x.every(function (v, k) { return v === y[k]; });
+}
+
+/* Zahlen aus einer Eingabe holen; ±11 ergibt −11 und 11 */
+function extractNumbers(raw, interval) {
+  var s = unifyMinus(raw).replace(/\+\/-|\+-/g, "±");
+  if (interval) {
+    s = s.replace(/√\(?\d+(?:[.,]\d+)?\)?/g, " ");       // "7 < √50 < 8" → 7, 8
+    s = s.replace(/(\d)\s*-\s*(?=\d)/g, "$1;");          // "7-8" → 7;8
+  }
+  var out = [];
+  var re = /([±+-]?)\s*(\d+(?:[.,]\d+)?)/g;
   var m;
-  while ((m = re.exec(s)) !== null) out.push(parseFloat(m[0]));
+  while ((m = re.exec(s)) !== null) {
+    var v = parseFloat(m[2].replace(",", "."));
+    if (m[1] === "±") out.push(-v, v);
+    else out.push(m[1] === "-" ? -v : v);
+  }
   return out;
 }
 
@@ -1324,61 +1449,119 @@ function numsEqual(a, b) {
   return x.every(function (v, i) { return Math.abs(v - y[i]) < 1e-9; });
 }
 
+/* Begriffe: liefert alle passenden Deutungen einer Eingabe */
+function wordKeys(raw) {
+  var s = String(raw == null ? "" : raw).toLowerCase().replace(/\s+/g, "").replace(/[.!"„“]/g, "");
+  var keys = [s];
+  var rules = [
+    [/^(ℕ|n|natürlich(e|en)?(zahl(en)?)?)$/, "n"],
+    [/^(ℤ|z|ganz(e|en)?(zahl(en)?)?)$/, "z"],
+    [/^(ℚ|q|rational(e|en)?zahl(en)?)$/, "q"],
+    [/^(ℝ|r|reell(e|en)?(zahl(en)?)?)$/, "r"],
+    [/^(irrational(e|er|es)?(zahl(en)?)?|nicht-?rational)$/, "irrational"],
+    [/^rational(e|er|es)?(zahl(en)?)?$/, "rational"]
+  ];
+  rules.forEach(function (r) { if (r[0].test(s)) keys.push(r[1]); });
+  return keys;
+}
+
 /* ---------- Auswertung ---------- */
 
-/* Prüft eine Eingabe gegen ein Rätsel. Rückgabe:
-   { ok: bool, errorText: string|undefined } */
+/* Prüft eine Eingabe gegen ein Rätsel. Rückgabe: { ok, errorText } */
 function checkAnswer(puzzle, rawInput, choiceIndex) {
-  var kind = puzzle.kind;
-  if (kind === "choice") {
-    var c = puzzle.choices[choiceIndex];
+  var fn = CHECKERS[puzzle.kind];
+  if (!fn) return { ok: false, errorText: DATA.errors.generic };
+  return fn(puzzle, rawInput, choiceIndex);
+}
+
+function findError(puzzle, test) {
+  var list = puzzle.commonErrors || [];
+  for (var k = 0; k < list.length; k++) {
+    if (test(list[k].when)) return list[k].text;
+  }
+  return null;
+}
+
+var CHECKERS = {
+  choice: function (p, raw, idx) {
+    var c = p.choices[idx];
     if (!c) return { ok: false, errorText: DATA.errors.generic };
     if (c.ok) return { ok: true };
     return { ok: false, errorText: c.feedback || DATA.errors.generic };
-  }
-  if (kind === "num") {
-    var nums = extractNumbers(rawInput);
-    if (nums.length === 1 && puzzle.solution.accept.some(function (a) {
-      return Math.abs(nums[0] - a) < 1e-9;
-    })) return { ok: true };
-    return { ok: false, errorText: matchError(puzzle, nums) };
-  }
-  if (kind === "set") {
-    var nums2 = extractNumbers(rawInput);
-    if (numsEqual(nums2, puzzle.solution.set)) return { ok: true };
-    return { ok: false, errorText: matchError(puzzle, nums2) };
-  }
-  if (kind === "token") {
-    var t = tokenKey(rawInput);
-    if (t === puzzle.solution.token || (puzzle.solution.tokenAlt || []).indexOf(t) >= 0) {
+  },
+
+  num: function (p, raw) {
+    var nums = extractNumbers(raw);
+    if (nums.length === 1 && p.solution.accept.some(function (a) { return near(nums[0], a); })) {
       return { ok: true };
     }
-    return { ok: false, errorText: matchError(puzzle, t) };
-  }
-  return { ok: false, errorText: DATA.errors.generic };
-}
+    var t = nums.length === 1 && findError(p, function (w) { return typeof w === "number" && near(nums[0], w); });
+    return { ok: false, errorText: t || DATA.errors.generic };
+  },
 
-function matchError(puzzle, normalized) {
-  var text = DATA.errors.generic;
-  (puzzle.commonErrors || []).forEach(function (e) {
-    var when = e.when;
-    if (typeof when === "string" && when.indexOf("kind:") === 0) {
-      if ((when === "kind:incomplete-set" || when === "kind:grenzen-falsch") &&
-          Array.isArray(normalized) && normalized.length > 0) {
-        if (normalized.length < puzzle.solution.set.length) text = e.text;
-      }
-    } else if (Array.isArray(normalized)) {
-      if (normalized.length === 1 && typeof when === "number" &&
-          Math.abs(normalized[0] - when) < 1e-9) text = e.text;
-    } else if (typeof when === "number") {
-      if (typeof normalized === "string" && normalized !== "" &&
-          Math.abs(parseFloat(normalized) - when) < 1e-9) text = e.text;
-    } else if (typeof when === "string") {
-      tokenKey(when);
-      if (tokenKey(when) === normalized) text = e.text;
+  set: function (p, raw) {
+    var nums = extractNumbers(raw, p.interval);
+    var sol = p.solution.set;
+    if (numsEqual(nums, sol)) return { ok: true };
+    var t = findError(p, function (w) {
+      if (Array.isArray(w)) return numsEqual(nums, w);
+      if (typeof w === "number") return nums.length === 1 && near(nums[0], w);
+      return false;
+    });
+    if (!t && nums.length > 0 && nums.length < sol.length) {
+      t = findError(p, function (w) { return w === "kind:incomplete-set"; });
     }
+    if (!t && p.interval && nums.length === 2) {
+      t = Math.abs(nums[0] - nums[1]) !== 1 ? DATA.errors.notConsecutive : DATA.errors.wrongBounds;
+    }
+    return { ok: false, errorText: t || DATA.errors.generic };
+  },
+
+  word: function (p, raw) {
+    var keys = wordKeys(raw);
+    var good = [p.solution.token].concat(p.solution.tokenAlt || []);
+    if (keys.some(function (k) { return good.indexOf(k) >= 0; })) return { ok: true };
+    var t = findError(p, function (w) { return keys.indexOf(String(w)) >= 0; });
+    return { ok: false, errorText: t || DATA.errors.generic };
+  },
+
+  term: function (p, raw) {
+    var c = canonTerm(raw);
+    var good = [p.solution.token].concat(p.solution.tokenAlt || []).map(canonTerm);
+    if (good.indexOf(c) >= 0) return { ok: true };
+    var t = findError(p, function (w) { return canonTerm(String(w)) === c; });
+    if (!t && termValueMatches(c, p.solution.token)) t = p.notSimplified || DATA.errors.notSimplified;
+    return { ok: false, errorText: t || DATA.errors.generic };
+  },
+
+  termset: function (p, raw) {
+    var got = parseTermSet(raw);
+    var sol = p.solution.terms.map(canonTerm);
+    if (sameStrings(got, sol)) return { ok: true };
+    var t = findError(p, function (w) {
+      return Array.isArray(w) && sameStrings(got, w.map(canonTerm));
+    });
+    if (!t && got.length > 0 && got.length < sol.length &&
+        got.every(function (g) { return sol.some(function (x) { return termValueMatches(g, x); }); })) {
+      t = findError(p, function (w) { return w === "kind:incomplete-set"; });
+    }
+    if (!t && got.length === sol.length) {
+      var vg = got.map(function (g) { return evalTerm(g); }).sort(function (a, b) { return a - b; });
+      var vs = sol.map(function (g) { return evalTerm(g); }).sort(function (a, b) { return a - b; });
+      if (vg.every(function (v, k) { return isFinite(v) && near(v, vs[k]); })) {
+        t = p.notSimplified || DATA.errors.notSimplified;
+      }
+    }
+    return { ok: false, errorText: t || DATA.errors.generic };
+  }
+};
+
+/* Gleicher Wert (an zwei Stellen für a geprüft) – Term aber anders geschrieben */
+function termValueMatches(input, solution) {
+  return [1.7, 2.3].every(function (a) {
+    var x = evalTerm(input, a), y = evalTerm(solution, a);
+    return isFinite(x) && isFinite(y) && near(x, y);
   });
-  return text;
 }
 
 /* ---------- DOM-Helfer ---------- */
@@ -1551,20 +1734,31 @@ function openPuzzle(id) {
               ({ main: "Pflicht", leicht: "Leicht", standard: "Standard", plus: "Plus" })[p.niv] + "</span></h2>";
   iHtml += "<p class=\"desc\">" + p.desc + "</p>";
   iHtml += "<p class=\"prompt\"><b>Aufgabe:</b> " + p.prompt + "</p>";
+  var usesInput = p.kind !== "choice" && !p.quick;
   if (p.kind === "choice") {
     iHtml += '<div class="choices">' + p.choices.map(function (c, i) {
       return '<button class="choice" data-choice="' + i + '" type="button">' + c.text + "</button>";
     }).join("") + "</div>";
+  } else if (p.quick) {
+    iHtml += '<div class="quick">' + p.quick.map(function (q) {
+      return '<button class="btn btn-secondary" data-quick="' + esc(q[0]) + '" type="button">' + esc(q[1]) + "</button>";
+    }).join("") + "</div>";
   } else {
-    iHtml += '<input class="answer-input" id="answer" type="text" inputmode="text" autocomplete="off" placeholder="Deine Antwort …">';
+    iHtml += '<input class="answer-input" id="answer" type="text" inputmode="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Deine Antwort …">';
+    var syms = SYMBOLS[p.kind] || [];
+    if (syms.length) {
+      iHtml += '<div class="symbar" aria-label="Sonderzeichen einfügen">' + syms.map(function (sy) {
+        return '<button class="sym" data-sym="' + esc(sy[0]) + '" type="button" aria-label="' + esc(sy[2] || sy[1]) + '">' + esc(sy[1]) + "</button>";
+      }).join("") + '<button class="sym sym-del" data-sym="DEL" type="button" aria-label="Zeichen löschen">⌫</button></div>';
+    }
   }
   iHtml += '<div id="feedback" class="info"></div><div id="help-area"></div>';
   iHtml += '<div class="actions">';
-  if (p.kind !== "choice") iHtml += '<button class="btn" id="btn-check" type="button">Prüfen</button>';
+  if (usesInput) iHtml += '<button class="btn" id="btn-check" type="button">Prüfen</button>';
   iHtml += '<button class="btn btn-secondary btn-small" id="btn-help" type="button">Hilfe (Tipp)</button>';
   iHtml += '<button class="btn btn-secondary btn-small" id="btn-quit" type="button">Später</button>';
   iHtml += "</div>";
-  showModal(iHtml, p.kind === "choice" ? null : "answer");
+  showModal(iHtml, usesInput ? "answer" : null);
 
   var fails = State.fails[id] || 0;
   var lvl = State.helpLevel[id] || 0;
@@ -1621,8 +1815,8 @@ function openPuzzle(id) {
     if (fails >= 5) offerReveal();
   }
 
-  function handleChoice(i) {
-    var res = checkAnswer(p, null, i);
+  function handleChoice(i, raw) {
+    var res = checkAnswer(p, raw === undefined ? null : raw, i);
     if (res.ok) { solvePuzzle(p, false); return; }
     fails += 1;
     State.fails[id] = fails;
@@ -1635,10 +1829,20 @@ function openPuzzle(id) {
     Array.prototype.forEach.call(document.querySelectorAll("[data-choice]"), function (b) {
       b.addEventListener("click", function () { handleChoice(parseInt(b.getAttribute("data-choice"), 10)); });
     });
+  } else if (p.quick) {
+    Array.prototype.forEach.call(document.querySelectorAll("[data-quick]"), function (b) {
+      b.addEventListener("click", function () { handleChoice(null, b.getAttribute("data-quick")); });
+    });
   } else {
     $("btn-check").addEventListener("click", handleCheck);
     $("answer").addEventListener("keydown", function (ev) {
       if (ev.key === "Enter") handleCheck();
+    });
+    Array.prototype.forEach.call(document.querySelectorAll("[data-sym]"), function (b) {
+      /* Fokus im Eingabefeld behalten, damit die iPad-Tastatur offen bleibt */
+      b.addEventListener("pointerdown", function (ev) { ev.preventDefault(); });
+      b.addEventListener("mousedown", function (ev) { ev.preventDefault(); });
+      b.addEventListener("click", function () { insertSymbol($("answer"), b.getAttribute("data-sym")); });
     });
   }
 
@@ -1653,6 +1857,30 @@ function openPuzzle(id) {
   if (fails >= 5) offerReveal();
 
   $("btn-quit").addEventListener("click", closeModal);
+}
+
+/* Sonderzeichen je Rätselart: [eingefügter Text, Beschriftung, Vorlesetext] */
+var SYMBOLS = {
+  num: [["-", "−", "Minus"], [",", ",", "Komma"]],
+  set: [["-", "−", "Minus"], ["; ", ";", "Strichpunkt"], ["±", "±", "plus minus"]],
+  term: [["√", "√", "Wurzel"], ["²", "²", "hoch 2"], ["/", "/", "Bruchstrich"], ["(", "(", "Klammer auf"], [")", ")", "Klammer zu"]],
+  termset: [["√", "√", "Wurzel"], ["±", "±", "plus minus"], ["-", "−", "Minus"], ["; ", ";", "Strichpunkt"], ["{", "{", "Mengenklammer auf"], ["}", "}", "Mengenklammer zu"]]
+};
+
+function insertSymbol(inp, text) {
+  var v = inp.value;
+  var st = typeof inp.selectionStart === "number" ? inp.selectionStart : v.length;
+  var en = typeof inp.selectionEnd === "number" ? inp.selectionEnd : st;
+  if (text === "DEL") {
+    if (st === en && st > 0) st -= 1;
+    inp.value = v.slice(0, st) + v.slice(en);
+    en = st;
+  } else {
+    inp.value = v.slice(0, st) + text + v.slice(en);
+    st = en = st + text.length;
+  }
+  try { inp.setSelectionRange(st, en); } catch (e) { /* ignorieren */ }
+  inp.focus();
 }
 
 function solvePuzzle(p, viaReveal) {
@@ -1827,20 +2055,38 @@ window.__runDevTests = function () {
         goodInputs.push(String(a), String(a).replace(".", ","), " " + String(a) + " ");
       });
     } else if (p.kind === "set") {
-      var set = p.solution.set;
-      var asStrings = set.map(String);
+      var asStrings = p.solution.set.map(String);
       goodInputs.push(
         "{" + asStrings.join("; ") + "}",
         asStrings.join(" und "),
         asStrings.slice().reverse().join(";"),
         "L={" + asStrings.join(";") + "}"
       );
-    } else if (p.kind === "token") {
+      if (p.interval) goodInputs.push(asStrings.join("-"), asStrings.join(" – "));
+      if (p.solution.set.length === 2 && p.solution.set[0] === -p.solution.set[1]) {
+        goodInputs.push("±" + Math.abs(p.solution.set[0]), "+-" + Math.abs(p.solution.set[0]));
+      }
+    } else if (p.kind === "word") {
       goodInputs.push(p.solution.token);
-      if (p.solution.token === "rational") goodInputs.push("Rational", " rationale ");
-      if (p.solution.token === "irrational") goodInputs.push("Irrational");
-      if (p.solution.token === "n") goodInputs.push("ℕ");
-      if (p.solution.token === "z") goodInputs.push("ℤ");
+      (p.quick || []).forEach(function (q) {
+        if (q[0] === p.solution.token) goodInputs.push(q[1]);
+      });
+      if (p.solution.token === "rational") goodInputs.push("Rational", " rationale Zahl ");
+      if (p.solution.token === "irrational") goodInputs.push("Irrational", "nicht rational");
+      if (p.solution.token === "n") goodInputs.push("natürliche Zahlen");
+      if (p.solution.token === "z") goodInputs.push("ganze Zahlen");
+      if (p.solution.token === "r") goodInputs.push("reelle Zahlen");
+    } else if (p.kind === "term") {
+      var tk = p.solution.token;
+      goodInputs.push(tk, " " + tk.replace(/√/g, "wurzel ") + " ", tk.replace(/√/g, "sqrt"),
+                      tk.replace(/(\d)√/g, "$1*√"), tk.replace(/(\d)√/g, "$1 · √"),
+                      tk.replace(/√(\d+)/g, "√($1)"));
+    } else if (p.kind === "termset") {
+      var ts = p.solution.terms;
+      goodInputs.push("L = {" + ts.join("; ") + "}", ts.slice().reverse().join(";"),
+                      "x1 = " + ts[0] + ", x2 = " + ts[1], ts.join(" und "));
+      var pos = ts.filter(function (t) { return t.charAt(0) !== "-"; })[0];
+      if (pos) goodInputs.push("±" + pos, "x = ±" + pos, "+-" + pos.replace(/√/g, "wurzel"));
     } else if (p.kind === "choice") {
       goodInputs = null;
       p.choices.forEach(function (c, i) {
@@ -1868,12 +2114,15 @@ window.__runDevTests = function () {
     /* Typische Fehler auslösbar? */
     (p.commonErrors || []).forEach(function (e) {
       var triggered;
-      if (typeof e.when === "string" && e.when.indexOf("kind:") === 0) {
-        triggered = (p.kind === "set") ? set.slice(0, 1).join("; ") : null;
-      } else if (p.kind === "token") {
-        triggered = e.when;
-      } else {
+      if (e.when === "kind:incomplete-set") {
+        triggered = p.kind === "set" ? String(p.solution.set[0])
+                  : p.kind === "termset" ? p.solution.terms[1] : null;
+      } else if (Array.isArray(e.when)) {
+        triggered = e.when.join("; ");
+      } else if (typeof e.when === "number") {
         triggered = String(e.when).replace(".", ",");
+      } else {
+        triggered = e.when;
       }
       if (triggered !== null) {
         var res = checkAnswer(p, triggered);
@@ -1884,6 +2133,17 @@ window.__runDevTests = function () {
     });
 
     if (ok) line("t-ok", "OK " + id);
+  });
+
+  /* Engine-Meldungen (Wert stimmt / Grenzen / Nicht aufeinanderfolgend) auslösbar */
+  [["lehrer_radizieren", "√72", DATA.errors.notSimplified],
+   ["labor_eingrenzen", "6; 7", DATA.errors.wrongBounds],
+   ["labor_eingrenzen", "6; 9", DATA.errors.notConsecutive],
+   ["labor_eingrenzen", "7 < √50 < 8", null]].forEach(function (c) {
+    var res = checkAnswer(DATA.puzzles[c[0]], c[1]);
+    var good = c[2] === null ? res.ok : (!res.ok && res.errorText === c[2]);
+    if (good) line("t-ok", "OK Engine-Meldung " + c[0] + " \"" + c[1] + "\"");
+    else { line("t-err", "FAIL Engine-Meldung " + c[0] + " \"" + c[1] + "\""); failCount++; }
   });
 
   /* Soft-Lock-Check: Pflichtpfad nur von Raumsel-Rätseln abhängig,
@@ -1930,6 +2190,7 @@ window.__runDevTests = function () {
     if (p.kind === "choice") probe = checkAnswer(p, null, p.solution.index);
     else if (p.kind === "num") probe = checkAnswer(p, String(p.solution.accept[0]));
     else if (p.kind === "set") probe = checkAnswer(p, p.solution.set.join(";"));
+    else if (p.kind === "termset") probe = checkAnswer(p, p.solution.terms.join(";"));
     else probe = checkAnswer(p, p.solution.token);
     return probe.ok;
   });
