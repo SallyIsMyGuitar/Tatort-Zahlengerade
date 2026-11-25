@@ -149,10 +149,27 @@ openPuzzle(p.id);
 State.fails[p.id] = 5;
 closeModal();
 
-// Karte: Platzhalter-Räume sichtbar
+// Karten- und Tür-Logik zu den Folge-Räumen (Zustand gezielt zurücksetzen)
+State.solved["labor_eingrenzen"] = false;
+State.solved["lehrer_radizieren"] = false;
 openMap();
-expect(elements["modal"].innerHTML.indexOf("Kommt bald") >= 0, "Platzhalter-Räume fehlen in der Karte");
+expect(elements["modal"].innerHTML.indexOf("Raum 5: Direktorat") >= 0, "Raum 5 fehlt in der Karte");
+expect(elements["modal"].innerHTML.indexOf("noch verschlossen") >= 0, "verschlossene Räume nicht markiert");
 closeModal();
+expect(roomUnlocked("lehrerzimmer") === false, "lehrerzimmer sollte gesperrt sein");
+expect(roomUnlocked("direktorat") === false, "direktorat sollte gesperrt sein");
+State.solved["labor_eingrenzen"] = true;
+expect(roomUnlocked("lehrerzimmer") === true, "lehrerzimmer sollte offen sein");
+State.solved["lehrer_radizieren"] = true;
+expect(roomUnlocked("direktorat") === true, "direktorat sollte offen sein");
+const tuerLabor = DATA.rooms.bibliothek.hotspots.find(h => h.doorId === "labor");
+State.solved["bibliothek_begruendung"] = false;
+State.currentRoom = "bibliothek";
+tryDoor(tuerLabor);
+expect(State.currentRoom === "bibliothek", "Tür Labor sollte ohne Lösung sperren");
+State.solved["bibliothek_begruendung"] = true;
+tryDoor(tuerLabor);
+expect(State.currentRoom === "labor", "Tür zum Labor öffnet nicht");
 
 // Notizbuch und Inventar
 openNotes();
@@ -163,6 +180,7 @@ closeModal();
 
 // Abschluss-Screen
 State.currentRoom = "bibliothek";
+DATA.story.requiredIds.forEach(id => State.solved[id] = true);
 tryFinale();
 expect(elements["modal"].innerHTML.indexOf("Gesicherte Kompetenzen") >= 0, "Abschluss-Screen fehlt");
 

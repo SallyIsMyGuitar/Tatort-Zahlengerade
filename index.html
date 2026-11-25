@@ -210,10 +210,19 @@ DATA.story = {
   intro: [
     "<p><b>Auftrag für das Detektivteam!</b></p>",
     "<p>In der Zahlensammlung des Direktors fehlt eine Zahl: <b>√2</b>. Zurück bleiben nur ein leerer Rahmen und ein Zettel mit der Aufschrift: „Bin kurz unerhörlich. Bin gleich wieder da. Versprochen. – √2“.</p>",
-    "<p>Der Direktor tobt, der Hausmeister fegt wortlos Quadrate in den Staub, und in der Bibliothek behauptet jemand, √2 sei „nie wirklich rational“ gewesen. Ermittle an zwei Tatorten: im <b>Hausmeisterkeller</b> und in der <b>Bibliothek</b>.</p>",
+    "<p>Der Direktor tobt, der Hausmeister fegt wortlos Quadrate in den Staub, und in der Bibliothek behauptet jemand, √2 sei „nie wirklich rational“ gewesen. Ermittle an fünf Tatorten: im <b>Hausmeisterkeller</b>, in der <b>Bibliothek</b>, im <b>Labor</b> , im <b>Lehrerzimmer</b> und im <b>Direktorat</b>.</p>",
     "<p>Nimm Gegenstände auf, sammle Zahlen und Merkregeln im Notizbuch – und bring Licht in die halbdunkle Angelegenheit. Viel Erfolg, Ermittlerin oder Ermittler!</p>"
   ].join(""),
-  requiredIds: ["keller_schloss", "bibliothek_kartei", "bibliothek_periode", "bibliothek_begruendung"]
+  requiredIds: ["keller_schloss", "bibliothek_kartei", "bibliothek_periode", "bibliothek_begruendung", "labor_eingrenzen", "labor_x2", "lehrer_produkt", "lehrer_radizieren", "direktor_code", "direktor_taeter"],
+  roomOrder: ["keller", "bibliothek", "labor", "lehrerzimmer", "direktorat"],
+  /* Freischaltung der Räume: Rätsel-ID, die gelöst sein muss (null = offen). */
+  roomUnlock: {
+    keller: null,
+    bibliothek: "keller_schloss",
+    labor: "bibliothek_begruendung",
+    lehrerzimmer: "labor_eingrenzen",
+    direktorat: "lehrer_radizieren"
+  }
 };
 
 /* ---------- Aufnehmbare Gegenstände ---------- */
@@ -253,6 +262,18 @@ DATA.notes = {
   n_fund_lampe: {
     title: "Fund in der dunklen Ecke",
     text: "Hinter dem Regal stand mit Kreide: „1 < √2 < 2 – hier verstecke ich mich gern.“ Ein erster Hinweis: √2 liegt zwischen zwei aufeinanderfolgenden ganzen Zahlen."
+  },
+  n_produkt: {
+    title: "Merkregel: Produkt von Wurzeln",
+    text: "√a · √b = √(a · b), z. B. √3 · √7 = √21. Wichtig: Die Wurzeln werden multipliziert, nicht addiert – √a · √b ist nie √(a + b)."
+  },
+  n_radizieren: {
+    title: "Merkregel: Teilweises Radizieren",
+    text: "√(a² · b) = a · √b. Größten quadratischen Faktor suchen und vor die Wurzel ziehen. Beispiel: √72 = √(36 · 2) = 6√2."
+  },
+  n_nenner: {
+    title: "Merkregel: Nenner rational machen",
+    text: "Bei a/√b mit √b erweitern: a/√b = (a · √b)/(√b · √b) = a√b/b. Beispiel: 5/√3 = 5√3/3."
   }
 };
 
@@ -484,10 +505,324 @@ DATA.puzzles = {
     },
     reveal: "√2 · √8 = √16 = <b>4</b>, also <b>rational</b>.",
     onSolve: { note: null, found: "√2 · √8 = 4 ∈ ℚ" }
+  },
+
+  /* ======== RAUM 3: LABOR (Abschätzen und Eingrenzen, x² = a; KE 2) ======== */
+
+  labor_eingrenzen: {
+    room: "labor", niv: "main", kind: "set",
+    title: "Eingrenzzange",
+    desc: "Auf dem Labortisch liegt eine Probe mit der Aufschrift „√50 – Fundort: Zahlengerade“. Der Laborant Bunsen-Brock drückt dir die Eingrenzzange in die Hand: „Zwischen zwei Quadratzahlen, bitte. Und schön der Reihe nach!“",
+    prompt: "Zwischen welchen <b>zwei aufeinanderfolgenden ganzen Zahlen</b> liegt <b>√50</b>? (Erst die kleinere.)",
+    solution: { set: [7, 8] },
+    commonErrors: [
+      { when: "kind:incomplete-set", text: "Zwei Zahlen, bitte! Gesucht sind die beiden ganzen Zahlen, zwischen denen √50 liegt." },
+      { when: 50, text: "50 ist der Radikand (die Zahl unter der Wurzel). Gesucht sind die Grundzahlen der Quadratzahlen, zwischen denen 50 liegt." },
+      { when: 25, text: "Vorsicht: Gesucht sind keine Quadratzahlen, sondern die ganzen Zahlen, zwischen denen √50 liegt. Quadriere deine Kandidaten: 7² = 49 < 50 < 64 = 8²." }
+    ],
+    help: {
+      hint: "Quadriere ganze Zahlen und schaue, zwischen welchen beiden Quadratzahlen die 50 liegt.",
+      merk: "Liegt a zwischen zwei Quadratzahlen, dann liegt √a zwischen den zugehörigen Grundzahlen. Beispiel: 4 < 5 < 9 ⇒ 2 < √5 < 3.",
+      beispiel: "√26 liegt zwischen 5 und 6, denn 5² = 25 < 26 < 36 = 6²."
+    },
+    reveal: "7² = 49 < 50 < 64 = 8², also liegt <b>√50</b> zwischen <b>7 und 8</b>.",
+    onSolve: { note: null, found: "7 < √50 < 8" }
+  },
+
+  labor_x2: {
+    room: "labor", niv: "main", kind: "token",
+    title: "Die ungeduldige Gleichung",
+    desc: "Auf dem Bildschirm flackert: „x² = 6“. Der Laborant seufzt: „Keine Quadratzahl. Trotzdem zwei Lösungen! So wie meine zwei linken Daumen.“",
+    prompt: "Gib die Lösungsmenge von <b>x² = 6</b> an – z. B. als „±√6“ oder „L = {−√6; √6}“.",
+    solution: { token: "±√6", tokenAlt: ["-√6;√6", "√6;-√6", "{-√6;√6}", "l={-√6;√6}", "l{-√6;√6}"] },
+    commonErrors: [
+      { when: "√6", text: "Fast! x² = 6 hat <b>zwei</b> Lösungen: +√6 und −√6. Das negative Vorzeichen darf nicht fehlen: L = {−√6; √6}." },
+      { when: "-√6", text: "Auch die positive Lösung gehört dazu: L = {−√6; √6}." },
+      { when: 36, text: "36 = 6² – aber gesucht sind die Zahlen x mit x² = 6, und das sind ±√6. Quadrieren und Wurzelziehen sind Umkehrungen." }
+    ],
+    help: {
+      hint: "Denke an positive UND negative Vorzeichen. Was ergibt (−√6)²?",
+      merk: "Für a > 0 gilt: x² = a hat die Lösungen L = {−√a; √a}. Kurze Schreibweise: ±√a.",
+      beispiel: "x² = 5 → L = {−√5; √5} (kurz: ±√5). Probe: (−√5)² = 5."
+    },
+    reveal: "x² = 6 hat <b>zwei</b> Lösungen: <b>L = {−√6; √6}</b> (kurz: ±√6).",
+    onSolve: { note: "n_x2", found: "x² = 6 → L = {−√6; √6}" }
+  },
+
+  labor_leicht: {
+    room: "labor", niv: "leicht", kind: "set",
+    title: "Zusatzrätsel (leicht): Erste Eingrenzung",
+    desc: "Am Probenregal klebt ein Etikett: „√20 – Handprobe, bitte nicht anhauchen.“",
+    prompt: "Zwischen welchen zwei aufeinanderfolgenden ganzen Zahlen liegt <b>√20</b>?",
+    solution: { set: [4, 5] },
+    commonErrors: [
+      { when: "kind:incomplete-set", text: "Zwei Zahlen, bitte! Es sind zwei aufeinanderfolgende ganze Zahlen gesucht." },
+      { when: 20, text: "20 ist der Radikand, nicht die Antwort. Quadriere: 4² = 16 < 20 < 25 = 5²." }
+    ],
+    help: {
+      hint: "Welche Quadratzahlen liegen links und rechts von 20?",
+      merk: "4 < 5 < 9 ⇒ 2 < √5 < 3. Übertrage das auf √20 mit passenden Quadratzahlen.",
+      beispiel: "√10 liegt zwischen 3 und 4, denn 9 < 10 < 16."
+    },
+    reveal: "4² = 16 < 20 < 25 = 5², also liegt <b>√20</b> zwischen <b>4 und 5</b>.",
+    onSolve: { note: null, found: "4 < √20 < 5" }
+  },
+
+  labor_naehe: {
+    room: "labor", niv: "standard", kind: "num",
+    title: "Zusatzrätsel (standard): Nähe-Sensor",
+    desc: "Der Nähe-Sensor des Labors schlägt aus. Auf dem Display: „√17 – näher an welcher ganzen Zahl?“",
+    prompt: "Liegt <b>√17</b> näher an 4 oder an 5? Gib die ganze Zahl an, der √17 näher liegt.",
+    solution: { accept: [4] },
+    commonErrors: [
+      { when: 5, text: "Schau auf die Abstände: 17 ist nur 1 von 16 (= 4²) entfernt, aber 8 von 25 (= 5²). Also ist √17 ≈ 4,12 näher an 4." },
+      { when: 17, text: "17 ist der Radikand. Vergleiche: 17 liegt zwischen 16 und 25 – und deutlich näher an 16." }
+    ],
+    help: {
+      hint: "Rechne 17 − 16 und 25 − 17. Welcher Abstand ist kleiner?",
+      merk: "Der Radikant 17 liegt näher an der Quadratzahl 16. Also liegt √17 näher an √16 = 4.",
+      beispiel: "√35 liegt näher an 6, denn 35 ist nur 1 von 36 entfernt, aber 10 von 25."
+    },
+    reveal: "17 ist nur 1 von 16 entfernt, also liegt <b>√17</b> näher an <b>4</b>.",
+    onSolve: { note: null, found: "√17 ≈ 4,12 (näher an 4)" }
+  },
+
+  labor_plus: {
+    room: "labor", niv: "plus", kind: "num",
+    title: "Zusatzrätsel (plus): Messprotokoll (Taschenrechner erlaubt)",
+    desc: "Im Messprotokoll des Laboranten steht: „√2 auf EINE Nachkommastelle runden – der Sensor akzeptiert nichts Ungenaues. Ironie des Labors.“",
+    prompt: "Runde <b>√2</b> auf <b>eine</b> Nachkommastelle.",
+    solution: { accept: [1.4] },
+    commonErrors: [
+      { when: 1.41, text: "Das sind zwei Nachkommastellen. Auf eine Stelle gerundet ergibt 1,4142135… ≈ 1,4." },
+      { when: 1.5, text: "Kontrolliere das Runden: 1,4142135… hat an der zweiten Stelle eine 1 – abgerundet ergibt das 1,4, nicht 1,5." },
+      { when: 1.2, text: "Zu weit weg: √2 liegt zwischen 1 und 2, deutlich näher bei 1,41 – gerundet also 1,4." }
+    ],
+    help: {
+      hint: "Der Taschenrechner zeigt √2 ≈ 1,4142… – behalte nur die erste Nachkommastelle und runde.",
+      merk: "Runden auf eine Nachkommastelle: die nächste Ziffer entscheidet (5 oder größer ⇒ aufrunden). Hier: 1,41… ⇒ 1,4.",
+      beispiel: "√3 ≈ 1,732… gerundet auf eine Nachkommastelle: 1,7."
+    },
+    reveal: "√2 ≈ 1,4142135…, gerundet auf eine Nachkommastelle: <b>1,4</b>.",
+    onSolve: { note: null, found: "√2 ≈ 1,4" }
+  },
+
+  /* ======== RAUM 4: LEHRERZIMMER (Mit Wurzeltermen rechnen, KE 3) ======== */
+
+  lehrer_produkt: {
+    room: "lehrerzimmer", niv: "main", kind: "token",
+    title: "Kaffeemaschinen-Notizzettel",
+    desc: "An der Kaffeemaschine hängt ein Notizzettel: „√3 · √7 = ??? – wer das löst, bekommt den letzten Keks. Signiert: Frau Tafelwisch.“",
+    prompt: "Vereinfache <b>√3 · √7</b> so weit wie möglich.",
+    solution: { token: "√21", tokenAlt: ["wurzel21", "√(21)"] },
+    commonErrors: [
+      { when: "√10", text: "Achtung, typischer Fehler: √a · √b = √(a · b) – Produkt unter der Wurzel, nicht Summe! Also √(3 · 7) = √21 und nicht √(3 + 7) = √10." },
+      { when: 21, text: "21 ist richtig – aber noch unter der Wurzel: geschrieben als √21. (21 ist keine Quadratzahl, deshalb bleibt die Wurzel stehen.)" },
+      { when: "√3+√7", text: "Zuerst multiplizieren: √3 · √7 = √(3 · 7) = √21. Die Wurzeln werden nicht addiert." }
+    ],
+    help: {
+      hint: "Nutze die Produktregel: Aus √a · √b wird √(a · b).",
+      merk: "√a · √b = √(a · b), z. B. √3 · √7 = √21. Die Wurzel eines Produkts ist das Produkt der Wurzeln. 21 ist keine Quadratzahl – die Wurzel bleibt stehen.",
+      beispiel: "√2 · √8 = √16 = 4."
+    },
+    reveal: "√3 · √7 = √(3 · 7) = <b>√21</b>.",
+    onSolve: { note: "n_produkt", found: "√3 · √7 = √21" }
+  },
+
+  lehrer_radizieren: {
+    room: "lehrerzimmer", niv: "main", kind: "token",
+    title: "Der streitsüchtige Getränkeautomat",
+    desc: "Der Getränkeautomat im Lehrerzimmer gibt nur frei, wer teilweises Radizieren beherrscht. Frau Tafelwisch zwinkert: „Quadratische Faktoren rausziehen – so bekommt man auch das letzte Fasswasser aus dem Automaten.“",
+    prompt: "Vereinfache durch teilweises Radizieren: <b>√72</b>",
+    solution: { token: "6√2", tokenAlt: ["6wurzel2"] },
+    commonErrors: [
+      { when: 36, text: "36 ist der größte quadratische Faktor von 72 (72 = 36 · 2). Aber du sollst die Wurzel ziehen: √72 = √(36 · 2) = √36 · √2 = 6√2." },
+      { when: "√36·√2", text: "Fast! Ziehe die Faktoren aus einer gemeinsamen Wurzel: √72 = √(36 · 2) = 6√2. Schreibe das Ergebnis als 6√2." },
+      { when: "8√3", text: "Prüfe die Zerlegung: 8² · 3 = 64 · 3 = 192, nicht 72. Richtig ist 72 = 36 · 2, also √72 = 6√2." }
+    ],
+    help: {
+      hint: "Zerlege 72 in das Produkt aus größtmöglicher Quadratzahl und Rest: 72 = 36 · 2.",
+      merk: "Teilweises Radizieren: √(a² · b) = a · √b. Suche den größten quadratischen Faktor (4, 9, 16, 25, 36, 49, 64, …) und zieh ihn vor die Wurzel.",
+      beispiel: "√50 = √(25 · 2) = 5√2. Und: √8 = √(4 · 2) = 2√2."
+    },
+    reveal: "√72 = √(36 · 2) = √36 · √2 = <b>6√2</b>.",
+    onSolve: { note: "n_radizieren", found: "√72 = 6√2" }
+  },
+
+  lehrer_quotient: {
+    room: "lehrerzimmer", niv: "leicht", kind: "num",
+    title: "Zusatzrätsel (leicht): Der Postkartengruß",
+    desc: "Auf einer Postkarte im Postkorb steht nur: „√32 : √8“ – keine Grußworte, nur Mathematik.",
+    prompt: "Berechne <b>√32 : √8</b>.",
+    solution: { accept: [2] },
+    commonErrors: [
+      { when: 4, text: "Vorsicht: Die Quotientenregel liefert √(32 : 8) = √4 = 2 – nicht 32 : 8 = 4 ohne Wurzel." },
+      { when: 2.8, text: "Ohne Runden: √32 : √8 = √(32 : 8) = √4 = 2 – exakt, nicht näherungsweise." }
+    ],
+    help: {
+      hint: "Zuerst unter EINER Wurzel dividieren: √a : √b = √(a : b).",
+      merk: "Quotientenregel: √a : √b = √(a : b) für b ≠ 0. Beispiel: √32 : √8 = √4 = 2.",
+      beispiel: "√18 : √2 = √9 = 3."
+    },
+    reveal: "√32 : √8 = √(32 : 8) = √4 = <b>2</b>.",
+    onSolve: { note: null, found: "√32 : √8 = 2" }
+  },
+
+  lehrer_standard: {
+    room: "lehrerzimmer", niv: "standard", kind: "token",
+    title: "Zusatzrätsel (standard): Wandernde Kaffeemaschine",
+    desc: "Die Kaffeemaschine mahlt nur, wenn im Nenner keine Wurzel steht. Pädagogisch wertvoll.",
+    prompt: "Mach den Nenner rational und gib das Ergebnis an: <b>5/√3</b>",
+    solution: { token: "5√3/3", tokenAlt: ["(5√3)/3", "5/3√3", "5√3:3"] },
+    commonErrors: [
+      { when: "5/3", text: "Fast: Beim Erweitern mit √3 landet auch im Zähler ein √3: 5/√3 = (5 · √3)/(√3 · √3) = 5√3/3." },
+      { when: "5√3", text: "Ohne den neuen Nenner stimmt das nicht: Erweitere mit √3, dann gilt (√3)² = 3 im Nenner. Ergebnis: 5√3/3." }
+    ],
+    help: {
+      hint: "Erweitere Zähler und Nenner mit √3. Was ergibt √3 · √3 im Nenner?",
+      merk: "Nenner rational machen: mit √b erweitern, denn √b · √b = b. Beispiel: 5/√3 = 5√3/3.",
+      beispiel: "1/√2 = √2/2 (erweitert mit √2)."
+    },
+    reveal: "5/√3 = (5 · √3)/(√3 · √3) = <b>5√3/3</b>.",
+    onSolve: { note: "n_nenner", found: "5/√3 = 5√3/3" }
+  },
+
+  lehrer_plus: {
+    room: "lehrerzimmer", niv: "plus", kind: "token",
+    title: "Zusatzrätsel (plus): Vertretungsplan-Challenge",
+    desc: "Auf dem Vertretungsplan klebt ein Zettel des Mathe-Kurses: „√(8a²) – wer das löst, bekommt eine freie Vertretungsstunde. Hinweis: a ≥ 0.“",
+    prompt: "Vereinfache durch teilweises Radizieren: <b>√(8a²)</b> (für a ≥ 0)",
+    solution: { token: "2a√2", tokenAlt: ["2√2a"] },
+    commonErrors: [
+      { when: "2a", text: "Der quadratische Faktor 4 liefert √(8a²) = √(4 · 2 · a²) = 2a√2 – der Faktor √2 fehlt dir noch." },
+      { when: "8a", text: "Vorsicht: Ziehe die quadratischen Faktoren aus der Wurzel: 8 = 4 · 2 und a². Also √(8a²) = 2a√2." },
+      { when: "4a√2", text: "Fast: √8 = √(4 · 2) = 2√2 und √(a²) = a (für a ≥ 0). Zusammen: 2a√2 – nicht 4a√2." }
+    ],
+    help: {
+      hint: "Zerlege: 8a² = 4 · a² · 2. Die quadratischen Faktoren 4 und a² darfst du aus der Wurzel ziehen.",
+      merk: "√(a²) = a für a ≥ 0. Teilweises Radizieren mit Variablen: √(8a²) = √4 · √(a²) · √2 = 2a√2.",
+      beispiel: "√(18a²) = √(9 · a² · 2) = 3a√2."
+    },
+    reveal: "√(8a²) = √(4 · a² · 2) = <b>2a√2</b>.",
+    onSolve: { note: null, found: "√(8a²) = 2a√2 (a ≥ 0)" }
+  },
+
+  /* ======== RAUM 5: DIREKTORAT (Finale, gemischte Aufgaben) ======== */
+
+  direktor_code: {
+    room: "direktorat", niv: "main", kind: "num",
+    title: "Der Panik-Code des Direktors",
+    desc: "Der Direktor zittert: „Meine Zahlensammlung ist wieder da – nur der Code zum Sonder-Rahmen fehlt! Ich habe ihn natürlich aus Wurzeln gebaut. Aus Sicherheitsgründen.“",
+    prompt: "Öffne den Rahmen-Code: <b>√144 : √9 + √25</b>",
+    solution: { accept: [9] },
+    commonErrors: [
+      { when: 17, text: "Du hast „: √9“ übersprungen: Erst dividieren (√144 : √9 = √16 = 4), dann addieren (+ √25 = 5): 4 + 5 = 9." },
+      { when: 20, text: "Reihenfolge beachten: Erst Division, dann Addition. √144 : √9 = √16 = 4 und √25 = 5, zusammen 9." },
+      { when: 1.6, text: "Vorsicht: √144 : √9 = √(144 : 9) = √16 = 4. Nicht die Wurzeln einzeln weglassen oder 144 : 90 rechnen." }
+    ],
+    help: {
+      hint: "Rechne Schritt für Schritt: erst die Division unter einer Wurzel, dann die Addition.",
+      merk: "Quotientenregel: √a : √b = √(a : b). Punktrechnung vor Strichrechnung – auch bei Wurzeln.",
+      beispiel: "√100 : √4 + √9 = √25 + 3 = 5 + 3 = 8."
+    },
+    reveal: "√144 : √9 = √16 = 4 und √25 = 5, also <b>9</b>.",
+    onSolve: { note: null, found: "√144 : √9 + √25 = 9" }
+  },
+
+  direktor_taeter: {
+    room: "direktorat", niv: "main", kind: "choice",
+    title: "Die Überführung",
+    desc: "Alle Indizien liegen auf dem Tisch des Direktors. Es ist Zeit für die große Auflösung: Wer hat √2 verschwinden lassen?",
+    prompt: "Wähle die richtige Auflösung des Falls:",
+    solution: { index: 2 },
+    choices: [
+      {
+        text: "Die Zahl 2 – aus Neid, weil √2 berühmter ist.",
+        feedback: "Falsch: Die 2 hat ein wasserdichtes Alibi – sie lag die ganze Zeit als Quadratzahl im Regal des Hausmeisters (2² = 4)."
+      },
+      {
+        text: "Der Hausmeister Herr Kehrweger – er konnte √2 nicht einordnen.",
+        feedback: "Falsch: Herr Kehrweger liebt Ordnung und schwärmt für Quadratzahlen. Sein einziges Verbrechen: fegen bei geschlossener Tür."
+      },
+      {
+        text: "√2 selbst – es wollte, dass endlich alle verstehen, dass es rational nicht zu fassen ist.",
+        ok: true
+      },
+      {
+        text: "Der Direktor – er hat √2 verlegt und alles vertuscht.",
+        feedback: "Falsch: Der Direktor ist zu ordnungsliebend, um Zahlen zu verlegen. Sein einziges Verbrechen ist der Panik-Code aus Wurzeln."
+      }
+    ],
+    help: {
+      hint: "Lies dein Notizbuch: den Abschiedszettel, den Kreide-Hinweis und die Aussagen aus Keller und Bibliothek.",
+      merk: "√2 ist irrational – als Bruch nicht darstellbar, nur eingrenzbar (1 < √2 < 2, gerundet 1,4). Und der Abschiedszettel klang nicht nach Entführung …",
+      beispiel: "Der Zettel im Rahmen lautete: „Bin kurz unerhörlich. Bin gleich wieder da. Versprochen. – √2“."
+    },
+    reveal: "√2 hat sich selbst „verschwinden“ lassen, um zu zeigen: Rational bin ich nicht zu fassen. Rückkehr: zugesagt.",
+    onSolve: { note: null, found: "Fall gelöst: √2 ist (fast) zurück" }
+  },
+
+  direktor_leicht: {
+    room: "direktorat", niv: "leicht", kind: "num",
+    title: "Zusatzrätsel (leicht): Rahmenprüfung",
+    desc: "Die Bilderrahmen des Direktors sind quadratisch – natürlich. Einer trägt eine Prüfnote.",
+    prompt: "Berechne <b>√8 : √2</b>.",
+    solution: { accept: [2] },
+    commonErrors: [
+      { when: 4, text: "Vorsicht: √a : √b = √(a : b). Also √8 : √2 = √4 = 2 – nicht 8 : 2 = 4 ohne Wurzel." },
+      { when: 5.7, text: "Kein Runden nötig: √8 : √2 = √(8 : 2) = √4 = 2 – exakt." }
+    ],
+    help: {
+      hint: "Zuerst unter einer Wurzel dividieren: √(8 : 2).",
+      merk: "Quotientenregel: √a : √b = √(a : b) für b ≠ 0.",
+      beispiel: "√50 : √2 = √25 = 5."
+    },
+    reveal: "√8 : √2 = √(8 : 2) = √4 = <b>2</b>.",
+    onSolve: { note: null, found: "√8 : √2 = 2" }
+  },
+
+  direktor_standard: {
+    room: "direktorat", niv: "standard", kind: "token",
+    title: "Zusatzrätsel (standard): Die nicht einzuordnende Konstante",
+    desc: "Auf dem Schreibtisch liegt eine Zahl ganz ohne Rahmen: π. Der Direktor: „Die ist sogar irrational – und nicht mal eine Wurzel! Trotzdem braucht sie eine Schublade.“",
+    prompt: "Welcher Zahlenmenge gehört <b>π</b> in der kleinsten passenden Schublade zu? Antworten: <b>n</b> (ℕ), <b>z</b> (ℤ), <b>q</b> (ℚ) oder <b>r</b> (ℝ).",
+    solution: { token: "r" },
+    commonErrors: [
+      { when: "q", text: "π ist irrational – es gibt keinen Bruch p/q für π. Die Dezimalentwicklung von π bricht nie ab und ist nicht periodisch." },
+      { when: "n", text: "π liegt zwischen 3 und 4, ist aber keine natürliche Zahl (nicht ganzzahlig)." },
+      { when: "z", text: "π ≈ 3,14… ist keine ganze Zahl, gehört also nicht zu ℤ." }
+    ],
+    help: {
+      hint: "Ist π als Bruch darstellbar? Was gilt für die Dezimalentwicklung von π?",
+      merk: "Irrationale Zahlen gehören zu ℝ, aber nicht zu ℚ. π und √2 sind Beispiele: kein Abbruch, keine Periode.",
+      beispiel: "√2 gehört als kleinste passende Menge zu ℝ. Dasselbe gilt für π."
+    },
+    reveal: "π ist irrational ⇒ kleinste passende Menge <b>ℝ</b> (Lösung: r).",
+    onSolve: { note: null, found: "π ∈ ℝ, irrational" }
+  },
+
+  direktor_plus: {
+    room: "direktorat", niv: "plus", kind: "token",
+    title: "Zusatzrätsel (plus): Der Wurzel-Hut",
+    desc: "Unter dem Hut des Direktors steckt ein letzter Zettel: „Addieren kann man Wurzeln nur, wenn sie zur selben Wurzel gehören. Viel Erfolg.“",
+    prompt: "Fasse zusammen und vereinfache: <b>√2 + √8</b>",
+    solution: { token: "3√2", tokenAlt: ["3wurzel2"] },
+    commonErrors: [
+      { when: "√10", text: "Achtung: √a + √b ist NICHT √(a + b). Erst umformen: √8 = √(4 · 2) = 2√2, dann addieren: √2 + 2√2 = 3√2." },
+      { when: 4, text: "Fast: 4 wäre √16. Richtig ist √2 + √8 = √2 + 2√2 = 3√2 (≈ 4,24) – die Wurzeln bleiben erhalten." },
+      { when: "√16", text: "√2 + √8 ist nicht √(2 + 8) = √10 und erst recht nicht √16. Forme zuerst um: √8 = 2√2." }
+    ],
+    help: {
+      hint: "Wandle √8 zunächst um: √8 = √(4 · 2) = 2√2. Addiere dann Terme mit demselben Wurzelfaktor.",
+      merk: "√a + √b ≠ √(a + b). Nur gleiche Wurzelfaktoren dürfen addiert werden: √2 + 2√2 = 3√2.",
+      beispiel: "√2 + √18 = √2 + 3√2 = 4√2 (denn √18 = √(9 · 2) = 3√2)."
+    },
+    reveal: "√8 = 2√2, also √2 + √8 = √2 + 2√2 = <b>3√2</b>.",
+    onSolve: { note: null, found: "√2 + √8 = 3√2" }
   }
 };
 
-/* ---------- Räume ----------
+/* ---------- Räume (Szenen) ----------
    room: { name, msgStart, backdrop (SVG-String), hotspots[] }
    Hotspot: { id, x, y, w, h, label,
               type: 'puzzle' | 'item' | 'info' | 'door' | 'niveau' | 'finale',
@@ -655,8 +990,9 @@ DATA.rooms.bibliothek = {
       type: "niveau", puzzleIds: ["bibliothek_negativ", "bibliothek_eingrenzen", "bibliothek_versteck"]
     },
     {
-      id: "hs_telefon", x: 590, y: 440, w: 100, h: 80, label: "Telefon des Direktors",
-      type: "finale"
+      id: "hs_tuer_labor", x: 560, y: 430, w: 160, h: 90, label: "Tür zum Labor",
+      type: "door", doorId: "labor", requiredPuzzle: "bibliothek_begruendung",
+      lockedText: "Hinter der Tür zum Labor summt es verdächtig. Frau Nachschlag: „Erst die Begründung, dann das Labor. Eiserne Ordnung herrscht hier.“"
     },
     {
       id: "hs_tuer_keller", x: 90, y: 440, w: 200, h: 80, label: "Zurück zum Hausmeisterkeller",
@@ -665,12 +1001,209 @@ DATA.rooms.bibliothek = {
   ]
 };
 
-/* Platzhalter-Türen (Räume 3–5): erscheinen im „Räume“-Dialog */
-DATA.placeholderRooms = [
-  { id: "labor", name: "Raum 3: Labor", hint: "Abschätzen und eingrenzen – kommt bald." },
-  { id: "lehrerzimmer", name: "Raum 4: Lehrerzimmer", hint: "Mit Wurzeltermen rechnen – kommt bald." },
-  { id: "direktorat", name: "Raum 5: Direktorat", hint: "Das Finale – kommt bald." }
-];
+DATA.rooms.labor = {
+  name: "Raum 3: Labor",
+  msgStart: "Der Laborant Bunsen-Brock raschelt mit einer Eingrenzzange: „Willkommen im Labor! Hier wird nicht geraten – hier wird eingegrenzt. Grober Unfug bitte außerhalb der Kittelfläche.“",
+  backdrop: `
+  <rect x="0" y="0" width="960" height="540" fill="#20262e"/>
+  <rect x="0" y="0" width="960" height="380" fill="#28313c"/>
+  <line x1="0" y1="380" x2="960" y2="380" stroke="#171c22" stroke-width="6"/>
+  <g>
+    <rect x="40" y="90" width="330" height="60" rx="8" fill="#2f3b47" stroke="#141b22" stroke-width="3"/>
+    <rect x="40" y="150" width="330" height="60" rx="8" fill="#2f3b47" stroke="#141b22" stroke-width="3"/>
+    <rect x="52" y="100" width="46" height="40" fill="#9db8cf" rx="4"/>
+    <rect x="104" y="100" width="46" height="40" fill="#b7c98f" rx="4"/>
+    <rect x="156" y="100" width="46" height="40" fill="#d7a86a" rx="4"/>
+    <rect x="208" y="100" width="46" height="40" fill="#9db8cf" rx="4"/>
+    <rect x="52" y="160" width="46" height="40" fill="#c5968f" rx="4"/>
+    <rect x="104" y="160" width="46" height="40" fill="#d7c26a" rx="4"/>
+    <rect x="156" y="160" width="46" height="40" fill="#8fbf9f" rx="4"/>
+    <rect x="208" y="160" width="46" height="40" fill="#b48fc0" rx="4"/>
+    <text x="215" y="200" font-family="sans-serif" font-size="15" fill="#e6edf3" text-anchor="middle">Probenregal</text>
+  </g>
+  <g>
+    <rect x="560" y="90" width="230" height="160" rx="10" fill="#10151b" stroke="#3c4a58" stroke-width="4"/>
+    <text x="675" y="130" font-family="monospace" font-size="22" fill="#63d471" text-anchor="middle">x² = 6</text>
+    <rect x="590" y="150" width="170" height="10" rx="4" fill="#243226"/>
+    <rect x="590" y="168" width="170" height="10" rx="4" fill="#1c2a20"/>
+    <rect x="640" y="200" width="70" height="34" rx="6" fill="#243226"/>
+    <text x="675" y="222" font-family="sans-serif" font-size="13" fill="#63d471" text-anchor="middle">BILD →</text>
+  </g>
+  <g>
+    <rect x="450" y="290" width="200" height="80" rx="8" fill="#5b6b7a" stroke="#22292f" stroke-width="3"/>
+    <circle cx="495" cy="290" r="16" fill="#7ecbb4" stroke="#22292f" stroke-width="3"/>
+    <path d="M540 290 q10 -34 30 0 z" fill="#7ecbb4" stroke="#22292f" stroke-width="2" transform="scale(0.9) translate(40,0)"/>
+    <rect x="590" y="260" width="20" height="40" rx="4" fill="#c98f8f"/>
+    <text x="550" y="358" font-family="sans-serif" font-size="15" fill="#dde5ed" text-anchor="middle">Labortisch</text>
+  </g>
+  <g>
+    <rect x="120" y="430" width="180" height="60" rx="8" fill="#57485e" stroke="#2f2735" stroke-width="3"/>
+    <text x="210" y="467" font-family="sans-serif" font-size="15" fill="#e0d7e8" text-anchor="middle">Tür zur Bibliothek</text>
+  </g>
+  <g>
+    <rect x="700" y="430" width="200" height="60" rx="8" fill="#4a5560" stroke="#22292f" stroke-width="3"/>
+    <text x="800" y="467" font-family="sans-serif" font-size="15" fill="#dde5ed" text-anchor="middle">Tür zum Lehrerzimmer</text>
+  </g>
+  <g>
+    <rect x="830" y="120" width="90" height="120" rx="8" fill="#3c4a58" stroke="#22292f" stroke-width="3"/>
+    <circle cx="875" cy="160" r="22" fill="none" stroke="#ffd046" stroke-width="4"/>
+    <line x1="875" y1="160" x2="875" y2="146" stroke="#ffd046" stroke-width="4"/>
+    <text x="875" y="205" font-family="sans-serif" font-size="13" fill="#e6edf3" text-anchor="middle">Eingrenzzange</text>
+  </g>`,
+  hotspots: [
+    {
+      id: "hs_probe", x: 450, y: 280, w: 200, h: 100, label: "Probe auf dem Labortisch",
+      type: "puzzle", puzzleId: "labor_eingrenzen"
+    },
+    {
+      id: "hs_bildschirm", x: 560, y: 90, w: 230, h: 170, label: "Labor-Bildschirm",
+      type: "puzzle", puzzleId: "labor_x2"
+    },
+    {
+      id: "hs_probenregal", x: 40, y: 90, w: 330, h: 130, label: "Probenregal",
+      type: "niveau", puzzleIds: ["labor_leicht", "labor_naehe", "labor_plus"]
+    },
+    {
+      id: "hs_tuer_zurueck_lab", x: 110, y: 420, w: 200, h: 80, label: "Zurück zur Bibliothek",
+      type: "door", doorId: "bibliothek"
+    },
+    {
+      id: "hs_tuer_lehrer", x: 690, y: 420, w: 220, h: 80, label: "Tür zum Lehrerzimmer",
+      type: "door", doorId: "lehrerzimmer", requiredPuzzle: "labor_eingrenzen",
+      lockedText: "Der Laborant versperrt dir den Weg: „Erst die Eingrenzprobe bestanden – Reihenfolge ist die halbe Kette.“"
+    }
+  ]
+};
+
+DATA.rooms.lehrerzimmer = {
+  name: "Raum 4: Lehrerzimmer",
+  msgStart: "Frau Tafelwisch zieht sich die Tafelstaub-Handschuhe aus: „Willkommen. Hier wird gerechnet, gehobelt und geklärt. Rund um Wurzeln. Beanstandungen bitte in den Postkorb.“",
+  backdrop: `
+  <rect x="0" y="0" width="960" height="540" fill="#2c2723"/>
+  <rect x="0" y="0" width="960" height="360" fill="#383129"/>
+  <line x1="0" y1="360" x2="960" y2="360" stroke="#1e1a15" stroke-width="6"/>
+  <g>
+    <rect x="40" y="60" width="260" height="140" rx="10" fill="#e8e2d4" stroke="#5b4f3e" stroke-width="4"/>
+    <rect x="60" y="80" width="220" height="100" rx="6" fill="#f5f1e6" stroke="#5b4f3e" stroke-width="2"/>
+    <text x="170" y="120" font-family="sans-serif" font-size="22" fill="#5b4f3e" text-anchor="middle">√a · √b = √(a·b)</text>
+    <text x="170" y="155" font-family="sans-serif" font-size="18" fill="#5b4f3e" text-anchor="middle">√a : √b = √(a:b)</text>
+  </g>
+  <g>
+    <rect x="380" y="120" width="130" height="120" rx="8" fill="#7a5b3a" stroke="#3f2f21" stroke-width="3"/>
+    <rect x="396" y="100" width="98" height="40" rx="6" fill="#3f2f21"/>
+    <path d="M380 180 a30 24 0 0 1 130 0 z" fill="none" stroke="#241c14" stroke-width="4"/>
+    <rect x="396" y="215" width="98" height="30" rx="4" fill="#5b432c"/>
+    <text x="445" y="282" font-family="sans-serif" font-size="15" fill="#e8ddc8" text-anchor="middle">Kaffeemaschine</text>
+  </g>
+  <g>
+    <rect x="560" y="240" width="150" height="140" rx="10" fill="#33424e" stroke="#161d24" stroke-width="4"/>
+    <rect x="596" y="140" width="78" height="100" fill="#4b5b69"/>
+    <circle cx="635" cy="160" r="10" fill="#ff7b72"/>
+    <rect x="596" y="180" width="50" height="8" rx="4" fill="#9db8cf"/>
+    <rect x="596" y="196" width="30" height="8" rx="4" fill="#9db8cf"/>
+    <text x="635" y="398" font-family="sans-serif" font-size="15" fill="#dde5ed" text-anchor="middle">Getränkeautomat</text>
+  </g>
+  <g>
+    <rect x="760" y="330" width="170" height="90" rx="8" fill="#5b4f3e" stroke="#2f271e" stroke-width="3"/>
+    <rect x="768" y="322" width="70" height="14" rx="6" fill="#e8e2d4"/>
+    <text x="845" y="442" font-family="sans-serif" font-size="15" fill="#e8ddc8" text-anchor="middle">Postkorb</text>
+  </g>
+  <g>
+    <rect x="60" y="440" width="190" height="60" rx="8" fill="#4a5560" stroke="#22292f" stroke-width="3"/>
+    <text x="155" y="477" font-family="sans-serif" font-size="15" fill="#dde5ed" text-anchor="middle">Zurück ins Labor</text>
+  </g>
+  <g>
+    <rect x="620" y="440" width="240" height="60" rx="8" fill="#57485e" stroke="#2f2735" stroke-width="3"/>
+    <text x="740" y="477" font-family="sans-serif" font-size="15" fill="#e0d7e8" text-anchor="middle">Tür zum Direktorat</text>
+  </g>`,
+  hotspots: [
+    {
+      id: "hs_kaffee", x: 380, y: 90, w: 130, h: 150, label: "Notizzettel an der Kaffeemaschine",
+      type: "puzzle", puzzleId: "lehrer_produkt"
+    },
+    {
+      id: "hs_automat", x: 560, y: 230, w: 150, h: 165, label: "Getränkeautomat",
+      type: "puzzle", puzzleId: "lehrer_radizieren"
+    },
+    {
+      id: "hs_postkorb", x: 750, y: 300, w: 190, h: 140, label: "Postkorb mit Übungszetteln",
+      type: "niveau", puzzleIds: ["lehrer_quotient", "lehrer_standard", "lehrer_plus"]
+    },
+    {
+      id: "hs_tafel", x: 30, y: 50, w: 280, h: 160, label: "Tafel mit Wurzelregeln",
+      type: "info",
+      text: "An der Tafel stehen die Merkregeln des Lehrerzimmers: <b>√a · √b = √(a·b)</b> und <b>√a : √b = √(a:b)</b> für b ≠ 0. Frau Tafelwisch nickt anerkennend von der Couch."
+    },
+    {
+      id: "hs_tuer_zurueck_lz", x: 50, y: 430, w: 210, h: 80, label: "Zurück ins Labor",
+      type: "door", doorId: "labor"
+    },
+    {
+      id: "hs_tuer_direktorat", x: 610, y: 430, w: 260, h: 80, label: "Tür zum Direktorat",
+      type: "door", doorId: "direktorat", requiredPuzzle: "lehrer_radizieren",
+      lockedText: "Frau Tafelwisch schüttelt den Kopf: „Erst den Automaten überzeugen. Teilweises Radizieren ist hier echte Zulassungsvoraussetzung.“"
+    }
+  ]
+};
+
+DATA.rooms.direktorat = {
+  name: "Raum 5: Direktorat",
+  msgStart: "Der Direktor steht grübelnd vor einem leeren Rahmen: „√2 hat mir eine Nachricht hinterlassen. Aber der Sonder-Rahmen hat einen Panik-Code. Aus Wurzeln. Ich bin Direktor, nicht Wahrsager.“",
+  backdrop: `
+  <rect x="0" y="0" width="960" height="540" fill="#241f2b"/>
+  <rect x="0" y="0" width="960" height="120" fill="#332c3f"/>
+  <g>
+    <rect x="40" y="60" width="240" height="170" rx="10" fill="#4a3f55" stroke="#181420" stroke-width="4"/>
+    <rect x="60" y="80" width="200" height="130" rx="4" fill="#f5f1e6" stroke="#8a7a5c" stroke-width="6"/>
+    <path d="M110 180 q50 -90 100 0 z" fill="none" stroke="#8a7a5c" stroke-width="3"/>
+    <text x="160" y="205" font-family="sans-serif" font-size="15" fill="#c8bfae" text-anchor="middle">(leerer Rahmen)</text>
+  </g>
+  <g>
+    <rect x="520" y="240" width="280" height="120" rx="10" fill="#6b5a3d" stroke="#3a3020" stroke-width="4"/>
+    <rect x="540" y="180" width="60" height="80" rx="4" fill="#8a7a5c"/>
+    <rect x="620" y="190" width="40" height="70" rx="4" fill="#3f5a72"/>
+    <rect x="680" y="170" width="30" height="90" rx="4" fill="#5a4f3f"/>
+    <text x="660" y="388" font-family="sans-serif" font-size="15" fill="#e8ddc8" text-anchor="middle">Schreibtisch des Direktors</text>
+  </g>
+  <g>
+    <rect x="380" y="100" width="100" height="120" rx="8" fill="#3a3347" stroke="#181420" stroke-width="3"/>
+    <circle cx="430" cy="150" r="18" fill="#ffd046"/>
+    <circle cx="430" cy="190" r="6" fill="#ffd046" opacity="0.7"/>
+    <text x="430" y="238" font-family="sans-serif" font-size="14" fill="#d7cfe8" text-anchor="middle">Panik-Code-Rahmen</text>
+  </g>
+  <g>
+    <rect x="60" y="440" width="220" height="60" rx="8" fill="#4a5560" stroke="#22292f" stroke-width="3"/>
+    <text x="170" y="477" font-family="sans-serif" font-size="15" fill="#dde5ed" text-anchor="middle">Zurück zum Lehrerzimmer</text>
+  </g>
+  <g>
+    <rect x="700" y="420" width="180" height="90" rx="8" fill="#7a3f3f" stroke="#3f2020" stroke-width="3"/>
+    <circle cx="790" cy="450" r="14" fill="#ffd046"/>
+    <rect x="730" y="476" width="120" height="12" rx="6" fill="#3f2020"/>
+    <text x="790" y="499" font-family="sans-serif" font-size="13" fill="#f2e4e4" text-anchor="middle">Direktions-Telefon</text>
+  </g>`,
+  hotspots: [
+    {
+      id: "hs_direktor_code", x: 380, y: 90, w: 110, h: 160, label: "Rahmen mit Panik-Code",
+      type: "puzzle", puzzleId: "direktor_code"
+    },
+    {
+      id: "hs_schreibtisch", x: 520, y: 220, w: 280, h: 170, label: "Schreibtisch des Direktors",
+      type: "puzzle", puzzleId: "direktor_taeter"
+    },
+    {
+      id: "hs_zusatz_direktor", x: 40, y: 40, w: 250, h: 210, label: "Zusatzrätsel-Bereich am Rahmen",
+      type: "niveau", puzzleIds: ["direktor_leicht", "direktor_standard", "direktor_plus"]
+    },
+    {
+      id: "hs_telefon_direktor", x: 690, y: 410, w: 200, h: 100, label: "Direktions-Telefon",
+      type: "finale"
+    },
+    {
+      id: "hs_tuer_zurueck_dir", x: 50, y: 430, w: 240, h: 80, label: "Zurück zum Lehrerzimmer",
+      type: "door", doorId: "lehrerzimmer"
+    }
+  ]
+};
 
 DATA.mapPuzzleByRoom = {};
 Object.keys(DATA.puzzles).forEach(function (id) {
@@ -682,10 +1215,16 @@ Object.keys(DATA.puzzles).forEach(function (id) {
 DATA.endCompetences = [
   { title: "Quadratwurzeln bestimmen (√169, √49)", required: "keller_schloss" },
   { title: "√(a²) = |a| anwenden", required: "keller_luke" },
-  { title: "Gleichungen x² = a lösen (L = {−√a; √a})", required: "keller_werkzeug" },
+  { title: "Gleichungen x² = a lösen: L = {−√a; √a}", required: "labor_x2" },
+  { title: "Wurzelwerte zwischen Quadratzahlen eingrenzen", required: "labor_eingrenzen" },
+  { title: "Wurzeln abschätzen (z. B. √17 ≈ 4,1; √2 ≈ 1,4)", required: "labor_plus" },
   { title: "Zahlen in ℕ, ℤ, ℚ, ℝ einordnen", required: "bibliothek_kartei" },
   { title: "Rational und irrational unterscheiden", required: "bibliothek_periode" },
-  { title: "Begründen, warum √2 nicht rational ist", required: "bibliothek_begruendung" }
+  { title: "Begründen, warum √2 nicht rational ist", required: "bibliothek_begruendung" },
+  { title: "Produkt und Quotient von Wurzeln (√3 · √7 = √21)", required: "lehrer_produkt" },
+  { title: "Teilweises Radizieren (√72 = 6√2)", required: "lehrer_radizieren" },
+  { title: "Nenner rational machen (5/√3 = 5√3/3)", required: "lehrer_standard" },
+  { title: "Gemischte Wurzelterme zusammenfassen (√2 + √8 = 3√2)", required: "direktor_plus" }
 ];
 
 /* ---------------------------------------------------------
@@ -749,7 +1288,8 @@ function normalizeInput(raw) {
     .replace(/·/g, "*")
     .replace(/\*/g, "")
     .replace(/×/g, "")
-    .replace(/,/g, ".");
+    .replace(/,/g, ".")
+    .replace(/\u2212/g, "-");
 }
 
 function tokenKey(raw) {
@@ -971,7 +1511,7 @@ function tryFinale() {
   }).join("");
   showModal(
     "<h2>Fall vorerst gelöst – fürs Erste!</h2>" +
-    "<p class=\"desc\">√2 meldet sich per Telefonanruf: „Danke, dass ihr endlich anerkennt, dass ich rational nicht zu fassen bin. Ich komme zurück – unter der Bedingung, dass alle wissen, warum.“ Der Direktor rahmt den leeren Rahmen erneut ein. Vorläufig bleibt der Rahmen leer.</p>" +
+    "<p class=\"desc\">√2 meldet sich am Direktions-Telefon: „Danke, dass ihr endlich anerkennt, dass ich rational nicht zu fassen bin. Ich bin übrigens nie wirklich weg gewesen – nur unerhörlich. Ich rahme mich selbst. – √2“. Der Direktor setzt sich und atmet aus. Der Rahmen ist gerahmt, der Fall geschlossen.</p>" +
     "<h3>Gesicherte Kompetenzen</h3><ul class=\"plain\" id=\"end-list\">" + li + "</ul>" +
     "<p class=\"desc\">Zusätzlich gelöste Zusatzrätsel: " +
     Object.keys(State.solved).filter(function (id) { return DATA.story.requiredIds.indexOf(id) < 0; }).length + "</p>" +
@@ -1165,24 +1705,25 @@ function openInventory() {
   $("btn-close-inv").addEventListener("click", closeModal);
 }
 
+function roomUnlocked(rid) {
+  var req = DATA.story.roomUnlock ? DATA.story.roomUnlock[rid] : null;
+  return !req || isSolved(req);
+}
+
 function openMap() {
-  var visited = ["keller", "bibliothek"];
   var html = "";
-  ["keller", "bibliothek"].forEach(function (rid) {
-    var open = (rid === "bibliothek") ? isSolved("keller_schloss") : true;
-    var label = DATA.rooms[rid].name +
-      (State.currentRoom === rid ? " – du bist hier" : "");
+  DATA.story.roomOrder.forEach(function (rid) {
+    var room = DATA.rooms[rid];
+    var label = room.name + (State.currentRoom === rid ? " – du bist hier" : "");
     html += '<li><span class="n-title">' + esc(label) + "</span>";
-    if (State.currentRoom !== rid && (rid === "keller" || open)) {
-      html += ' <button class="btn btn-secondary btn-small" data-goto="' + rid + '" type="button">Hingehen</button>';
-    } else if (!open) {
-      html += ' <span class="n-text">(Code am Tresor erforderlich)</span>';
+    if (State.currentRoom !== rid) {
+      if (roomUnlocked(rid)) {
+        html += ' <button class="btn btn-secondary btn-small" data-goto="' + rid + '" type="button">Hingehen</button>';
+      } else {
+        html += ' <span class="n-text">(noch verschlossen)</span>';
+      }
     }
     html += "</li>";
-  });
-  DATA.placeholderRooms.forEach(function (r) {
-    html += '<li><span class="n-title">' + esc(r.name) +
-      '</span> <span class="tag">Kommt bald</span><br><span class="n-text">' + esc(r.hint) + "</span></li>";
   });
   showModal(
     "<h2>Räume</h2><ul class=\"plain\">" + html + "</ul>" +
@@ -1191,16 +1732,17 @@ function openMap() {
   $("btn-close-map").addEventListener("click", closeModal);
   Array.prototype.forEach.call(document.querySelectorAll("[data-goto]"), function (b) {
     b.addEventListener("click", function () {
-      if (b.getAttribute("data-goto") === "bibliothek" && !isSolved("keller_schloss")) {
-        msg(escWithoutTags(DATA.rooms.keller.hotspots.filter(function (h) { return h.id === "hs_tuer_bib"; })[0].lockedText));
-        closeModal();
+      var rid = b.getAttribute("data-goto");
+      if (!roomUnlocked(rid)) {
+        msg("Dieser Raum ist noch verschlossen. Löse erst die Pflicht-Indizien im vorherigen Raum.");
         return;
       }
-      State.currentRoom = b.getAttribute("data-goto");
+      State.currentRoom = rid;
       saveState();
       closeModal();
       renderRoom();
-      msg(escWithoutTags(DATA.rooms[State.currentRoom].msgStart));
+      msg(escWithoutTags(DATA.rooms[rid].msgStart));
+      window.scrollTo(0, 0);
     });
   });
 }

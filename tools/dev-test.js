@@ -68,7 +68,13 @@ console.log(out.replace(/<[^>]*>/g, "\n"));
   expect(requiredDone(), "Pflichtpunkte nicht abgeschlossen");
   tryFinale();
   expect(elements["modal"].innerHTML.indexOf("Gesicherte Kompetenzen") >= 0, "Abschluss-Screen fehlt");
-  expect(DATA.placeholderRooms.length === 3, "Platzhalter-Räume");
+  expect(DATA.story.roomOrder.length === 5, "Raumliste: 5 Räume erwartet");
+  DATA.story.roomOrder.forEach(rid => expect(!!DATA.rooms[rid], "Raum fehlt: " + rid));
+  // Freischalt-Kette: jeder Folgeraum braucht genau ein Rätsel als Schlüssel
+  [["bibliothek","keller_schloss"],["labor","bibliothek_begruendung"],["lehrerzimmer","labor_eingrenzen"],["direktorat","lehrer_radizieren"]].forEach(([rid,key]) => {
+    expect(DATA.story.roomUnlock[rid] === key, "Schlüssel-Rätsel für " + rid);
+    expect(DATA.puzzles[key], "Schlüssel-Rätsel existiert nicht: " + key);
+  });
   // Tür ohne Lösung blockiert (Meldung vorhanden, kein Absturz):
   State.solved["keller_schloss"] = false;
   tryDoor(tuer);
