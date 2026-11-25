@@ -162,7 +162,10 @@
 <section id="screen-start">
   <h1>Tatort Zahlengerade <span class="title-sqrt">– Der Fall √2</span></h1>
   <div class="intro" id="intro-text"></div>
-  <button class="btn" id="btn-start" type="button">Neu starten</button>
+  <div style="display: flex; gap: .75rem; flex-wrap: wrap; justify-content: center;">
+    <button class="btn hidden" id="btn-continue" type="button">Weiterspielen</button>
+    <button class="btn" id="btn-start" type="button">Neu starten</button>
+  </div>
   <p id="continue-hint" class="hidden" style="color: var(--muted);"></p>
 </section>
 
@@ -388,7 +391,7 @@ DATA.puzzles = {
     help: {
       hint: "Achte nicht darauf, ob die Zahl aufhört, sondern darauf, ob sich etwas wiederholt.",
       merk: "Rationale Zahlen haben eine abbrechende oder eine periodische Dezimalentwicklung. Periodisch ⇒ als Bruch schreibbar ⇒ rational.",
-      beispiel: "0,33333… = 0,3̄ = 1/3 ist rational, obwohl die development nicht aufhört."
+      beispiel: "0,33333… = 0,3̄ = 1/3 ist rational, obwohl die Dezimalentwicklung nicht aufhört."
     },
     reveal: "0,66666… = 0,6̄ = 2/3, ein Bruch – also <b>rational</b>.",
     onSolve: { note: "n_rat", found: "0,6̄ = 2/3 ∈ ℚ" }
@@ -455,7 +458,6 @@ DATA.puzzles = {
     solution: { set: [1, 2] },
     commonErrors: [
       { when: "kind:incomplete-set", text: "Zwei Zahlen, bitte! Es sind zwei aufeinanderfolgende ganze Zahlen gesucht – die kleinere zuerst." },
-      { when: "kind:grenzen-falsch", text: "Prüfe mit dem Quadrieren: Liegt √2 über 1 und unter seiner Obergrenze, ohne eine Quadratzahl zu treffen?" }
     ],
     help: {
       hint: "Quadriere die Kandidaten: 1² = 1 und 2² = 4. Wo liegt die 2 dazwischen?",
@@ -673,6 +675,7 @@ DATA.placeholderRooms = [
 DATA.mapPuzzleByRoom = {};
 Object.keys(DATA.puzzles).forEach(function (id) {
   var p = DATA.puzzles[id];
+  p.id = id;
   (DATA.mapPuzzleByRoom[p.room] = DATA.mapPuzzleByRoom[p.room] || []).push(id);
 });
 
@@ -688,15 +691,745 @@ DATA.endCompetences = [
 /* ---------------------------------------------------------
    2. ENGINE
    --------------------------------------------------------- */
-function setState(msg) {
-  document.getElementById("intro-text").innerHTML = DATA.story.intro;
-  document.getElementById("continue-hint").classList.add("hidden");
-  if (msg !== undefined) {
-    document.getElementById("continue-hint").textContent = msg;
-    document.getElementById("continue-hint").classList.remove("hidden");
+
+var State = {
+  currentRoom: "keller",
+  solved: {},        // puzzleId -> true
+  inventory: [],     // itemIds
+  notes: [],         // noteIds
+  found: [],         // gefundene Zahlen (Strings)
+  fails: {},         // puzzleId -> Anzahl Fehlversuche
+  helpLevel: {},     // puzzleId -> 0/1/2/3 (freigeschaltete Hilfestufe)
+  done: false
+};
+
+function saveState() {
+  try {
+    localStorage.setItem("tatort-sqrt2", JSON.stringify(State));
+  } catch (e) { /* Speichern optional: Spiel läuft auch ohne localStorage */ }
+}
+
+function loadState() {
+  try {
+    var raw = localStorage.getItem("tatort-sqrt2");
+    if (!raw) return false;
+    var s = JSON.parse(raw);
+    if (!s || typeof s !== "object" || !s.currentRoom) return false;
+    ["solved", "inventory", "notes", "found"].forEach(function (k) {
+      if (!Array.isArray(s[k])) s[k] = [];
+    });
+    ["fails", "helpLevel"].forEach(function (k) {
+      if (typeof s[k] !== "object" || s[k] === null) s[k] = {};
+    });
+    State = s;
+    return true;
+  } catch (e) {
+    return false; /* defekter Spielstand wird ignoriert, Spiel startet neu */
   }
 }
-setState();
+
+function clearState() {
+  State = {
+    currentRoom: "keller", solved: {}, inventory: [], notes: [],
+    found: [], fails: {}, helpLevel: {}, done: false
+  };
+  try { localStorage.removeItem("tatort-sqrt2"); } catch (e) { /* ignorieren */ }
+}
+
+function isSolved(id) { return !!State.solved[id]; }
+function requiredDone() {
+  return DATA.story.requiredIds.every(isSolved);
+}
+
+/* ---------- Normierung der Eingaben (tolerant) ---------- */
+function normalizeInput(raw) {
+  return String(raw == null ? "" : raw)
+    .toLowerCase()
+    .replace(/\s+/g, "")
+    .replace(/·/g, "*")
+    .replace(/\*/g, "")
+    .replace(/×/g, "")
+    .replace(/,/g, ".");
+}
+
+function tokenKey(raw) {
+  var s = normalizeInput(raw);
+  s = s
+    .replace(/ℕ/g, "n").replace(/natürlichenzahlen?/g, "n").replace(/natürlichezahlen?/g, "n")
+    .replace(/ℤ/g, "z").replace(/ganzezahlen?/g, "z").replace(/ganzezahl?/g, "z")
+    .replace(/ℚ/g, "q").replace(/rationalezahlen?/g, "q").replace(/rationalezahl?/g, "q")
+    .replace(/ℝ/g, "r").replace(/reellenzahlen?/g, "r").replace(/reellezahl?/g, "r")
+    .replace(/ irrational /g, "irrational");
+  if (s === "rationale") s = "rational";
+  if (s === "irrationale") s = "irrational";
+  return s;
+}
+
+function extractNumbers(raw) {
+  var s = String(raw).replace(/,/g, ".");
+  var out = [];
+  var re = /[-+]?\d+(?:\.\d+)?/g;
+  var m;
+  while ((m = re.exec(s)) !== null) out.push(parseFloat(m[0]));
+  return out;
+}
+
+function numsEqual(a, b) {
+  if (a.length !== b.length) return false;
+  var x = a.slice().sort(function (p, q) { return p - q; });
+  var y = b.slice().sort(function (p, q) { return p - q; });
+  return x.every(function (v, i) { return Math.abs(v - y[i]) < 1e-9; });
+}
+
+/* ---------- Auswertung ---------- */
+
+/* Prüft eine Eingabe gegen ein Rätsel. Rückgabe:
+   { ok: bool, errorText: string|undefined } */
+function checkAnswer(puzzle, rawInput, choiceIndex) {
+  var kind = puzzle.kind;
+  if (kind === "choice") {
+    var c = puzzle.choices[choiceIndex];
+    if (!c) return { ok: false, errorText: DATA.errors.generic };
+    if (c.ok) return { ok: true };
+    return { ok: false, errorText: c.feedback || DATA.errors.generic };
+  }
+  if (kind === "num") {
+    var nums = extractNumbers(rawInput);
+    if (nums.length === 1 && puzzle.solution.accept.some(function (a) {
+      return Math.abs(nums[0] - a) < 1e-9;
+    })) return { ok: true };
+    return { ok: false, errorText: matchError(puzzle, nums) };
+  }
+  if (kind === "set") {
+    var nums2 = extractNumbers(rawInput);
+    if (numsEqual(nums2, puzzle.solution.set)) return { ok: true };
+    return { ok: false, errorText: matchError(puzzle, nums2) };
+  }
+  if (kind === "token") {
+    var t = tokenKey(rawInput);
+    if (t === puzzle.solution.token || (puzzle.solution.tokenAlt || []).indexOf(t) >= 0) {
+      return { ok: true };
+    }
+    return { ok: false, errorText: matchError(puzzle, t) };
+  }
+  return { ok: false, errorText: DATA.errors.generic };
+}
+
+function matchError(puzzle, normalized) {
+  var text = DATA.errors.generic;
+  (puzzle.commonErrors || []).forEach(function (e) {
+    var when = e.when;
+    if (typeof when === "string" && when.indexOf("kind:") === 0) {
+      if ((when === "kind:incomplete-set" || when === "kind:grenzen-falsch") &&
+          Array.isArray(normalized) && normalized.length > 0) {
+        if (!numsEqual(normalized, puzzle.solution.set)) text = e.text;
+      }
+    } else if (Array.isArray(normalized)) {
+      if (normalized.length === 1 && typeof when === "number" &&
+          Math.abs(normalized[0] - when) < 1e-9) text = e.text;
+    } else if (typeof when === "number") {
+      if (typeof normalized === "string" && normalized !== "" &&
+          Math.abs(parseFloat(normalized) - when) < 1e-9) text = e.text;
+    } else if (typeof when === "string") {
+      tokenKey(when);
+      if (tokenKey(when) === normalized) text = e.text;
+    }
+  });
+  return text;
+}
+
+/* ---------- DOM-Helfer ---------- */
+function $(id) { return document.getElementById(id); }
+function esc(s) {
+  return String(s).replace(/[&<>]/g, function (ch) {
+    return { "&": "&amp;", "<": "&lt;", ">": "&gt;" }[ch];
+  });
+}
+
+function msg(html) { $("msgbar").innerHTML = html; }
+
+function showModal(html, focusId) {
+  $("modal").innerHTML = html;
+  $("overlay").classList.remove("hidden");
+  if (focusId) {
+    var el = $(focusId);
+    if (el) el.focus();
+  }
+}
+
+function closeModal() {
+  $("overlay").classList.add("hidden");
+  $("modal").innerHTML = "";
+}
+
+$("overlay").addEventListener("click", function (ev) {
+  if (ev.target === $("overlay")) closeModal();
+});
+
+/* ---------- Rendering ---------- */
+function renderRoom() {
+  var room = DATA.rooms[State.currentRoom];
+  $("location-label").textContent = room.name;
+  var svg = '<svg viewBox="0 0 960 540" role="img" aria-label="' + esc(room.name) + '">';
+  svg += room.backdrop;
+  room.hotspots.forEach(function (h) {
+    var solvedMark = (h.type === "puzzle" && isSolved(h.puzzleId)) ||
+                     (h.type === "niveau" && h.puzzleIds.every(isSolved)) ||
+                     (h.type === "item" && State.inventory.indexOf(h.itemId) >= 0);
+    var cx = h.x + h.w / 2;
+    var cy = h.y + h.h / 2;
+    var cy2 = Math.min(h.y + h.h - 26, Math.max(h.y + 26, cy));
+    svg += '<g class="hotspot' + (solvedMark ? " solved" : "") +
+           '" data-hotspot="' + h.id + '" tabindex="0" role="button" aria-label="' + esc(h.label) + '">';
+    svg += '<rect class="hit" x="' + h.x + '" y="' + h.y + '" width="' + h.w + '" height="' + h.h + '"/>';
+    svg += '<circle class="marker" cx="' + cx + '" cy="' + cy2 + '" r="16"/>';
+    svg += '<text class="marker-text" x="' + cx + '" y="' + (cy2 + 6) + '">?</text>';
+    svg += "</g>";
+  });
+  svg += "</svg>";
+  $("stage").innerHTML = svg;
+  Array.prototype.forEach.call(document.querySelectorAll("[data-hotspot]"), function (g) {
+    function activate() { activateHotspot(g.getAttribute("data-hotspot")); }
+    g.addEventListener("click", activate);
+    g.addEventListener("keydown", function (ev) {
+      if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); activate(); }
+    });
+  });
+}
+
+function activateHotspot(id) {
+  var room = DATA.rooms[State.currentRoom];
+  var h = room.hotspots.filter(function (x) { return x.id === id; })[0];
+  if (!h) return;
+  if (h.type === "puzzle") {
+    var p = DATA.puzzles[h.puzzleId];
+    if (isSolved(p.id)) {
+      msg("<b>" + esc(p.title) + "</b> – bereits gelöst. Gut gemacht, Ermittler:in!");
+      return;
+    }
+    openPuzzle(p.id);
+  } else if (h.type === "niveau") {
+    openNiveau(h.puzzleIds, h.label);
+  } else if (h.type === "item") {
+    takeItem(h);
+  } else if (h.type === "info") {
+    if (h.requiresItem && State.inventory.indexOf(h.requiresItem) < 0) {
+      msg("Hier ist es zu dunkel. Vielleicht hilft eine <b>Taschenlampe</b> aus der Kiste.");
+      return;
+    }
+    msg(escWithoutTags(h.text));
+    if (h.note && State.notes.indexOf(h.note) < 0) {
+      State.notes.push(h.note);
+      msg("<b>Notizbuch ergänzt!</b> " + h.text);
+      saveState();
+    }
+  } else if (h.type === "door") {
+    tryDoor(h);
+  } else if (h.type === "finale") {
+    tryFinale();
+  }
+}
+
+function escWithoutTags(s) {
+  // Story-Texte enthalten bewusst <b>-Tag(s)
+  return String(s);
+}
+
+function takeItem(h) {
+  if (State.inventory.indexOf(h.itemId) >= 0) {
+    msg("Die Kiste ist leer. Nur Staub – und der ist quadratisch.");
+    return;
+  }
+  var item = DATA.items[h.itemId];
+  State.inventory.push(h.itemId);
+  saveState();
+  msg("<b>Aufgenommen:</b> " + esc(item.name) + ". " + esc(item.desc));
+  renderRoom();
+}
+
+function tryDoor(h) {
+  if (h.requiredPuzzle && !isSolved(h.requiredPuzzle)) {
+    msg(escWithoutTags(h.lockedText));
+    return;
+  }
+  State.currentRoom = h.doorId;
+  saveState();
+  renderRoom();
+  msg(escWithoutTags(DATA.rooms[h.doorId].msgStart));
+  window.scrollTo(0, 0);
+}
+
+function tryFinale() {
+  if (!requiredDone()) {
+    var missing = DATA.story.requiredIds.filter(function (id) { return !isSolved(id); })
+      .map(function (id) { return DATA.puzzles[id].title; });
+    msg("Frau Nachschlag hält das Telefon fest: „Erst alle Pflicht-Indizien sichern, dann angerufen!“ Noch offen: <b>" + esc(missing.join(" · ")) + "</b>");
+    return;
+  }
+  var li = DATA.endCompetences.map(function (c) {
+    return '<li class="' + (isSolved(c.required) ? "done" : "") + '"><span class="n-title">' + c.title + '</span></li>';
+  }).join("");
+  showModal(
+    "<h2>Fall vorerst gelöst – fürs Erste!</h2>" +
+    "<p class=\"desc\">√2 meldet sich per Telefonanruf: „Danke, dass ihr endlich anerkennt, dass ich rational nicht zu fassen bin. Ich komme zurück – unter der Bedingung, dass alle wissen, warum.“ Der Direktor rahmt den leeren Rahmen erneut ein. Vorläufig bleibt der Rahmen leer.</p>" +
+    "<h3>Gesicherte Kompetenzen</h3><ul class=\"plain\" id=\"end-list\">" + li + "</ul>" +
+    "<p class=\"desc\">Zusätzlich gelöste Zusatzrätsel: " +
+    Object.keys(State.solved).filter(function (id) { return DATA.story.requiredIds.indexOf(id) < 0; }).length + "</p>" +
+    "<div class=\"actions\"><button class=\"btn\" id=\"btn-close-end\" type=\"button\">Weiterspielen</button></div>"
+  );
+  State.done = true;
+  saveState();
+  $("btn-close-end").addEventListener("click", closeModal);
+}
+
+/* ---------- Rätsel-Dialog ---------- */
+function openNiveau(puzzleIds, label) {
+  var labels = { leicht: "Leicht", standard: "Standard", plus: "Plus" };
+  var buttons = puzzleIds.map(function (id) {
+    var p = DATA.puzzles[id];
+    var state = isSolved(id) ? " ✓" : "";
+    return '<button class="btn btn-secondary" data-niveau="' + id + '" type="button">' + esc(labels[p.niv]) + state + "</button>";
+  }).join("");
+  showModal(
+    "<h2>" + esc(label) + " – Zusatzrätsel</h2>" +
+    "<p class=\"desc\">Drei Niveaus – freie Auswahl. Zusatzrätsel sind optional.</p>" +
+    "<div class=\"niveau-bar\">" + buttons + "</div>" +
+    "<div class=\"actions\"><button class=\"btn btn-secondary btn-small\" id=\"btn-abort-niveau\" type=\"button\">Schließen</button></div>"
+  );
+  $("btn-abort-niveau").addEventListener("click", closeModal);
+  Array.prototype.forEach.call(document.querySelectorAll("[data-niveau]"), function (b) {
+    b.addEventListener("click", function () { openPuzzle(b.getAttribute("data-niveau")); });
+  });
+}
+
+function openPuzzle(id) {
+  var p = DATA.puzzles[id];
+  var iHtml = "<h2>" + esc(p.title) + "<span class=\"tag\">" +
+              ({ main: "Pflicht", leicht: "Leicht", standard: "Standard", plus: "Plus" })[p.niv] + "</span></h2>";
+  iHtml += "<p class=\"desc\">" + p.desc + "</p>";
+  iHtml += "<p class=\"prompt\"><b>Aufgabe:</b> " + p.prompt + "</p>";
+  if (p.kind === "choice") {
+    iHtml += '<div class="choices">' + p.choices.map(function (c, i) {
+      return '<button class="choice" data-choice="' + i + '" type="button">' + c.text + "</button>";
+    }).join("") + "</div>";
+  } else {
+    iHtml += '<input class="answer-input" id="answer" type="text" inputmode="text" autocomplete="off" placeholder="Deine Antwort …">';
+  }
+  iHtml += '<div id="feedback" class="info"></div><div id="help-area"></div>';
+  iHtml += '<div class="actions">';
+  if (p.kind !== "choice") iHtml += '<button class="btn" id="btn-check" type="button">Prüfen</button>';
+  iHtml += '<button class="btn btn-secondary btn-small" id="btn-help" type="button">Hilfe (Tipp)</button>';
+  iHtml += '<button class="btn btn-secondary btn-small" id="btn-quit" type="button">Später</button>';
+  iHtml += "</div>";
+  showModal(iHtml, p.kind === "choice" ? null : "answer");
+
+  var fails = State.fails[id] || 0;
+  var lvl = State.helpLevel[id] || 0;
+
+  function feedback(cls, text) {
+    var f = $("feedback");
+    f.className = cls;
+    f.innerHTML = text;
+  }
+
+  function showHelpLevel(n) {
+    var area = $("help-area");
+    if (n === 1) area.innerHTML = '<div class="helpbox"><span class="helplabel">Tipp</span>' + p.help.hint + "</div>";
+    if (n === 2) area.innerHTML = '<div class="helpbox merk"><span class="helplabel">Merkkasten</span>' + p.help.merk + "</div>";
+    if (n === 3) area.innerHTML = '<div class="helpbox beispiel"><span class="helplabel">Beispiel</span>' + p.help.beispiel + "</div>";
+    var label = ["Hilfe (Tipp)", "Hilfe (Merkkasten)", "Hilfe (Beispiel)", "Nochmal helfen"][Math.min(n, 3)];
+    $("btn-help").textContent = label;
+  }
+
+  function offerReveal() {
+    if (document.getElementById("btn-reveal")) return;
+    var a = $("modal").querySelector(".actions");
+    var b = document.createElement("button");
+    b.className = "btn-secondary btn btn-small";
+    b.id = "btn-reveal";
+    b.type = "button";
+    b.textContent = "Lösung zeigen (nach 5 Versuchen)";
+    b.addEventListener("click", function () {
+      feedback("info", "Lösung: " + p.reveal);
+      document.getElementById("btn-reveal").disabled = true;
+      var okBtn = document.getElementById("btn-reveal-ok");
+      if (!okBtn) {
+        var ok = document.createElement("button");
+        ok.className = "btn btn-small";
+        ok.id = "btn-reveal-ok";
+        ok.type = "button";
+        ok.textContent = "Weiter mit der Lösung";
+        ok.addEventListener("click", function () { solvePuzzle(p, true); });
+        a.appendChild(ok);
+      }
+    });
+    a.appendChild(b);
+  }
+
+  function handleCheck() {
+    var raw = $("answer").value;
+    if (!raw.trim()) { feedback("err", "Bitte gib etwas ein."); return; }
+    var res = checkAnswer(p, raw);
+    if (res.ok) { solvePuzzle(p, false); return; }
+    fails += 1;
+    State.fails[id] = fails;
+    saveState();
+    feedback("err", res.errorText);
+    if (fails >= 5) offerReveal();
+  }
+
+  function handleChoice(i) {
+    var res = checkAnswer(p, null, i);
+    if (res.ok) { solvePuzzle(p, false); return; }
+    fails += 1;
+    State.fails[id] = fails;
+    saveState();
+    feedback("err", res.errorText);
+    if (fails >= 5) offerReveal();
+  }
+
+  if (p.kind === "choice") {
+    Array.prototype.forEach.call(document.querySelectorAll("[data-choice]"), function (b) {
+      b.addEventListener("click", function () { handleChoice(parseInt(b.getAttribute("data-choice"), 10)); });
+    });
+  } else {
+    $("btn-check").addEventListener("click", handleCheck);
+    $("answer").addEventListener("keydown", function (ev) {
+      if (ev.key === "Enter") handleCheck();
+    });
+  }
+
+  $("btn-help").addEventListener("click", function () {
+    lvl = Math.min(lvl + 1, 3);
+    State.helpLevel[id] = lvl;
+    saveState();
+    showHelpLevel(lvl);
+    feedback("info", lvl < 3 ? "Noch nicht weiter? Es gibt eine weitere Hilfestufe." : "Das war die letzte Hilfestufe. Du schaffst das!");
+  });
+  if (lvl > 0) showHelpLevel(lvl);
+  if (fails >= 5) offerReveal();
+
+  $("btn-quit").addEventListener("click", closeModal);
+}
+
+function solvePuzzle(p, viaReveal) {
+  if (!isSolved(p.id)) {
+    State.solved[p.id] = true;
+    var o = p.onSolve || {};
+    if (o.note && State.notes.indexOf(o.note) < 0) State.notes.push(o.note);
+    if (o.found && State.found.indexOf(o.found) < 0) State.found.push(o.found);
+  }
+  saveState();
+  var f = $("feedback");
+  f.className = "ok";
+  f.innerHTML = (viaReveal ? "Notiert! " : "") +
+    "<b>Richtig!</b> Beweis gesichert: " + p.reveal;
+  var q = $("modal").querySelector(".actions");
+  q.innerHTML = '<button class="btn" id="btn-after-solve" type="button">Weiter</button>';
+  $("btn-after-solve").addEventListener("click", function () {
+    closeModal();
+    renderRoom();
+    msg("<b>Indiz gesichert:</b> " + esc(p.title));
+  });
+}
+
+/* ---------- Notizbuch, Inventar, Karte ---------- */
+function openNotes() {
+  var merkHTML = State.notes.length
+    ? "<ul class=\"plain\">" + State.notes.map(function (nid) {
+        var n = DATA.notes[nid];
+        if (!n) return "";
+        return '<li><span class="n-title">' + esc(n.title) + '</span><br><span class="n-text">' + n.text + "</span></li>";
+      }).join("") + "</ul>"
+    : "<p class=\"desc\">Noch keine Merkregeln gefunden. Löse Indizien – deine Merkregeln landen dann hier.</p>";
+  var foundHTML = State.found.length
+    ? "<ul class=\"plain\">" + State.found.map(function (f) { return "<li>" + f + "</li>"; }).join("") + "</ul>"
+    : "<p class=\"desc\">Noch keine Zahlen gesichert.</p>";
+  showModal(
+    "<h2>Notizbuch</h2><h3>Merkregeln</h3>" + merkHTML +
+    "<h3>Gesicherte Zahlen</h3>" + foundHTML +
+    "<div class=\"actions\"><button class=\"btn btn-secondary btn-small\" id=\"btn-close-notes\" type=\"button\">Schließen</button></div>"
+  );
+  $("btn-close-notes").addEventListener("click", closeModal);
+}
+
+function openInventory() {
+  var html = State.inventory.length
+    ? "<ul class=\"plain\">" + State.inventory.map(function (iid) {
+        var it = DATA.items[iid];
+        return '<li><span class="n-title">' + esc(it.name) + "</span><br><span class=\"n-text\">" + esc(it.desc) + "</span></li>";
+      }).join("") + "</ul>"
+    : "<p class=\"desc\">Deine Taschen sind noch leer.</p>";
+  showModal("<h2>Inventar</h2>" + html +
+    "<div class=\"actions\"><button class=\"btn btn-secondary btn-small\" id=\"btn-close-inv\" type=\"button\">Schließen</button></div>");
+  $("btn-close-inv").addEventListener("click", closeModal);
+}
+
+function openMap() {
+  var visited = ["keller", "bibliothek"];
+  var html = "";
+  ["keller", "bibliothek"].forEach(function (rid) {
+    var open = (rid === "bibliothek") ? isSolved("keller_schloss") : true;
+    var label = DATA.rooms[rid].name +
+      (State.currentRoom === rid ? " – du bist hier" : "");
+    html += '<li><span class="n-title">' + esc(label) + "</span>";
+    if (State.currentRoom !== rid && (rid === "keller" || open)) {
+      html += ' <button class="btn btn-secondary btn-small" data-goto="' + rid + '" type="button">Hingehen</button>';
+    } else if (!open) {
+      html += ' <span class="n-text">(Code am Tresor erforderlich)</span>';
+    }
+    html += "</li>";
+  });
+  DATA.placeholderRooms.forEach(function (r) {
+    html += '<li><span class="n-title">' + esc(r.name) +
+      '</span> <span class="tag">Kommt bald</span><br><span class="n-text">' + esc(r.hint) + "</span></li>";
+  });
+  showModal(
+    "<h2>Räume</h2><ul class=\"plain\">" + html + "</ul>" +
+    "<div class=\"actions\"><button class=\"btn btn-secondary btn-small\" id=\"btn-close-map\" type=\"button\">Schließen</button></div>"
+  );
+  $("btn-close-map").addEventListener("click", closeModal);
+  Array.prototype.forEach.call(document.querySelectorAll("[data-goto]"), function (b) {
+    b.addEventListener("click", function () {
+      if (b.getAttribute("data-goto") === "bibliothek" && !isSolved("keller_schloss")) {
+        msg(escWithoutTags(DATA.rooms.keller.hotspots.filter(function (h) { return h.id === "hs_tuer_bib"; })[0].lockedText));
+        closeModal();
+        return;
+      }
+      State.currentRoom = b.getAttribute("data-goto");
+      saveState();
+      closeModal();
+      renderRoom();
+      msg(escWithoutTags(DATA.rooms[State.currentRoom].msgStart));
+    });
+  });
+}
+
+/* ---------- Start / Restart ---------- */
+function startGame(fresh) {
+  if (fresh) clearState();
+  $("screen-start").classList.add("hidden");
+  $("screen-game").classList.remove("hidden");
+  renderRoom();
+  msg(escWithoutTags(DATA.rooms[State.currentRoom].msgStart));
+  saveState();
+}
+
+$("btn-start").addEventListener("click", function () { startGame(true); });
+$("btn-continue").addEventListener("click", function () { startGame(false); });
+$("btn-notes").addEventListener("click", openNotes);
+$("btn-inventory").addEventListener("click", openInventory);
+$("btn-map").addEventListener("click", openMap);
+$("btn-restart").addEventListener("click", function () {
+  showModal(
+    "<h2>Neu starten?</h2><p class=\"desc\">Der bisherige Spielstand wird gelöscht.</p>" +
+    "<div class=\"actions\"><button class=\"btn\" id=\"btn-restart-yes\" type=\"button\">Ja, neu starten</button>" +
+    "<button class=\"btn btn-secondary\" id=\"btn-restart-no\" type=\"button\">Abbrechen</button></div>"
+  );
+  $("btn-restart-yes").addEventListener("click", function () {
+    closeModal();
+    clearState();
+    $("screen-game").classList.add("hidden");
+    $("screen-start").classList.remove("hidden");
+    setState(undefined);
+  });
+  $("btn-restart-no").addEventListener("click", closeModal);
+});
+
+function setState(msg) {
+  document.getElementById("intro-text").innerHTML = DATA.story.intro;
+  var hint = document.getElementById("continue-hint");
+  hint.classList.add("hidden");
+  if (msg) {
+    hint.textContent = msg;
+    hint.classList.remove("hidden");
+  }
+}
+
+/* ---------------------------------------------------------
+   3. DEV-TESTS (nur mit ?dev=1 aktiv, nicht im normalen Spiel sichtbar)
+   Prüft: Rechung jeder Aufgabe, tolerant akzeptierte Eingaben,
+   Hilfsstufen, typische Fehler (jede Meldung mindestens einmal auslösbar),
+   Soft-Lock-Freiheit, Pflichtpfad.
+   --------------------------------------------------------- */
+window.__runDevTests = function () {
+  var panel = document.getElementById("dev-panel");
+  panel.classList.remove("hidden");
+  var lines = [];
+  var failCount = 0;
+  function line(cls, txt) {
+    lines.push('<span class="' + cls + '">' + txt + "</span>");
+  }
+
+  /* Pro Rätsel: Hilfen vorhanden, jede Lösungsvariante akzeptiert,
+     jeder typische Fehler auslösbar, Reveal vorhanden */
+  Object.keys(DATA.puzzles).forEach(function (id) {
+    var p = DATA.puzzles[id];
+    var ok = true;
+
+    if (!p.help || !p.help.hint || !p.help.merk || !p.help.beispiel) {
+      line("t-err", "FAIL " + id + ": Hilfestufen unvollständig"); failCount++; ok = false;
+    }
+    if (!p.reveal) {
+      line("t-err", "FAIL " + id + ": reveal fehlt"); failCount++; ok = false;
+    }
+
+    /* Lösungs-Eingaben tolerant prüfen */
+    var goodInputs = [];
+    if (p.kind === "num") {
+      p.solution.accept.forEach(function (a) {
+        goodInputs.push(String(a), String(a).replace(".", ","), " " + String(a) + " ");
+      });
+    } else if (p.kind === "set") {
+      var set = p.solution.set;
+      var asStrings = set.map(String);
+      goodInputs.push(
+        "{" + asStrings.join("; ") + "}",
+        asStrings.join(" und "),
+        asStrings.slice().reverse().join(";"),
+        "L={" + asStrings.join(";") + "}"
+      );
+    } else if (p.kind === "token") {
+      goodInputs.push(p.solution.token);
+      if (p.solution.token === "rational") goodInputs.push("Rational", " rationale ");
+      if (p.solution.token === "irrational") goodInputs.push("Irrational");
+      if (p.solution.token === "n") goodInputs.push("ℕ");
+      if (p.solution.token === "z") goodInputs.push("ℤ");
+    } else if (p.kind === "choice") {
+      goodInputs = null;
+      p.choices.forEach(function (c, i) {
+        var res = checkAnswer(p, null, i);
+        if (!!c.ok !== res.ok) {
+          line("t-err", "FAIL " + id + ": Auswahl " + i + " falsch bewertet"); failCount++;
+        } else if (!c.ok && !c.feedback) {
+          line("t-err", "FAIL " + id + ": Auswahl " + i + " ohne Fehlerfeedback"); failCount++;
+        }
+      });
+      var okCount = p.choices.filter(function (c) { return c.ok; }).length;
+      if (okCount !== 1) {
+        line("t-err", "FAIL " + id + ": " + okCount + " richtige Auswahlmöglichkeiten"); failCount++;
+      }
+    }
+    if (goodInputs) {
+      goodInputs.forEach(function (gi) {
+        var res = checkAnswer(p, gi);
+        if (!res.ok) {
+          line("t-err", "FAIL " + id + ": Lösung \"" + gi + "\" nicht akzeptiert (" + res.errorText + ")"); failCount++; ok = false;
+        }
+      });
+    }
+
+    /* Typische Fehler auslösbar? */
+    (p.commonErrors || []).forEach(function (e) {
+      var triggered;
+      if (typeof e.when === "string" && e.when.indexOf("kind:") === 0) {
+        triggered = (p.kind === "set") ? set.slice(0, 1).join("; ") : null;
+      } else if (p.kind === "token") {
+        triggered = e.when;
+      } else {
+        triggered = String(e.when).replace(".", ",");
+      }
+      if (triggered !== null) {
+        var res = checkAnswer(p, triggered);
+        if (res.ok || res.errorText !== e.text) {
+          line("t-err", "FAIL " + id + ": Fehler \"" + triggered + "\" löst Feedback nicht aus"); failCount++; ok = false;
+        }
+      }
+    });
+
+    if (ok) line("t-ok", "OK " + id);
+  });
+
+  /* Soft-Lock-Check: Pflichtpfad nur von Raumsel-Rätseln abhängig,
+     kein Gegenstand notwendig, jede Tür ohne dauerhafte Blockade */
+  var itemReq = [];
+  Object.keys(DATA.rooms).forEach(function (rid) {
+    var room = DATA.rooms[rid];
+    if (!room.backdrop || !Array.isArray(room.hotspots) || room.hotspots.length < 4) {
+      line("t-err", "FAIL Raum " + rid + ": weniger als 4 Hotspots oder kein Szenenbild"); failCount++;
+    }
+    room.hotspots.forEach(function (h) {
+      if (h.type === "door") {
+        if (!h.doorId || !DATA.rooms[h.doorId]) {
+          line("t-err", "FAIL Raum " + rid + ": Tür ohne gültiges Ziel"); failCount++;
+        }
+      }
+      if (h.type === "puzzle" && !DATA.puzzles[h.puzzleId]) {
+        line("t-err", "FAIL Raum " + rid + ": unbekanntes Rätsel " + h.puzzleId); failCount++;
+      }
+      if (h.type === "niveau") {
+        var arr = h.puzzleIds || [];
+        arr.forEach(function (pid) {
+          if (!DATA.puzzles[pid]) {
+            line("t-err", "FAIL Raum " + rid + ": unbekanntes Zusatzrätsel " + pid); failCount++;
+          }
+        });
+        if (arr.length !== 3) {
+          line("t-err", "FAIL Raum " + rid + ": Niveau-Auswahl braucht 3 Stufen"); failCount++;
+        }
+      }
+      if (h.type === "item") itemReq.push(h.itemId);
+    });
+  });
+  DATA.story.requiredIds.forEach(function (id) {
+    if (!DATA.puzzles[id]) {
+      line("t-err", "FAIL Pflichtpunkt " + id + " existiert nicht"); failCount++;
+    }
+  });
+  /* Simulierter Lösungsweg: nur Pflichtpunkte + Tür – ohne Gegenstände, ohne Zusatz */
+  var simOk = DATA.story.requiredIds.every(function (id) {
+    var p = DATA.puzzles[id];
+    if (!p) return false;
+    var probe;
+    if (p.kind === "choice") probe = checkAnswer(p, null, p.solution.index);
+    else if (p.kind === "num") probe = checkAnswer(p, String(p.solution.accept[0]));
+    else if (p.kind === "set") probe = checkAnswer(p, p.solution.set.join(";"));
+    else probe = checkAnswer(p, p.solution.token);
+    return probe.ok;
+  });
+  if (!simOk) {
+    line("t-err", "FAIL: Pflicht-Rätsel sind mit ihren Lösungen nicht lösbar (Soft-Lock-Risiko)"); failCount++;
+  } else {
+    line("t-ok", "OK Pflichtpfad ohne Gegenstände lösbar (kein Soft-Lock)");
+  }
+  /* Tür zur Bibliothek braucht genau keller_schloss */
+  var tuer = DATA.rooms.keller.hotspots.filter(function (h) { return h.doorId === "bibliothek"; })[0];
+  if (!tuer || tuer.requiredPuzzle !== "keller_schloss") {
+    line("t-err", "FAIL: Tür zur Bibliothek sollte von keller_schloss abhängen"); failCount++;
+  } else {
+    line("t-ok", "OK Türlogik: Bibliothek erst nach Tresor-Code");
+  }
+
+  /* Notizen prüfen */
+  Object.keys(DATA.puzzles).forEach(function (id) {
+    var p = DATA.puzzles[id];
+    if (p.onSolve && p.onSolve.note && !DATA.notes[p.onSolve.note]) {
+      line("t-err", "FAIL " + id + ": Notiz " + p.onSolve.note + " fehlt"); failCount++;
+    }
+  });
+
+  line("t-ok", failCount === 0 ? "ALLE TESTS BESTANDEN" : (failCount + " PROBLEM(E)"));
+  panel.innerHTML = lines.join("\n");
+  if (typeof console !== "undefined") {
+    console.log("[DEV] Tatort-Zahlengerade-Tests:");
+    lines.forEach(function (l) { console.log(l.replace(/<[^>]*>/g, "")); });
+  }
+};
+
+/* Spielstand laden, falls vorhanden */
+(function init() {
+  if (loadState()) {
+    setState("Spielstand gefunden. „Weiterspielen“ setzt die Ermittlung fort, „Neu starten“ löscht ihn.");
+    document.getElementById("btn-continue").classList.remove("hidden");
+  } else {
+    setState();
+  }
+  /* DEV-MODUS */
+  if (/[?&]dev=1/.test(window.location.search)) {
+    window.__runDevTests();
+  }
+})();
+
 </script>
 </body>
 </html>
