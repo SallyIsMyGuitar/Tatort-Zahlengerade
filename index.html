@@ -54,6 +54,7 @@
   .btn:focus-visible { outline: 3px solid var(--accent); }
   .btn-secondary { background: var(--panel-2); color: var(--text); border: 1px solid var(--line); }
   .btn-small { padding: 8px 14px; min-height: 44px; font-weight: 600; }
+  .btn:disabled { opacity: .55; cursor: default; }
 
   /* ---------- Spielbildschirm ---------- */
   #screen-game { flex: 1; display: flex; flex-direction: column; min-height: 0; height: 100vh; height: 100dvh; }
@@ -306,6 +307,8 @@ DATA.errors = {
      token  – Begriff (z. B. Niveaus n/z/q/r, rational/irrational)
      choice – Auswahlmöglichkeiten
    commonErrors: { when: Zahl | Zeichenkette | "kind:incomplete-set", text: Feedback }
+   ke: Kompetenzerwartung (quellen/lehrplan-…), op: Operator
+   calc: Nachrechnung im DEV-Test – expr (Term, ggf. round), root (Eingrenzen), square (x² = a)
    Drei Hilfestufen: help.hint → help.merk → help.beispiel
    reveal: Zugabe nach 5 Fehlversuchen (verhindert Blockaden)
 ---------------------------------------------------------------- */
@@ -315,6 +318,7 @@ DATA.puzzles = {
   /* ======== RAUM 1: HAUSMEISTERKELLER (Quadratwurzeln, KE 1/2) ======== */
 
   keller_schloss: {
+    ke: "KE 1", op: "Berechne", calc: { expr: "√169 + √100" },
     room: "keller", niv: "main", kind: "num",
     title: "Zahlenschloss am Tresor",
     desc: "Am Tresor des Hausmeisters klebt ein Zettel: „Vor lauter Wurzeln sieht man den Code vor lauter Bäumen nicht.“ Das Schloss verlangt eine Zahl. (Der Tresor blockiert den Durchgang zur Bibliothek.)",
@@ -323,7 +327,7 @@ DATA.puzzles = {
     commonErrors: [
       { when: 269, text: "Achtung: Zuerst die Wurzeln ziehen, dann addieren: √169 = 13 und √100 = 10. Wichtig: √(a + b) ist nicht dasselbe wie √a + √b!" },
       { when: 13, text: "13 stimmt für √169 – aber du hast „+ √100“ vergessen. Berechne beide Wurzeln und addiere dann." },
-      { when: 3, text: "Vorsicht: √169 ist nicht 1,3. √169 = 13, denn 13² = 169." }
+      { when: 130, text: "Du hast multipliziert: 13 · 10 = 130. Im Code steht aber ein Plus: √169 + √100 = 13 + 10." }
     ],
     help: {
       hint: "Berechne zuerst jede Wurzel einzeln. Welche Zahlen ergeben hoch 2 genau 169 und genau 100?",
@@ -335,6 +339,7 @@ DATA.puzzles = {
   },
 
   keller_regal: {
+    ke: "KE 1", op: "Berechne", calc: { expr: "√49" },
     room: "keller", niv: "leicht", kind: "num",
     title: "Zusatzrätsel (leicht): Quadratzahl-Regal",
     desc: "Im Regal liegen Kärtchen mit Quadratzahlen – und der Hausmeister hat auf eines sein „Wurzelwerk“ geschrieben.",
@@ -343,7 +348,7 @@ DATA.puzzles = {
     commonErrors: [
       { when: 24.5, text: "Hier wurde halbiert statt radiziert: 49 : 2 = 24,5. Gesucht ist die Zahl, die mit sich selbst multipliziert 49 ergibt." },
       { when: 2401, text: "Du hast quadriert (49² = 2401) statt die Wurzel zu ziehen. Quadrieren und Wurzelziehen sind Umkehrungen – hier ist die Wurzel gemeint." },
-      { when: 9.8, text: "Vorsicht: √49 ist nicht 49 : 7. Gesucht ist die Zahl x mit x² = 49." }
+      { when: -7, text: "Zwar gilt (−7)² = 49, aber die Quadratwurzel ist definitionsgemäß nie negativ: √49 = 7." }
     ],
     help: {
       hint: "Welche Zahl mal sich selbst ergibt 49?",
@@ -355,6 +360,7 @@ DATA.puzzles = {
   },
 
   keller_luke: {
+    ke: "KE 1", op: "Berechne", calc: { expr: "√((−12)²)" },
     room: "keller", niv: "standard", kind: "num",
     title: "Zusatzrätsel (standard): Kellerluke unterm Putz",
     desc: "Unter einer Putzschicht kommt eine alte Übung zum Vorschein. Tatsächlich: mit Minuszeichen!",
@@ -375,6 +381,7 @@ DATA.puzzles = {
   },
 
   keller_werkzeug: {
+    ke: "KE 2", op: "Gib die Lösungsmenge an", calc: { square: 121 },
     room: "keller", niv: "plus", kind: "set",
     title: "Zusatzrätsel (plus): Werkzeugkasten",
     desc: "Im Werkzeugkasten des Hausmeisters liegt bei den Schrauben eine Zettel-Aufgabe: „Zwei Lösungen, wie meine zwei linken Hände.“",
@@ -396,6 +403,7 @@ DATA.puzzles = {
   /* ======== RAUM 2: BIBLIOTHEK (Reelle Zahlen, KE 1) ======== */
 
   bibliothek_kartei: {
+    ke: "KE 1", op: "Ordne zu",
     room: "bibliothek", niv: "main", kind: "word", quick: [["n", "ℕ"], ["z", "ℤ"], ["q", "ℚ"], ["r", "ℝ"]],
     title: "Die Kartei der Zahlenmengen",
     desc: "Die Bibliothekarin schiebt dir eine Kartei zu: „Ordnung ist das halte Geheimnis der Zahlen. Man muss nur die kleinste passende Schublade finden.“",
@@ -416,6 +424,7 @@ DATA.puzzles = {
   },
 
   bibliothek_periode: {
+    ke: "KE 1", op: "Entscheide",
     room: "bibliothek", niv: "main", kind: "word", quick: [["rational", "rational"], ["irrational", "irrational"]],
     title: "Die endlose Rückgabe-Frist",
     desc: "Auf dem Bibliothekscomputer läuft eine Zahl im Kreis: 0,66666… Die Bibliothekarin seufzt: „Ist die wenigstens rational? Man kann ja nie sicher sein.“",
@@ -434,6 +443,7 @@ DATA.puzzles = {
   },
 
   bibliothek_begruendung: {
+    ke: "KE 1", op: "Begründe",
     room: "bibliothek", niv: "main", kind: "choice",
     title: "Vernehmung: Warum ist √2 nicht rational?",
     desc: "Die Bibliothekarin tipelt auf die Theke: „Wenn Sie √2 wirklich finden wollen, müssen Sie wenigstens sagen können, warum es sich unter den Brüchen nicht wohlfühlt.“ (Auf Lehrplan-Niveau – ohne formalen Beweis.)",
@@ -467,6 +477,7 @@ DATA.puzzles = {
   },
 
   bibliothek_negativ: {
+    ke: "KE 1", op: "Ordne zu",
     room: "bibliothek", niv: "leicht", kind: "word", quick: [["n", "ℕ"], ["z", "ℤ"], ["q", "ℚ"], ["r", "ℝ"]],
     title: "Zusatzrätsel (leicht): Der negative Gast",
     desc: "In der Leseecke sitzt eine negative Zahl und gibt vor, unschuldig zu sein.",
@@ -487,6 +498,7 @@ DATA.puzzles = {
   },
 
   bibliothek_eingrenzen: {
+    ke: "KE 2", op: "Grenze ein", calc: { root: 2 },
     room: "bibliothek", niv: "standard", kind: "set",
     interval: true,
     title: "Zusatzrätsel (standard): Das Versteck",
@@ -499,13 +511,14 @@ DATA.puzzles = {
     help: {
       hint: "Quadriere die Kandidaten: 1² = 1 und 2² = 4. Wo liegt die 2 dazwischen?",
       merk: "Für 0 < a gilt: Liegt a zwischen zwei Quadratzahlen, dann liegt √a zwischen den zugehörigen Grundzahlen. Beispiel: 4 < 5 < 9 ⇒ 2 < √5 < 3.",
-      beispiel: "√10 liegt zwischen 3 und 4, denn 3² = 9 < 10 < 16 = 4². (Hinweis: Du darfst hier näherungsweise überlegen – das Abschätzen von Wurzeln gehört zum Repertoire.)"
+      beispiel: "√10 liegt zwischen 3 und 4, denn 3² = 9 < 10 < 16 = 4²."
     },
     reveal: "1² = 1 < 2 < 4 = 2², also liegt <b>√2</b> zwischen <b>1 und 2</b>.",
     onSolve: { note: null, found: "1 < √2 < 2" }
   },
 
   bibliothek_versteck: {
+    ke: "KE 1", op: "Entscheide", calc: { expr: "√2 · √8", rational: true },
     room: "bibliothek", niv: "plus", kind: "word", quick: [["rational", "rational"], ["irrational", "irrational"]],
     title: "Zusatzrätsel (plus): Der Dramatische Auftritt",
     desc: "Hinter dem „Goldenen Schnitt“-Poster ist eine Notiz: „Alle behaupten, ich sei irrational. Alias beweist es!“ (Taschenrechner erlaubt.)",
@@ -526,6 +539,7 @@ DATA.puzzles = {
   /* ======== RAUM 3: LABOR (Abschätzen und Eingrenzen, x² = a; KE 2) ======== */
 
   labor_eingrenzen: {
+    ke: "KE 2", op: "Grenze ein", calc: { root: 50 },
     room: "labor", niv: "main", kind: "set",
     interval: true,
     title: "Eingrenzzange",
@@ -535,7 +549,7 @@ DATA.puzzles = {
     commonErrors: [
       { when: "kind:incomplete-set", text: "Zwei Zahlen, bitte! Gesucht sind die beiden ganzen Zahlen, zwischen denen √50 liegt." },
       { when: 50, text: "50 ist der Radikand (die Zahl unter der Wurzel). Gesucht sind die Grundzahlen der Quadratzahlen, zwischen denen 50 liegt." },
-      { when: 25, text: "Vorsicht: Gesucht sind keine Quadratzahlen, sondern die ganzen Zahlen, zwischen denen √50 liegt. Quadriere deine Kandidaten: 7² = 49 < 50 < 64 = 8²." }
+      { when: [49, 64], text: "49 und 64 sind die Quadratzahlen, zwischen denen 50 liegt. Gesucht sind aber ihre Grundzahlen: 7² = 49 und 8² = 64." }
     ],
     help: {
       hint: "Quadriere ganze Zahlen und schaue, zwischen welchen beiden Quadratzahlen die 50 liegt.",
@@ -547,6 +561,7 @@ DATA.puzzles = {
   },
 
   labor_x2: {
+    ke: "KE 2", op: "Löse", calc: { square: 6 },
     room: "labor", niv: "main", kind: "termset",
     title: "Die ungeduldige Gleichung",
     desc: "Auf dem Bildschirm flackert: „x² = 6“. Der Laborant seufzt: „Keine Quadratzahl. Trotzdem zwei Lösungen! So wie meine zwei linken Daumen.“",
@@ -568,6 +583,7 @@ DATA.puzzles = {
   },
 
   labor_leicht: {
+    ke: "KE 2", op: "Grenze ein", calc: { root: 20 },
     room: "labor", niv: "leicht", kind: "set",
     interval: true,
     title: "Zusatzrätsel (leicht): Erste Eingrenzung",
@@ -588,6 +604,7 @@ DATA.puzzles = {
   },
 
   labor_naehe: {
+    ke: "KE 2", op: "Schätze ab", calc: { expr: "√17", round: 0 },
     room: "labor", niv: "standard", kind: "num",
     title: "Zusatzrätsel (standard): Nähe-Sensor",
     desc: "Der Nähe-Sensor des Labors schlägt aus. Auf dem Display: „√17 – näher an welcher ganzen Zahl?“",
@@ -607,6 +624,7 @@ DATA.puzzles = {
   },
 
   labor_plus: {
+    ke: "KE 2", op: "Runde", calc: { expr: "√2", round: 1 },
     room: "labor", niv: "plus", kind: "num",
     title: "Zusatzrätsel (plus): Messprotokoll (Taschenrechner erlaubt)",
     desc: "Im Messprotokoll des Laboranten steht: „√2 auf EINE Nachkommastelle runden – der Sensor akzeptiert nichts Ungenaues. Ironie des Labors.“",
@@ -629,6 +647,7 @@ DATA.puzzles = {
   /* ======== RAUM 4: LEHRERZIMMER (Mit Wurzeltermen rechnen, KE 3) ======== */
 
   lehrer_produkt: {
+    ke: "KE 3", op: "Vereinfache", calc: { expr: "√3 · √7" },
     room: "lehrerzimmer", niv: "main", kind: "term",
     title: "Kaffeemaschinen-Notizzettel",
     desc: "An der Kaffeemaschine hängt ein Notizzettel: „√3 · √7 = ??? – wer das löst, bekommt den letzten Keks. Signiert: Frau Tafelwisch.“",
@@ -636,7 +655,7 @@ DATA.puzzles = {
     solution: { token: "√21" },
     commonErrors: [
       { when: "√10", text: "Achtung, typischer Fehler: √a · √b = √(a · b) – Produkt unter der Wurzel, nicht Summe! Also √(3 · 7) = √21 und nicht √(3 + 7) = √10." },
-      { when: 21, text: "21 ist richtig – aber noch unter der Wurzel: geschrieben als √21. (21 ist keine Quadratzahl, deshalb bleibt die Wurzel stehen.)" },
+      { when: 21, text: "Fast: Unter der Wurzel steht 3 · 7 = 21 – die Wurzel bleibt aber stehen, weil 21 keine Quadratzahl ist. Ergebnis: √21." },
       { when: "√3+√7", text: "Zuerst multiplizieren: √3 · √7 = √(3 · 7) = √21. Die Wurzeln werden nicht addiert." }
     ],
     help: {
@@ -649,6 +668,7 @@ DATA.puzzles = {
   },
 
   lehrer_radizieren: {
+    ke: "KE 3", op: "Vereinfache", calc: { expr: "√72" },
     room: "lehrerzimmer", niv: "main", kind: "term",
     title: "Der streitsüchtige Getränkeautomat",
     desc: "Der Getränkeautomat im Lehrerzimmer gibt nur frei, wer teilweises Radizieren beherrscht. Frau Tafelwisch zwinkert: „Quadratische Faktoren rausziehen – so bekommt man auch das letzte Fasswasser aus dem Automaten.“",
@@ -669,6 +689,7 @@ DATA.puzzles = {
   },
 
   lehrer_quotient: {
+    ke: "KE 3", op: "Berechne", calc: { expr: "√32 : √8" },
     room: "lehrerzimmer", niv: "leicht", kind: "num",
     title: "Zusatzrätsel (leicht): Der Postkartengruß",
     desc: "Auf einer Postkarte im Postkorb steht nur: „√32 : √8“ – keine Grußworte, nur Mathematik.",
@@ -676,7 +697,7 @@ DATA.puzzles = {
     solution: { accept: [2] },
     commonErrors: [
       { when: 4, text: "Vorsicht: Die Quotientenregel liefert √(32 : 8) = √4 = 2 – nicht 32 : 8 = 4 ohne Wurzel." },
-      { when: 2.8, text: "Ohne Runden: √32 : √8 = √(32 : 8) = √4 = 2 – exakt, nicht näherungsweise." }
+      { when: 16, text: "Du hast quadriert statt die Wurzel zu ziehen: 32 : 8 = 4 und √4 = 2 (nicht 4² = 16)." }
     ],
     help: {
       hint: "Zuerst unter EINER Wurzel dividieren: √a : √b = √(a : b).",
@@ -688,6 +709,7 @@ DATA.puzzles = {
   },
 
   lehrer_standard: {
+    ke: "KE 3", op: "Mache den Nenner rational", calc: { expr: "5/√3" },
     room: "lehrerzimmer", niv: "standard", kind: "term",
     title: "Zusatzrätsel (standard): Wandernde Kaffeemaschine",
     desc: "Die Kaffeemaschine mahlt nur, wenn im Nenner keine Wurzel steht. Pädagogisch wertvoll.",
@@ -707,6 +729,7 @@ DATA.puzzles = {
   },
 
   lehrer_plus: {
+    ke: "KE 3", op: "Vereinfache", calc: { expr: "√(8a²)" },
     room: "lehrerzimmer", niv: "plus", kind: "term",
     title: "Zusatzrätsel (plus): Vertretungsplan-Challenge",
     desc: "Auf dem Vertretungsplan klebt ein Zettel des Mathe-Kurses: „√(8a²) – wer das löst, bekommt eine freie Vertretungsstunde. Hinweis: a ≥ 0.“",
@@ -729,6 +752,7 @@ DATA.puzzles = {
   /* ======== RAUM 5: DIREKTORAT (Finale, gemischte Aufgaben) ======== */
 
   direktor_code: {
+    ke: "KE 3", op: "Berechne", calc: { expr: "√144 : √9 + √25" },
     room: "direktorat", niv: "main", kind: "num",
     title: "Der Panik-Code des Direktors",
     desc: "Der Direktor zittert: „Meine Zahlensammlung ist wieder da – nur der Code zum Sonder-Rahmen fehlt! Ich habe ihn natürlich aus Wurzeln gebaut. Aus Sicherheitsgründen.“",
@@ -737,7 +761,7 @@ DATA.puzzles = {
     commonErrors: [
       { when: 17, text: "Du hast „: √9“ übersprungen: Erst dividieren (√144 : √9 = √16 = 4), dann addieren (+ √25 = 5): 4 + 5 = 9." },
       { when: 20, text: "Reihenfolge beachten: Erst Division, dann Addition. √144 : √9 = √16 = 4 und √25 = 5, zusammen 9." },
-      { when: 1.6, text: "Vorsicht: √144 : √9 = √(144 : 9) = √16 = 4. Nicht die Wurzeln einzeln weglassen oder 144 : 90 rechnen." }
+      { when: 1.5, text: "Punkt vor Strich: Du hast zuerst √9 + √25 = 8 addiert und dann 12 : 8 gerechnet. Richtig ist erst √144 : √9 = 4, dann + √25." }
     ],
     help: {
       hint: "Rechne Schritt für Schritt: erst die Division unter einer Wurzel, dann die Addition.",
@@ -749,6 +773,7 @@ DATA.puzzles = {
   },
 
   direktor_taeter: {
+    ke: "KE 1", op: "Entscheide",
     room: "direktorat", niv: "main", kind: "choice",
     title: "Die Überführung",
     desc: "Alle Indizien liegen auf dem Tisch des Direktors. Es ist Zeit für die große Auflösung: Wer hat √2 verschwinden lassen?",
@@ -757,7 +782,7 @@ DATA.puzzles = {
     choices: [
       {
         text: "Die Zahl 2 – aus Neid, weil √2 berühmter ist.",
-        feedback: "Falsch: Die 2 hat ein wasserdichtes Alibi – sie lag die ganze Zeit als Quadratzahl im Regal des Hausmeisters (2² = 4)."
+        feedback: "Falsch: Die 2 hat ein wasserdichtes Alibi – sie war zur Tatzeit als Hochzahl in jeder Quadratzahl des Hausmeisterkellers beschäftigt."
       },
       {
         text: "Der Hausmeister Herr Kehrweger – er konnte √2 nicht einordnen.",
@@ -782,6 +807,7 @@ DATA.puzzles = {
   },
 
   direktor_leicht: {
+    ke: "KE 3", op: "Berechne", calc: { expr: "√8 : √2" },
     room: "direktorat", niv: "leicht", kind: "num",
     title: "Zusatzrätsel (leicht): Rahmenprüfung",
     desc: "Die Bilderrahmen des Direktors sind quadratisch – natürlich. Einer trägt eine Prüfnote.",
@@ -789,7 +815,7 @@ DATA.puzzles = {
     solution: { accept: [2] },
     commonErrors: [
       { when: 4, text: "Vorsicht: √a : √b = √(a : b). Also √8 : √2 = √4 = 2 – nicht 8 : 2 = 4 ohne Wurzel." },
-      { when: 5.7, text: "Kein Runden nötig: √8 : √2 = √(8 : 2) = √4 = 2 – exakt." }
+      { when: 16, text: "Du hast 8 · 2 gerechnet. Gesucht ist der Quotient unter einer Wurzel: √8 : √2 = √(8 : 2) = √4 = 2." }
     ],
     help: {
       hint: "Zuerst unter einer Wurzel dividieren: √(8 : 2).",
@@ -801,6 +827,7 @@ DATA.puzzles = {
   },
 
   direktor_standard: {
+    ke: "KE 1", op: "Ordne zu",
     room: "direktorat", niv: "standard", kind: "word", quick: [["n", "ℕ"], ["z", "ℤ"], ["q", "ℚ"], ["r", "ℝ"]],
     title: "Zusatzrätsel (standard): Die nicht einzuordnende Konstante",
     desc: "Auf dem Schreibtisch liegt eine Zahl ganz ohne Rahmen: π. Der Direktor: „Die ist sogar irrational – und nicht mal eine Wurzel! Trotzdem braucht sie eine Schublade.“",
@@ -821,6 +848,7 @@ DATA.puzzles = {
   },
 
   direktor_plus: {
+    ke: "KE 3", op: "Fasse zusammen", calc: { expr: "√2 + √8" },
     room: "direktorat", niv: "plus", kind: "term",
     title: "Zusatzrätsel (plus): Der Wurzel-Hut",
     desc: "Unter dem Hut des Direktors steckt ein letzter Zettel: „Addieren kann man Wurzeln nur, wenn sie zur selben Wurzel gehören. Viel Erfolg.“",
@@ -1755,7 +1783,7 @@ function openPuzzle(id) {
   iHtml += '<div id="feedback" class="info"></div><div id="help-area"></div>';
   iHtml += '<div class="actions">';
   if (usesInput) iHtml += '<button class="btn" id="btn-check" type="button">Prüfen</button>';
-  iHtml += '<button class="btn btn-secondary btn-small" id="btn-help" type="button">Hilfe (Tipp)</button>';
+  iHtml += '<button class="btn btn-secondary btn-small" id="btn-help" type="button">Hilfe: Tipp</button>';
   iHtml += '<button class="btn btn-secondary btn-small" id="btn-quit" type="button">Später</button>';
   iHtml += "</div>";
   showModal(iHtml, usesInput ? "answer" : null);
@@ -1769,13 +1797,16 @@ function openPuzzle(id) {
     f.innerHTML = text;
   }
 
+  /* Hilfestufen bleiben stehen und bauen aufeinander auf */
   function showHelpLevel(n) {
-    var area = $("help-area");
-    if (n === 1) area.innerHTML = '<div class="helpbox"><span class="helplabel">Tipp</span>' + p.help.hint + "</div>";
-    if (n === 2) area.innerHTML = '<div class="helpbox merk"><span class="helplabel">Merkkasten</span>' + p.help.merk + "</div>";
-    if (n === 3) area.innerHTML = '<div class="helpbox beispiel"><span class="helplabel">Beispiel</span>' + p.help.beispiel + "</div>";
-    var label = ["Hilfe (Tipp)", "Hilfe (Merkkasten)", "Hilfe (Beispiel)", "Nochmal helfen"][Math.min(n, 3)];
-    $("btn-help").textContent = label;
+    var html = "";
+    if (n >= 1) html += '<div class="helpbox"><span class="helplabel">1 · Tipp</span>' + p.help.hint + "</div>";
+    if (n >= 2) html += '<div class="helpbox merk"><span class="helplabel">2 · Merkkasten</span>' + p.help.merk + "</div>";
+    if (n >= 3) html += '<div class="helpbox beispiel"><span class="helplabel">3 · Beispiel</span>' + p.help.beispiel + "</div>";
+    $("help-area").innerHTML = html;
+    var btn = $("btn-help");
+    btn.textContent = ["Hilfe: Tipp", "Hilfe: Merkkasten", "Hilfe: Beispiel", "Alle Hilfen offen"][Math.min(n, 3)];
+    btn.disabled = n >= 3;
   }
 
   function offerReveal() {
@@ -1851,7 +1882,7 @@ function openPuzzle(id) {
     State.helpLevel[id] = lvl;
     saveState();
     showHelpLevel(lvl);
-    feedback("info", lvl < 3 ? "Noch nicht weiter? Es gibt eine weitere Hilfestufe." : "Das war die letzte Hilfestufe. Du schaffst das!");
+    feedback("info", lvl < 3 ? "Noch nicht weiter? Es gibt eine weitere Hilfestufe." : "Das war die letzte Hilfestufe – vergleiche das Beispiel mit deiner Aufgabe. Du schaffst das!");
   });
   if (lvl > 0) showHelpLevel(lvl);
   if (fails >= 5) offerReveal();
@@ -2026,6 +2057,33 @@ function setState(msg) {
    Hilfsstufen, typische Fehler (jede Meldung mindestens einmal auslösbar),
    Soft-Lock-Freiheit, Pflichtpfad.
    --------------------------------------------------------- */
+/* Rechnet die Musterlösung eines Rätsels unabhängig nach. Rückgabe: Fehlertext oder "" */
+function devRecalc(p) {
+  var c = p.calc;
+  if (c.expr) {
+    var v = evalTerm(c.expr);
+    if (!isFinite(v)) return "Term " + c.expr + " nicht berechenbar";
+    if (typeof c.round === "number") { var f = Math.pow(10, c.round); v = Math.round(v * f) / f; }
+    if (p.kind === "num") return near(v, p.solution.accept[0]) ? "" : c.expr + " = " + v + ", Lösung " + p.solution.accept[0];
+    if (p.kind === "term") return termValueMatches(p.solution.token, c.expr) ? "" : c.expr + " ≠ " + p.solution.token;
+    if (p.kind === "word" && c.rational) {
+      var isInt = Math.abs(v - Math.round(v)) < 1e-9;
+      return (isInt ? "rational" : "irrational") === p.solution.token ? "" : "Einordnung passt nicht";
+    }
+    return "";
+  }
+  if (c.root) {
+    var lo = Math.min.apply(null, p.solution.set), hi = Math.max.apply(null, p.solution.set);
+    return (hi - lo === 1 && lo * lo < c.root && c.root < hi * hi) ? "" : "√" + c.root + " liegt nicht zwischen " + lo + " und " + hi;
+  }
+  if (c.square) {
+    var vals = p.kind === "set" ? p.solution.set : p.solution.terms.map(function (t) { return evalTerm(t); });
+    var okSq = vals.length === 2 && vals.every(function (x) { return near(x * x, c.square); }) && near(vals[0], -vals[1]);
+    return okSq ? "" : "Lösungen erfüllen x² = " + c.square + " nicht";
+  }
+  return "";
+}
+
 window.__runDevTests = function () {
   var panel = document.getElementById("dev-panel");
   panel.classList.remove("hidden");
@@ -2046,6 +2104,16 @@ window.__runDevTests = function () {
     }
     if (!p.reveal) {
       line("t-err", "FAIL " + id + ": reveal fehlt"); failCount++; ok = false;
+    }
+    if (!/^KE [123]$/.test(p.ke || "") || !p.op) {
+      line("t-err", "FAIL " + id + ": Kompetenz (ke) oder Operator (op) fehlt"); failCount++; ok = false;
+    }
+    if (p.kind !== "choice" && p.kind !== "word" && !p.calc && id !== "labor_naehe") {
+      line("t-err", "FAIL " + id + ": keine Nachrechnung (calc)"); failCount++; ok = false;
+    }
+    if (p.calc) {
+      var calcErr = devRecalc(p);
+      if (calcErr) { line("t-err", "FAIL " + id + ": Nachrechnung – " + calcErr); failCount++; ok = false; }
     }
 
     /* Lösungs-Eingaben tolerant prüfen */
