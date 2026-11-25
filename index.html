@@ -76,6 +76,7 @@
   /* Hotspots */
   .hotspot { cursor: pointer; }
   .hotspot .hit { fill: transparent; stroke: none; }
+  .hotspot:active .hit { fill: rgba(255, 208, 70, .12); }
   .hotspot:focus-visible { outline: none; }
   .hotspot:focus-visible .hit { stroke: var(--accent); stroke-width: 4; }
   .hotspot .marker { fill: var(--accent); fill-opacity: .85; stroke: #1d2330; stroke-width: 2; }
@@ -914,7 +915,18 @@ DATA.rooms.keller = {
   <g>
     <rect x="470" y="60" width="150" height="360" rx="8" fill="#26303a" stroke="#3c4a58" stroke-width="4"/>
     <rect x="470" y="400" width="150" height="14" rx="4" fill="#111"/>
-    <text x="545" y="70" font-family="sans-serif" font-size="16" fill="#7f93a8" text-anchor="middle">↑ Treppe</text>
+    <g stroke="#3c4a58" stroke-width="3">
+      <line x1="482" y1="130" x2="608" y2="130"/><line x1="482" y1="190" x2="608" y2="190"/>
+      <line x1="482" y1="250" x2="608" y2="250"/><line x1="482" y1="310" x2="608" y2="310"/>
+      <line x1="482" y1="370" x2="608" y2="370"/>
+    </g>
+    <text x="545" y="160" font-family="sans-serif" font-size="16" fill="#9fb3c8" text-anchor="middle">↑ Treppe zur</text>
+    <text x="545" y="180" font-family="sans-serif" font-size="16" fill="#9fb3c8" text-anchor="middle">Bibliothek</text>
+  </g>
+  <g>
+    <rect x="30" y="430" width="130" height="100" rx="6" fill="#16130f"/>
+    <path d="M30 430 l40 30 M30 450 l25 10 M60 430 l10 30" stroke="#3a332a" stroke-width="2" fill="none"/>
+    <text x="95" y="500" font-family="sans-serif" font-size="13" fill="#6e6252" text-anchor="middle">dunkle Ecke</text>
   </g>
   <g>
     <rect x="180" y="430" width="90" height="90" rx="8" fill="#7a5b3a" stroke="#4d3823" stroke-width="3"/>
@@ -957,7 +969,7 @@ DATA.rooms.keller = {
       note: "n_fund_lampe"
     },
     {
-      id: "hs_tuer_bib", x: 620, y: 380, w: 260, h: 150, label: "Tür zur Bibliothek",
+      id: "hs_tuer_bib", x: 470, y: 60, w: 150, h: 360, label: "Treppe zur Bibliothek",
       type: "door", doorId: "bibliothek", requiredPuzzle: "keller_schloss",
       lockedText: "Der Weg zur Bibliothek ist vom Tresor blockiert. Herr Kehrweger: „Erst der Code, dann der Korridor.“"
     }
@@ -994,26 +1006,29 @@ DATA.rooms.bibliothek = {
     <rect x="780" y="100" width="140" height="80" fill="#2e2426" stroke="#8a6a75" stroke-width="2"/>
     <text x="850" y="150" font-family="sans-serif" font-size="22" fill="#f2f4f8" text-anchor="middle">ℕℤℚℝ</text>
     <rect x="640" y="210" width="280" height="110" rx="6" fill="#2e2426"/>
-    <text x="780" y="245" font-family="sans-serif" font-size="17" fill="#c9b26b" text-anchor="middle">„Zahlenmengen-“</text>
-    <text x="780" y="270" font-family="sans-serif" font-size="17" fill="#c9b26b" text-anchor="middle">Kartei – bitte
-</text>
-    <text x="780" y="295" font-family="sans-serif" font-size="17" fill="#c9b26b" text-anchor="middle">Ordnung halten“"</text>
+    <text x="780" y="245" font-family="sans-serif" font-size="17" fill="#c9b26b" text-anchor="middle">Kartei der Zahlenmengen</text>
+    <text x="780" y="275" font-family="sans-serif" font-size="15" fill="#c9b26b" text-anchor="middle">„Bitte Ordnung halten!“</text>
   </g>
   <g>
-    <rect x="360" y="330" width="200" height="120" rx="8" fill="#7a5b3a" stroke="#4d3823" stroke-width="3"/>
-    <rect x="360" y="300" width="200" height="34" rx="6" fill="#94764f"/>
-    <text x="460" y="324" font-family="sans-serif" font-size="16" fill="#3a2c1e" text-anchor="middle">Theke</text>
+    <rect x="380" y="235" width="140" height="95" rx="8" fill="#10151b" stroke="#5f4a52" stroke-width="4"/>
+    <text x="450" y="280" font-family="monospace" font-size="20" fill="#63d471" text-anchor="middle">0,666…</text>
+    <text x="450" y="310" font-family="sans-serif" font-size="12" fill="#63d471" text-anchor="middle">Computer</text>
+    <rect x="440" y="330" width="20" height="22" fill="#2e2426"/>
   </g>
   <g>
-    <rect x="600" y="460" width="80" height="60" rx="6" fill="#453a45" stroke="#241c24" stroke-width="3"/>
-    <circle cx="640" cy="445" r="10" fill="#ffd046"/>
-    <text x="640" y="440" font-family="sans-serif" font-size="12" fill="#1d2330" text-anchor="middle">?</text>
+    <rect x="340" y="352" width="240" height="26" rx="6" fill="#94764f"/>
+    <rect x="340" y="376" width="240" height="84" rx="8" fill="#7a5b3a" stroke="#4d3823" stroke-width="3"/>
+    <text x="460" y="425" font-family="sans-serif" font-size="16" fill="#e8dcae" text-anchor="middle">Theke</text>
   </g>
   <g>
-    <rect x="850" y="150" width="90" height="130" rx="10" fill="#9c7d3c" stroke="#6b5426" stroke-width="3"/>
-    <circle cx="895" cy="200" r="28" fill="#d9b650" stroke="#8a6f30" stroke-width="2"/>
-    <rect x="865" y="160" width="60" height="8" rx="4" fill="#7a6228"/>
-    <text x="877" y="258" font-family="sans-serif" font-size="13" fill="#e8dcae" text-anchor="middle">Poster</text>
+    <rect x="700" y="370" width="120" height="150" rx="6" fill="#453a45" stroke="#241c24" stroke-width="4"/>
+    <circle cx="800" cy="450" r="7" fill="#ffd046"/>
+    <text x="760" y="410" font-family="sans-serif" font-size="15" fill="#e0d7e8" text-anchor="middle">Labor</text>
+  </g>
+  <g>
+    <rect x="440" y="40" width="100" height="130" rx="8" fill="#9c7d3c" stroke="#6b5426" stroke-width="3"/>
+    <circle cx="490" cy="90" r="28" fill="#d9b650" stroke="#8a6f30" stroke-width="2"/>
+    <text x="490" y="150" font-family="sans-serif" font-size="13" fill="#3a2c1e" text-anchor="middle">Poster</text>
   </g>
   <g>
     <rect x="100" y="460" width="180" height="50" rx="8" fill="#574a5e" stroke="#2f2735" stroke-width="3"/>
@@ -1025,11 +1040,11 @@ DATA.rooms.bibliothek = {
       type: "puzzle", puzzleId: "bibliothek_kartei"
     },
     {
-      id: "hs_computer", x: 360, y: 290, w: 200, h: 170, label: "Bibliothekscomputer",
+      id: "hs_computer", x: 370, y: 225, w: 160, h: 120, label: "Bibliothekscomputer",
       type: "puzzle", puzzleId: "bibliothek_periode"
     },
     {
-      id: "hs_theke", x: 360, y: 430, w: 200, h: 60, label: "Theke der Bibliothekarin",
+      id: "hs_theke", x: 330, y: 350, w: 260, h: 120, label: "Theke der Bibliothekarin",
       type: "puzzle", puzzleId: "bibliothek_begruendung"
     },
     {
@@ -1037,7 +1052,7 @@ DATA.rooms.bibliothek = {
       type: "niveau", puzzleIds: ["bibliothek_negativ", "bibliothek_eingrenzen", "bibliothek_versteck"]
     },
     {
-      id: "hs_tuer_labor", x: 560, y: 430, w: 160, h: 90, label: "Tür zum Labor",
+      id: "hs_tuer_labor", x: 690, y: 360, w: 140, h: 170, label: "Tür zum Labor",
       type: "door", doorId: "labor", requiredPuzzle: "bibliothek_begruendung",
       lockedText: "Hinter der Tür zum Labor summt es verdächtig. Frau Nachschlag: „Erst die Begründung, dann das Labor. Eiserne Ordnung herrscht hier.“"
     },
@@ -1169,11 +1184,11 @@ DATA.rooms.lehrerzimmer = {
       type: "puzzle", puzzleId: "lehrer_produkt"
     },
     {
-      id: "hs_automat", x: 560, y: 230, w: 150, h: 165, label: "Getränkeautomat",
+      id: "hs_automat", x: 560, y: 130, w: 150, h: 265, label: "Getränkeautomat",
       type: "puzzle", puzzleId: "lehrer_radizieren"
     },
     {
-      id: "hs_postkorb", x: 750, y: 300, w: 190, h: 140, label: "Postkorb mit Übungszetteln",
+      id: "hs_postkorb", x: 750, y: 300, w: 190, h: 125, label: "Postkorb mit Übungszetteln",
       type: "niveau", puzzleIds: ["lehrer_quotient", "lehrer_standard", "lehrer_plus"]
     },
     {
@@ -1238,7 +1253,7 @@ DATA.rooms.direktorat = {
       type: "puzzle", puzzleId: "direktor_taeter"
     },
     {
-      id: "hs_zusatz_direktor", x: 40, y: 40, w: 250, h: 210, label: "Zusatzrätsel-Bereich am Rahmen",
+      id: "hs_zusatz_direktor", x: 40, y: 40, w: 250, h: 210, label: "Leerer Rahmen (Zusatzrätsel)",
       type: "niveau", puzzleIds: ["direktor_leicht", "direktor_standard", "direktor_plus"]
     },
     {
@@ -1630,14 +1645,18 @@ function renderRoom() {
     var solvedMark = (h.type === "puzzle" && isSolved(h.puzzleId)) ||
                      (h.type === "niveau" && h.puzzleIds.every(isSolved)) ||
                      (h.type === "item" && State.inventory.indexOf(h.itemId) >= 0);
-    var cx = h.x + h.w / 2;
-    var cy = h.y + h.h / 2;
-    var cy2 = Math.min(h.y + h.h - 26, Math.max(h.y + 26, cy));
+    /* Marker oben rechts im Hotspot, damit Beschriftungen lesbar bleiben.
+       Symbol statt Farbe allein: ? Rätsel, ✓ gelöst, ★ Zusatzrätsel, + Gegenstand,
+       i Hinweis, → Tür, ☎ Finale */
+    var cx = h.x + h.w - 20;
+    var cy2 = h.y + 20;
+    var sym = { puzzle: "?", niveau: "★", item: "+", info: "i", door: "→", finale: "☎" }[h.type] || "?";
+    if (solvedMark) sym = "✓";
     svg += '<g class="hotspot' + (solvedMark ? " solved" : "") +
            '" data-hotspot="' + h.id + '" tabindex="0" role="button" aria-label="' + esc(h.label) + '">';
     svg += '<rect class="hit" x="' + h.x + '" y="' + h.y + '" width="' + h.w + '" height="' + h.h + '"/>';
     svg += '<circle class="marker" cx="' + cx + '" cy="' + cy2 + '" r="16"/>';
-    svg += '<text class="marker-text" x="' + cx + '" y="' + (cy2 + 6) + '">?</text>';
+    svg += '<text class="marker-text" x="' + cx + '" y="' + (cy2 + 7) + '">' + sym + "</text>";
     svg += "</g>";
   });
   svg += "</svg>";
