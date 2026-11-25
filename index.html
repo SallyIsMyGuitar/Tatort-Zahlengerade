@@ -148,7 +148,7 @@
   .hotspot { cursor: pointer; }
   .hotspot .hit { fill: transparent; stroke: none; }
   .hotspot:active .hit { fill: rgba(255, 208, 70, .12); }
-  .hotspot:focus-visible { outline: none; }
+  .hotspot:focus, .hotspot:focus-visible { outline: none; }
   .hotspot:focus-visible .hit { stroke: var(--marker); stroke-width: 4; stroke-dasharray: 10 6; }
   .hotspot .marker { fill: var(--marker); stroke: #1c1814; stroke-width: 2.5; }
   .hotspot .marker-ring { fill: none; stroke: rgba(255, 208, 70, .55); stroke-width: 3; }
@@ -1531,6 +1531,126 @@ DATA.sceneDefs = `<defs>
   <filter id="f-shadow" x="-10%" y="-10%" width="130%" height="140%"><feDropShadow dx="0" dy="6" stdDeviation="5" flood-color="#000" flood-opacity=".45"/></filter>
 </defs>`;
 
+/* ---------- Figuren (eigene Erfindungen, flache SVG-Zeichnung) ----------
+   Je Raum eine Figur. Antippen zeigt nacheinander die Sprüche in der Meldungsleiste.
+   look: Farben und Merkmale; x/y = Fußpunkt in der Szene; s = Skalierung */
+DATA.characters = {
+  keller: {
+    name: "Herr Kehrweger", x: 910, y: 516, s: 1,
+    look: { skin: "#e8b98f", top: "#3d6a8c", bottom: "#2f506b", shoes: "#2b2419", hair: "cap", hairColor: "#7a5a3c", extra: "broom" },
+    lines: [
+      "Ich fege nur Quadratzahlen zusammen. 1, 4, 9, 16 … herrlich ordentlich. Alles andere liegt hier bloß rum.",
+      "Der Tresor? Mit Wurzeln gesichert. Tipp unter Kollegen: erst jede Wurzel einzeln ziehen, dann rechnen.",
+      "Ein Minus unter dem Quadrat? Kehr ich weg! √((−5)²) = 5. Eine Wurzel ist nie negativ.",
+      "In die dunkle Ecke geh ich ohne Taschenlampe nicht. Da liegt bestimmt noch was von 1998."
+    ]
+  },
+  bibliothek: {
+    name: "Frau Nachschlag", x: 888, y: 526, s: .95,
+    look: { skin: "#c98f6a", top: "#6b4a7a", bottom: "#3a2a44", shoes: "#2b2419", hair: "bun", hairColor: "#9aa0a6", extra: "glasses" },
+    lines: [
+      "Psst! Hier wird geflüstert – und sortiert: ℕ ⊂ ℤ ⊂ ℚ ⊂ ℝ. Jede Zahl kommt in die kleinste passende Schublade.",
+      "Brüche sind bei mir immer willkommen. Abbrechend oder periodisch – Hauptsache rational.",
+      "√2 hat nie in die Bruch-Abteilung gepasst: Es gibt keinen Bruch p/q mit (p/q)² = 2. Das hat es sehr gekränkt.",
+      "Ausleihfrist für 0,6̄? Unendlich. Aber periodisch – also völlig in Ordnung."
+    ]
+  },
+  labor: {
+    name: "Herr Bunsen-Brock", x: 396, y: 436, s: .9,
+    look: { skin: "#f0c9a5", top: "#f4f6f8", bottom: "#4a5560", shoes: "#2b2419", hair: "wild", hairColor: "#eceff1", extra: "goggles" },
+    lines: [
+      "Eingrenzen ist wie Einparken: Quadratzahl davor, Quadratzahl dahinter. 49 < 50 < 64, also 7 < √50 < 8.",
+      "x² = a hat zwei Lösungen. Die negative wird gern vergessen – dabei ist sie genauso quadratisch!",
+      "Meine Schutzbrille trage ich auch zu Hause. Man weiß nie, wann eine Gleichung explodiert.",
+      "Näher dran oder weiter weg? √17 liegt näher an 4, weil 17 viel näher an 16 liegt als an 25."
+    ]
+  },
+  lehrerzimmer: {
+    name: "Frau Tafelwisch", x: 330, y: 430, s: .85,
+    look: { skin: "#8d5a3b", top: "#2f6b45", bottom: "#2b2419", shoes: "#5a3d24", hair: "bob", hairColor: "#2b1d14", extra: "book" },
+    lines: [
+      "Mal darf unter eine gemeinsame Wurzel, Plus nicht! √a · √b = √(a·b) – aber √a + √b ist nicht √(a + b).",
+      "Teilweise radizieren heißt: größten quadratischen Faktor suchen. √72 = √(36 · 2) = 6√2. Fertig ist die Laube.",
+      "Eine Wurzel im Nenner? Das ist wie Kreide im Kaffee. Einfach mit genau dieser Wurzel erweitern.",
+      "Der Automat schuldet mir noch drei Limos. Er behauptet, ich hätte nicht vollständig vereinfacht."
+    ]
+  },
+  direktorat: {
+    name: "Der Direktor", x: 880, y: 396, s: .95,
+    look: { skin: "#e3b08a", top: "#2b2f3a", bottom: "#23262f", shoes: "#111", hair: "bald", hairColor: "#8a8f99", extra: "tie" },
+    lines: [
+      "Meine Zahlensammlung! Siebzehn Jahre gesammelt – und ausgerechnet die irrationalste fehlt.",
+      "Ich habe alles mit Wurzeln gesichert. Sehr sicher. Sagt jedenfalls mein Sicherheitsberater. Also ich.",
+      "Am Aktenschrank brauchst du beide Lösungen. Ein Schloss links, eins rechts – wie bei x² = 50.",
+      "Wenn du alle Indizien hast, ruf am Telefon an. Ich habe so eine Ahnung, wer abhebt …"
+    ]
+  }
+};
+
+/* Zeichnet eine Figur: Fußpunkt bei (0|0), Höhe ca. 225 */
+function drawCharacter(c) {
+  var L = c.look;
+  var g = '<g transform="translate(' + c.x + " " + c.y + ") scale(" + c.s + ')" aria-hidden="true">';
+  g += '<ellipse cx="0" cy="2" rx="44" ry="8" fill="#000" opacity=".35"/>';
+  if (L.extra === "broom") {
+    g += '<rect x="-52" y="-200" width="6" height="190" rx="3" fill="#a8865a"/>';
+    g += '<path d="M-64 -12 h30 l6 14 h-42z" fill="#c9a54a" stroke="#7a5f20" stroke-width="2"/>';
+  }
+  /* Beine und Schuhe */
+  g += '<rect x="-20" y="-92" width="16" height="88" rx="5" fill="' + L.bottom + '"/>';
+  g += '<rect x="4" y="-92" width="16" height="88" rx="5" fill="' + L.bottom + '"/>';
+  g += '<ellipse cx="-13" cy="-4" rx="14" ry="7" fill="' + L.shoes + '"/><ellipse cx="13" cy="-4" rx="14" ry="7" fill="' + L.shoes + '"/>';
+  /* Oberkörper (Kittel länger) */
+  var coat = L.extra === "goggles";
+  g += '<rect x="-34" y="-172" width="68" height="' + (coat ? 120 : 88) + '" rx="16" fill="' + L.top + '" stroke="rgba(0,0,0,.25)" stroke-width="2"/>';
+  if (coat) g += '<path d="M0 -168 V-56" stroke="#c9d2da" stroke-width="2"/><rect x="10" y="-140" width="16" height="12" rx="2" fill="#5ac8fa"/>';
+  if (L.extra === "broom") g += '<rect x="-34" y="-120" width="68" height="10" fill="' + L.bottom + '"/><rect x="-14" y="-160" width="28" height="24" rx="3" fill="' + L.bottom + '"/>';
+  if (L.extra === "tie") g += '<path d="M-14 -172 L0 -150 L14 -172z" fill="#f4ecd9"/><path d="M0 -152 l-6 8 l6 40 l6 -40z" fill="#a8322a"/>';
+  /* Arme */
+  g += '<rect x="-46" y="-166" width="14" height="72" rx="7" fill="' + L.top + '" stroke="rgba(0,0,0,.25)" stroke-width="2" transform="rotate(' + (L.extra === "broom" ? 14 : 6) + ' -39 -166)"/>';
+  g += '<rect x="32" y="-166" width="14" height="72" rx="7" fill="' + L.top + '" stroke="rgba(0,0,0,.25)" stroke-width="2" transform="rotate(' + (L.extra === "book" ? -40 : -6) + ' 39 -166)"/>';
+  if (L.extra === "book") g += '<rect x="28" y="-132" width="34" height="26" rx="2" fill="#a8322a" transform="rotate(-12 45 -119)"/><rect x="31" y="-129" width="28" height="4" fill="#f4ecd9" transform="rotate(-12 45 -119)"/>';
+  /* Kopf */
+  g += '<rect x="-8" y="-184" width="16" height="16" fill="' + L.skin + '"/>';
+  g += '<circle cx="0" cy="-204" r="27" fill="' + L.skin + '" stroke="rgba(0,0,0,.2)" stroke-width="2"/>';
+  /* Haare */
+  var h = L.hairColor;
+  if (L.hair === "cap") {
+    g += '<path d="M-28 -210 a28 24 0 0 1 56 0z" fill="' + L.bottom + '"/><rect x="-6" y="-214" width="44" height="8" rx="4" fill="' + L.bottom + '"/>';
+  } else if (L.hair === "bun") {
+    g += '<circle cx="0" cy="-238" r="13" fill="' + h + '"/><path d="M-28 -204 a28 30 0 0 1 56 0 q-8 -18 -28 -20 q-20 2 -28 20z" fill="' + h + '"/>';
+  } else if (L.hair === "wild") {
+    g += '<path d="M-30 -206 l-8 -14 l14 2 l-4 -18 l14 10 l4 -18 l10 14 l10 -14 l4 18 l14 -10 l-4 18 l14 -2 l-8 14 q-24 -16 -56 0z" fill="' + h + '"/>';
+  } else if (L.hair === "bob") {
+    g += '<path d="M-30 -196 q-4 -40 30 -38 q34 -2 30 38 l-8 0 q2 -22 -22 -26 q-24 4 -22 26z" fill="' + h + '"/>';
+  } else if (L.hair === "bald") {
+    g += '<path d="M-27 -200 q2 -12 8 -14 M27 -200 q-2 -12 -8 -14" stroke="' + h + '" stroke-width="7" fill="none" stroke-linecap="round"/>';
+    g += '<path d="M-12 -190 q12 -8 24 0 q-12 4 -24 0z" fill="' + h + '"/>';
+  }
+  /* Gesicht */
+  g += '<circle cx="-9" cy="-206" r="3" fill="#2b2419"/><circle cx="9" cy="-206" r="3" fill="#2b2419"/>';
+  g += '<path d="M-8 -192 q8 7 16 0" stroke="#2b2419" stroke-width="2.5" fill="none" stroke-linecap="round"/>';
+  if (L.extra === "glasses") {
+    g += '<g fill="none" stroke="#2b2419" stroke-width="2.5"><circle cx="-10" cy="-206" r="8"/><circle cx="10" cy="-206" r="8"/><path d="M-2 -206 h4"/></g>';
+  }
+  if (L.extra === "goggles") {
+    g += '<rect x="-24" y="-216" width="48" height="18" rx="9" fill="#9fd3e6" fill-opacity=".55" stroke="#4a5560" stroke-width="3"/>';
+  }
+  g += "</g>";
+  return g;
+}
+
+Object.keys(DATA.characters).forEach(function (rid) {
+  var c = DATA.characters[rid];
+  var w = 90 * c.s, top = c.y - 245 * c.s;
+  DATA.rooms[rid].hotspots.push({
+    id: "hs_talk_" + rid, type: "talk", room: rid,
+    x: Math.round(c.x - w / 2 - 6), y: Math.round(Math.max(top, rid === "bibliothek" ? 344 : top)),
+    w: Math.round(w + 12), h: Math.round(c.y - Math.max(top, rid === "bibliothek" ? 344 : top)),
+    label: "Mit " + c.name.replace(/^Der /, "dem ").replace(/^Herr /, "Herrn ") + " sprechen"
+  });
+});
+
 DATA.mapPuzzleByRoom = {};
 Object.keys(DATA.puzzles).forEach(function (id) {
   var p = DATA.puzzles[id];
@@ -1909,6 +2029,7 @@ function renderRoom() {
   $("location-label").textContent = room.name;
   var svg = '<svg viewBox="0 0 960 540" role="img" aria-label="' + esc(room.name) + '">';
   svg += DATA.sceneDefs + room.backdrop;
+  if (DATA.characters[State.currentRoom]) svg += drawCharacter(DATA.characters[State.currentRoom]);
   svg += '<rect width="960" height="540" fill="url(#g-vignette)" pointer-events="none"/>';
   room.hotspots.forEach(function (h) {
     var solvedMark = (h.type === "puzzle" && isSolved(h.puzzleId)) ||
@@ -1919,7 +2040,7 @@ function renderRoom() {
        i Hinweis, → Tür, ☎ Finale */
     var cx = h.x + h.w - 20;
     var cy2 = h.y + 20;
-    var sym = { puzzle: "?", niveau: "★", item: "+", info: "i", door: "→", finale: "☎" }[h.type] || "?";
+    var sym = { puzzle: "?", niveau: "★", item: "+", info: "i", door: "→", finale: "☎", talk: "…" }[h.type] || "?";
     if (solvedMark) sym = "✓";
     svg += '<g class="hotspot' + (solvedMark ? " solved" : "") +
            '" data-hotspot="' + h.id + '" tabindex="0" role="button" aria-label="' + esc(h.label) + '">';
@@ -1969,7 +2090,18 @@ function activateHotspot(id) {
     tryDoor(h);
   } else if (h.type === "finale") {
     tryFinale();
+  } else if (h.type === "talk") {
+    talkTo(h.room);
   }
+}
+
+/* Sprüche der Figuren nacheinander (nur im Arbeitsspeicher, nicht gespeichert) */
+var talkIndex = {};
+function talkTo(rid) {
+  var c = DATA.characters[rid];
+  var i = talkIndex[rid] || 0;
+  msg('<span class="speaker">' + esc(c.name) + ":</span> „" + esc(c.lines[i % c.lines.length]) + "“");
+  talkIndex[rid] = i + 1;
 }
 
 function escWithoutTags(s) {
@@ -2621,6 +2753,13 @@ window.__runDevTests = function () {
       else localStorage.setItem("tatort-sqrt2", raw);
     } catch (e) { /* ignorieren */ }
   })();
+
+  /* Figuren: je Raum eine mit mindestens 3 Sprüchen und Hotspot */
+  Object.keys(DATA.rooms).forEach(function (rid) {
+    var c = DATA.characters[rid];
+    var hs = DATA.rooms[rid].hotspots.filter(function (h) { return h.type === "talk"; });
+    if (!c || c.lines.length < 3 || hs.length !== 1) { line("t-err", "FAIL Raum " + rid + ": Figur/Sprüche/Hotspot fehlen"); failCount++; }
+  });
 
   /* Notizen prüfen */
   Object.keys(DATA.puzzles).forEach(function (id) {
